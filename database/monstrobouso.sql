@@ -19,8 +19,6 @@
 -- Table structure for table `batalha_log`
 --
 
-use monstrobouso;
-
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `batalha_log` (
@@ -170,12 +168,15 @@ CREATE TABLE `desafio_pokemon` (
   `id_held_item` int(11) DEFAULT NULL,
   `nivel` int(11) NOT NULL,
   `ordem` int(11) NOT NULL,
+  `id_golpe_status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_desafio_pokemon`),
   UNIQUE KEY `uq_desafio_ordem` (`id_desafio`,`ordem`),
   KEY `fk_desafio_pokemon_especie` (`id_pokemon_especie`),
   KEY `fk_desafio_pokemon_held_item` (`id_held_item`),
+  KEY `fk_desafio_pokemon_golpe_status` (`id_golpe_status`),
   CONSTRAINT `fk_desafio_pokemon_desafio` FOREIGN KEY (`id_desafio`) REFERENCES `desafio` (`id_desafio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_desafio_pokemon_especie` FOREIGN KEY (`id_pokemon_especie`) REFERENCES `pokemon_especie` (`id_pokemon_especie`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_desafio_pokemon_golpe_status` FOREIGN KEY (`id_golpe_status`) REFERENCES `golpe` (`id_golpe`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_desafio_pokemon_held_item` FOREIGN KEY (`id_held_item`) REFERENCES `held_item` (`id_held_item`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `chk_desafio_pokemon_nivel` CHECK (`nivel` between 1 and 100),
   CONSTRAINT `chk_desafio_pokemon_ordem` CHECK (`ordem` >= 1)
@@ -237,13 +238,14 @@ CREATE TABLE `golpe` (
   `precisao` int(11) DEFAULT NULL,
   `pp` int(11) DEFAULT NULL,
   `prioridade` int(11) NOT NULL DEFAULT 0,
+  `classe_dano` varchar(20) DEFAULT NULL,
   `descricao` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_golpe`),
   UNIQUE KEY `api_id` (`api_id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `fk_golpe_tipo` (`id_tipo`),
   CONSTRAINT `fk_golpe_tipo` FOREIGN KEY (`id_tipo`) REFERENCES `tipo` (`id_tipo`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -252,6 +254,7 @@ CREATE TABLE `golpe` (
 
 LOCK TABLES `golpe` WRITE;
 /*!40000 ALTER TABLE `golpe` DISABLE KEYS */;
+INSERT INTO `golpe` VALUES (1,34,'body-slam',1,'DANO',65,100,15,0,'PHYSICAL','Has a chance to paralyze the target.'),(2,351,'shock-wave',3,'DANO',65,NULL,20,0,'SPECIAL','Never misses.'),(3,424,'fire-fang',2,'DANO',65,95,15,0,'PHYSICAL','Has a chance to burn the target and a chance to make the target flinch.'),(4,352,'water-pulse',4,'DANO',65,100,20,0,'SPECIAL','Has a chance to confuse the target.'),(5,72,'mega-drain',5,'DANO',65,100,15,0,'SPECIAL','Drains half the damage inflicted to heal the user.'),(6,409,'drain-punch',6,'DANO',65,100,10,0,'PHYSICAL','Drains half the damage inflicted to heal the user.'),(7,389,'sucker-punch',9,'DANO',65,100,5,1,'PHYSICAL','Only works if the target is about to use a damaging move.'),(8,418,'bullet-punch',7,'DANO',65,100,30,1,'PHYSICAL','Inflicts regular damage with no additional effect.'),(9,425,'shadow-sneak',13,'DANO',65,100,30,1,'PHYSICAL','Inflicts regular damage with no additional effect.'),(10,450,'bug-bite',14,'DANO',65,100,20,0,'PHYSICAL','If target has a berry, inflicts double damage and uses the berry.'),(11,414,'earth-power',17,'DANO',65,100,10,0,'SPECIAL','Has a chance to lower the target’s Special Defense by one stage.'),(12,317,'rock-tomb',16,'DANO',65,95,15,0,'PHYSICAL','Has a chance to lower the target’s Speed by one stage.'),(13,337,'dragon-claw',10,'DANO',65,100,15,0,'PHYSICAL','Inflicts regular damage with no additional effect.'),(14,605,'dazzling-gleam',18,'DANO',65,100,10,0,'SPECIAL','Inflicts regular damage with no additional effect.'),(15,512,'acrobatics',15,'DANO',65,100,15,0,'PHYSICAL','Has double power if the user has no held item.'),(16,94,'psychic',8,'DANO',65,100,10,0,'SPECIAL','Has a chance to lower the target’s Special Defense by one stage.'),(17,188,'sludge-bomb',12,'DANO',65,100,10,0,'SPECIAL','Has a chance to poison the target.'),(18,58,'ice-beam',11,'DANO',65,100,10,0,'SPECIAL','Has a chance to freeze the target.'),(28,14,'Dança das Espadas',1,'STATUS',NULL,NULL,20,0,'status','Raises the user’s Attack by two stages.'),(29,417,'Maquinação Maliciosa',9,'STATUS',NULL,NULL,20,0,'status','Raises the user’s Special Attack by two stages.'),(30,86,'Onda Trovão',3,'STATUS',NULL,90,20,0,'status','Paralyzes the target.'),(31,92,'Tóxico',12,'STATUS',NULL,90,10,0,'status','Badly poisons the target.  Never misses when used by a Poison-type Pokémon.'),(32,347,'Paz Mental',8,'STATUS',NULL,NULL,20,0,'status','Raises the user’s Special Attack and Special Defense by one stage each.'),(33,339,'Corpulência',6,'STATUS',NULL,NULL,20,0,'status','Raises the user’s Attack and Defense by one stage each.'),(34,147,'Esporo',5,'STATUS',NULL,100,15,0,'status','Puts the target to sleep.'),(35,261,'Fogo Fátuo',2,'STATUS',NULL,85,15,0,'status','Burns the target.');
 /*!40000 ALTER TABLE `golpe` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -484,7 +487,7 @@ CREATE TABLE `pokemon_especie` (
   PRIMARY KEY (`id_pokemon_especie`),
   UNIQUE KEY `api_id` (`api_id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -493,6 +496,7 @@ CREATE TABLE `pokemon_especie` (
 
 LOCK TABLES `pokemon_especie` WRITE;
 /*!40000 ALTER TABLE `pokemon_especie` DISABLE KEYS */;
+INSERT INTO `pokemon_especie` VALUES (15,494,'victini',100,100,100,100,100,100,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/494.png'),(16,495,'snivy',45,45,55,45,55,63,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/495.png'),(17,496,'servine',60,60,75,60,75,83,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/496.png'),(18,497,'serperior',75,75,95,75,95,113,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/497.png'),(19,498,'tepig',65,63,45,45,45,45,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/498.png'),(20,499,'pignite',90,93,55,70,55,55,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/499.png'),(21,500,'emboar',110,123,65,100,65,65,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/500.png'),(22,501,'oshawott',55,55,45,63,45,45,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/501.png'),(23,502,'dewott',75,75,60,83,60,60,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/502.png'),(24,503,'samurott',95,100,85,108,70,70,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/503.png'),(25,504,'patrat',45,55,39,35,39,42,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/504.png'),(26,505,'watchog',60,85,69,60,69,77,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/505.png'),(27,506,'lillipup',45,60,45,25,45,55,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/506.png'),(28,507,'herdier',65,80,65,35,65,60,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/507.png'),(29,508,'stoutland',85,110,90,45,90,80,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/508.png'),(30,509,'purrloin',41,50,37,50,37,66,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/509.png'),(31,510,'liepard',64,88,50,88,50,106,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/510.png'),(32,511,'pansage',50,53,48,53,48,64,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/511.png'),(33,512,'simisage',75,98,63,98,63,101,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/512.png'),(34,513,'pansear',50,53,48,53,48,64,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/513.png'),(35,514,'simisear',75,98,63,98,63,101,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/514.png'),(36,515,'panpour',50,53,48,53,48,64,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/515.png'),(37,516,'simipour',75,98,63,98,63,101,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/516.png'),(38,517,'munna',76,25,45,67,55,24,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/517.png'),(39,518,'musharna',116,55,85,107,95,29,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/518.png'),(40,519,'pidove',50,55,50,36,30,43,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/519.png'),(41,520,'tranquill',62,77,62,50,42,65,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/520.png'),(42,521,'unfezant',80,115,80,65,55,93,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/521.png'),(43,522,'blitzle',45,60,32,50,32,76,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/522.png'),(44,523,'zebstrika',75,100,63,80,63,116,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/523.png'),(45,524,'roggenrola',55,75,85,25,25,15,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/524.png'),(46,525,'boldore',70,105,105,50,40,20,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/525.png'),(47,526,'gigalith',85,135,130,60,80,25,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/526.png'),(48,527,'woobat',65,45,43,55,43,72,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/527.png'),(49,528,'swoobat',67,57,55,77,55,114,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/528.png'),(50,529,'drilbur',60,85,40,30,45,68,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/529.png'),(51,530,'excadrill',110,135,60,50,65,88,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/530.png'),(52,531,'audino',103,60,86,60,86,50,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/531.png'),(53,532,'timburr',75,80,55,25,35,35,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/532.png'),(54,533,'gurdurr',85,105,85,40,50,40,'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/533.png');
 /*!40000 ALTER TABLE `pokemon_especie` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -511,7 +515,7 @@ CREATE TABLE `pokemon_especie_golpe` (
   KEY `fk_peg_golpe` (`id_golpe`),
   CONSTRAINT `fk_peg_golpe` FOREIGN KEY (`id_golpe`) REFERENCES `golpe` (`id_golpe`) ON UPDATE CASCADE,
   CONSTRAINT `fk_peg_pokemon` FOREIGN KEY (`id_pokemon_especie`) REFERENCES `pokemon_especie` (`id_pokemon_especie`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `chk_pokemon_slot` CHECK (`slot` between 1 and 3)
+  CONSTRAINT `chk_pokemon_slot` CHECK (`slot` between 1 and 2)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -521,6 +525,7 @@ CREATE TABLE `pokemon_especie_golpe` (
 
 LOCK TABLES `pokemon_especie_golpe` WRITE;
 /*!40000 ALTER TABLE `pokemon_especie_golpe` DISABLE KEYS */;
+INSERT INTO `pokemon_especie_golpe` VALUES (15,16,1),(15,3,2),(16,5,1),(17,5,1),(18,5,1),(19,3,1),(20,3,1),(20,6,2),(21,3,1),(21,6,2),(22,4,1),(23,4,1),(24,4,1),(25,1,1),(26,1,1),(27,1,1),(28,1,1),(29,1,1),(30,7,1),(31,7,1),(32,5,1),(33,5,1),(34,3,1),(35,3,1),(36,4,1),(37,4,1),(38,16,1),(39,16,1),(40,1,1),(40,15,2),(41,1,1),(41,15,2),(42,1,1),(42,15,2),(43,2,1),(44,2,1),(45,12,1),(46,12,1),(47,12,1),(48,16,1),(48,15,2),(49,16,1),(49,15,2),(50,11,1),(51,11,1),(51,8,2),(52,1,1),(53,6,1),(54,6,1);
 /*!40000 ALTER TABLE `pokemon_especie_golpe` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -532,26 +537,22 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_golpe_pokemon
-BEFORE INSERT ON pokemon_especie_golpe
-FOR EACH ROW
-BEGIN
-    DECLARE v_categoria VARCHAR(20);
-
-    SELECT categoria
-    INTO v_categoria
-    FROM golpe
-    WHERE id_golpe = NEW.id_golpe;
-
-    IF NEW.slot IN (1, 2) AND v_categoria <> 'DANO' THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Os slots 1 e 2 devem conter golpes de dano.';
-    END IF;
-
-    IF NEW.slot = 3 AND v_categoria <> 'STATUS' THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'O slot 3 deve conter um golpe de status.';
-    END IF;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_golpe_dano_insert
+BEFORE INSERT ON pokemon_especie_golpe
+FOR EACH ROW
+BEGIN
+    DECLARE v_categoria VARCHAR(20);
+
+    SELECT categoria
+    INTO v_categoria
+    FROM golpe
+    WHERE id_golpe = NEW.id_golpe;
+
+    IF v_categoria <> 'DANO' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT =
+            'Os slots do Pokemon devem conter apenas golpes de dano.';
+    END IF;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -567,32 +568,55 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_golpe_pokemon_update
-BEFORE UPDATE ON pokemon_especie_golpe
-FOR EACH ROW
-BEGIN
-    DECLARE v_categoria VARCHAR(20);
-
-    SELECT categoria
-    INTO v_categoria
-    FROM golpe
-    WHERE id_golpe = NEW.id_golpe;
-
-    IF NEW.slot IN (1, 2) AND v_categoria <> 'DANO' THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Os slots 1 e 2 devem conter golpes de dano.';
-    END IF;
-
-    IF NEW.slot = 3 AND v_categoria <> 'STATUS' THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'O slot 3 deve conter um golpe de status.';
-    END IF;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_golpe_dano_update
+BEFORE UPDATE ON pokemon_especie_golpe
+FOR EACH ROW
+BEGIN
+    DECLARE v_categoria VARCHAR(20);
+
+    SELECT categoria
+    INTO v_categoria
+    FROM golpe
+    WHERE id_golpe = NEW.id_golpe;
+
+    IF v_categoria <> 'DANO' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT =
+            'Os slots do Pokemon devem conter apenas golpes de dano.';
+    END IF;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `pokemon_especie_status_opcao`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pokemon_especie_status_opcao` (
+  `id_pokemon_especie` int(11) NOT NULL,
+  `id_golpe` int(11) NOT NULL,
+  `criterio` varchar(40) NOT NULL DEFAULT 'TIPO',
+  PRIMARY KEY (`id_pokemon_especie`,`id_golpe`),
+  KEY `fk_status_opcao_golpe` (`id_golpe`),
+  CONSTRAINT `fk_status_opcao_golpe` FOREIGN KEY (`id_golpe`) REFERENCES `golpe` (`id_golpe`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_status_opcao_pokemon` FOREIGN KEY (`id_pokemon_especie`) REFERENCES `pokemon_especie` (`id_pokemon_especie`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pokemon_especie_status_opcao`
+--
+
+LOCK TABLES `pokemon_especie_status_opcao` WRITE;
+/*!40000 ALTER TABLE `pokemon_especie_status_opcao` DISABLE KEYS */;
+INSERT INTO `pokemon_especie_status_opcao` VALUES (15,28,'TEM_FISICO'),(15,32,'TIPO_PSYCHIC'),(15,35,'TIPO_FIRE_GHOST'),(16,29,'TEM_ESPECIAL'),(16,34,'TIPO_GRASS'),(17,29,'TEM_ESPECIAL'),(17,34,'TIPO_GRASS'),(18,29,'TEM_ESPECIAL'),(18,34,'TIPO_GRASS'),(19,28,'TEM_FISICO'),(19,35,'TIPO_FIRE_GHOST'),(20,33,'TIPO_FIGHTING'),(20,35,'TIPO_FIRE_GHOST'),(21,33,'TIPO_FIGHTING'),(21,35,'TIPO_FIRE_GHOST'),(22,29,'TEM_ESPECIAL'),(23,29,'TEM_ESPECIAL'),(24,29,'TEM_ESPECIAL'),(25,28,'TEM_FISICO'),(26,28,'TEM_FISICO'),(27,28,'TEM_FISICO'),(28,28,'TEM_FISICO'),(29,28,'TEM_FISICO'),(30,28,'TEM_FISICO'),(31,28,'TEM_FISICO'),(32,29,'TEM_ESPECIAL'),(32,34,'TIPO_GRASS'),(33,29,'TEM_ESPECIAL'),(33,34,'TIPO_GRASS'),(34,28,'TEM_FISICO'),(34,35,'TIPO_FIRE_GHOST'),(35,28,'TEM_FISICO'),(35,35,'TIPO_FIRE_GHOST'),(36,29,'TEM_ESPECIAL'),(37,29,'TEM_ESPECIAL'),(38,32,'TIPO_PSYCHIC'),(39,32,'TIPO_PSYCHIC'),(40,28,'TEM_FISICO'),(41,28,'TEM_FISICO'),(42,28,'TEM_FISICO'),(43,29,'TEM_ESPECIAL'),(43,30,'TIPO_ELETRICO'),(44,29,'TEM_ESPECIAL'),(44,30,'TIPO_ELETRICO'),(45,28,'TEM_FISICO'),(46,28,'TEM_FISICO'),(47,28,'TEM_FISICO'),(48,28,'TEM_FISICO'),(48,32,'TIPO_PSYCHIC'),(49,28,'TEM_FISICO'),(49,32,'TIPO_PSYCHIC'),(50,29,'TEM_ESPECIAL'),(51,28,'TEM_FISICO'),(51,29,'TEM_ESPECIAL'),(52,28,'TEM_FISICO'),(53,33,'TIPO_FIGHTING'),(54,33,'TIPO_FIGHTING');
+/*!40000 ALTER TABLE `pokemon_especie_status_opcao` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `pokemon_especie_tipo`
@@ -616,6 +640,7 @@ CREATE TABLE `pokemon_especie_tipo` (
 
 LOCK TABLES `pokemon_especie_tipo` WRITE;
 /*!40000 ALTER TABLE `pokemon_especie_tipo` DISABLE KEYS */;
+INSERT INTO `pokemon_especie_tipo` VALUES (15,2),(15,8),(16,5),(17,5),(18,5),(19,2),(20,2),(20,6),(21,2),(21,6),(22,4),(23,4),(24,4),(25,1),(26,1),(27,1),(28,1),(29,1),(30,9),(31,9),(32,5),(33,5),(34,2),(35,2),(36,4),(37,4),(38,8),(39,8),(40,1),(40,15),(41,1),(41,15),(42,1),(42,15),(43,3),(44,3),(45,16),(46,16),(47,16),(48,8),(48,15),(49,8),(49,15),(50,17),(51,7),(51,17),(52,1),(53,6),(54,6);
 /*!40000 ALTER TABLE `pokemon_especie_tipo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -641,10 +666,13 @@ CREATE TABLE `pokemon_time` (
   `velocidade` int(11) NOT NULL,
   `status` varchar(30) NOT NULL DEFAULT 'normal',
   `posicao` int(11) NOT NULL,
+  `id_golpe_status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_pokemon_time`),
   UNIQUE KEY `uq_perfil_posicao` (`id_perfil`,`posicao`),
   KEY `fk_time_especie` (`id_pokemon_especie`),
   KEY `fk_pokemon_time_held_item` (`id_held_item`),
+  KEY `fk_pokemon_time_golpe_status` (`id_golpe_status`),
+  CONSTRAINT `fk_pokemon_time_golpe_status` FOREIGN KEY (`id_golpe_status`) REFERENCES `golpe` (`id_golpe`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_pokemon_time_held_item` FOREIGN KEY (`id_held_item`) REFERENCES `held_item` (`id_held_item`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_time_especie` FOREIGN KEY (`id_pokemon_especie`) REFERENCES `pokemon_especie` (`id_pokemon_especie`) ON UPDATE CASCADE,
   CONSTRAINT `fk_time_perfil` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id_perfil`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -668,6 +696,78 @@ LOCK TABLES `pokemon_time` WRITE;
 /*!40000 ALTER TABLE `pokemon_time` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pokemon_time` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_status_pokemon_time_insert
+BEFORE INSERT ON pokemon_time
+FOR EACH ROW
+BEGIN
+    DECLARE v_existe INT DEFAULT 0;
+
+    IF NEW.id_golpe_status IS NOT NULL THEN
+
+        SELECT COUNT(*)
+        INTO v_existe
+        FROM pokemon_especie_status_opcao
+        WHERE id_pokemon_especie = NEW.id_pokemon_especie
+          AND id_golpe = NEW.id_golpe_status;
+
+        IF v_existe = 0 THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT =
+                'O golpe de status escolhido nao e uma opcao valida para este Pokemon.';
+        END IF;
+
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_status_pokemon_time_update
+BEFORE UPDATE ON pokemon_time
+FOR EACH ROW
+BEGIN
+    DECLARE v_existe INT DEFAULT 0;
+
+    IF NEW.id_golpe_status IS NOT NULL THEN
+
+        SELECT COUNT(*)
+        INTO v_existe
+        FROM pokemon_especie_status_opcao
+        WHERE id_pokemon_especie = NEW.id_pokemon_especie
+          AND id_golpe = NEW.id_golpe_status;
+
+        IF v_existe = 0 THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT =
+                'O golpe de status escolhido nao e uma opcao valida para este Pokemon.';
+        END IF;
+
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `progresso_desafio`
@@ -812,4 +912,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-05 16:53:11
+-- Dump completed on 2026-10-14  8:17:23
