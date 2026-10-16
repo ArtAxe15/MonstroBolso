@@ -120,19 +120,141 @@ function coletarTransicoesEvolutivas(array $elo, array &$transicoes): void
  * em qualquer nível; essa alternativa universal será aplicada pelo serviço PHP
  * de evolução, não pela condição de nível desta linha.
  */
-function determinarRegraEvolucao(string $origem, string $destino, array $detalhes, int $idMoonStone): array
+function obterRegrasPersonalizadasEvolucao(): array
 {
+    return [
+        'pansage>simisage' => [
+            'origem' => 'pansage',
+            'destino' => 'simisage',
+            'nivel' => 20,
+        ],
+        'pansear>simisear' => [
+            'origem' => 'pansear',
+            'destino' => 'simisear',
+            'nivel' => 20,
+        ],
+        'panpour>simipour' => [
+            'origem' => 'panpour',
+            'destino' => 'simipour',
+            'nivel' => 20,
+        ],
+        'munna>musharna' => [
+            'origem' => 'munna',
+            'destino' => 'musharna',
+            'nivel' => 28,
+        ],
+        'boldore>gigalith' => [
+            'origem' => 'boldore',
+            'destino' => 'gigalith',
+            'nivel' => 40,
+        ],
+        'basculin-white-striped>basculegion-male' => [
+            'origem' => 'basculin-white-striped',
+            'destino' => 'basculegion-male',
+            'nivel' => 30,
+        ],
+        'yamask-galar>runerigus' => [
+            'origem' => 'yamask-galar',
+            'destino' => 'runerigus',
+            'nivel' => 35,
+        ],
+        'darumaka-galar>darmanitan-galar-standard' => [
+            'origem' => 'darumaka-galar',
+            'destino' => 'darmanitan-galar-standard',
+            'nivel' => 35,
+        ],
+        'woobat>swoobat' => [
+            'origem' => 'woobat',
+            'destino' => 'swoobat',
+            'nivel' => 22,
+        ],
+        'gurdurr>conkeldurr' => [
+            'origem' => 'gurdurr',
+            'destino' => 'conkeldurr',
+            'nivel' => 22,
+        ],
+        'swadloon>leavanny' => [
+            'origem' => 'swadloon',
+            'destino' => 'leavanny',
+            'nivel' => 28,
+        ],
+        'cottonee>whimsicott' => [
+            'origem' => 'cottonee',
+            'destino' => 'whimsicott',
+            'nivel' => 25,
+        ],
+        'petilil>lilligant' => [
+            'origem' => 'petilil',
+            'destino' => 'lilligant',
+            'nivel' => 25,
+        ],
+        'petilil>lilligant-hisui' => [
+            'origem' => 'petilil',
+            'destino' => 'lilligant-hisui',
+            'nivel' => 25,
+        ],
+        'minccino>cinccino' => [
+            'origem' => 'minccino',
+            'destino' => 'cinccino',
+            'nivel' => 20,
+        ],
+        'karrablast>escavalier' => [
+            'origem' => 'karrablast',
+            'destino' => 'escavalier',
+            'nivel' => 30,
+        ],
+        'eelektrik>eelektross' => [
+            'origem' => 'eelektrik',
+            'destino' => 'eelektross',
+            'nivel' => 48,
+        ],
+        'lampent>chandelure' => [
+            'origem' => 'lampent',
+            'destino' => 'chandelure',
+            'nivel' => 50,
+        ],
+        'shelmet>accelgor' => [
+            'origem' => 'shelmet',
+            'destino' => 'accelgor',
+            'nivel' => 48,
+        ],   
+        'bisharp>kingambit' => [
+            'origem' => 'bisharp',
+            'destino' => 'kingambit',
+            'nivel' => 60,
+        ],
+    ];
+}
+
+
+function determinarRegraEvolucao(
+    string $origem,
+    string $destino,
+    array $detalhes,
+    int $idMoonStone
+): array {
     $chave = strtolower($origem . '>' . $destino);
+    $regrasPersonalizadas = obterRegrasPersonalizadasEvolucao();
+
     $gatilhosApi = [];
     $niveis = [];
 
     foreach ($detalhes as $detalhe) {
         $gatilho = (string) ($detalhe['trigger']['name'] ?? '');
-        if ($gatilho !== '' && !in_array($gatilho, $gatilhosApi, true)) {
+
+        if (
+            $gatilho !== ''
+            && !in_array($gatilho, $gatilhosApi, true)
+        ) {
             $gatilhosApi[] = $gatilho;
         }
-        if ($gatilho === 'level-up' && isset($detalhe['min_level'])) {
+
+        if (
+            $gatilho === 'level-up'
+            && isset($detalhe['min_level'])
+        ) {
             $nivel = (int) $detalhe['min_level'];
+
             if ($nivel >= 1 && $nivel <= 100) {
                 $niveis[] = $nivel;
             }
@@ -141,23 +263,18 @@ function determinarRegraEvolucao(string $origem, string $destino, array $detalhe
 
     $gatilhoOriginal = $gatilhosApi[0] ?? null;
 
-    $regrasPersonalizadas = [
-        'seadra>kingdra' => 40,
-        'basculin-white-striped>basculegion-male' => 30,
-        'yamask>runerigus' => 35,
-        'yamask-galar>runerigus' => 35,
-    ];
-
+    // 1. Regras personalizadas do MONSTROBOLSO.
     if (isset($regrasPersonalizadas[$chave])) {
         return [
             'metodo_evolucao' => 'NIVEL',
-            'nivel_requisito' => $regrasPersonalizadas[$chave],
+            'nivel_requisito' => $regrasPersonalizadas[$chave]['nivel'],
             'id_item' => null,
             'api_trigger' => $gatilhoOriginal,
         ];
     }
-    
 
+    // 2. Se não houver regra personalizada,
+    // utilizar o nível informado pela PokéAPI.
     if ($niveis !== []) {
         return [
             'metodo_evolucao' => 'NIVEL',
@@ -167,7 +284,7 @@ function determinarRegraEvolucao(string $origem, string $destino, array $detalhe
         ];
     }
 
-    // Trocas, pedras específicas e demais condições complexas viram Moon Stone.
+    // 3. Regra padrão para evoluções sem nível definido.
     return [
         'metodo_evolucao' => 'ITEM',
         'nivel_requisito' => null,
@@ -175,6 +292,7 @@ function determinarRegraEvolucao(string $origem, string $destino, array $detalhe
         'api_trigger' => $gatilhoOriginal,
     ];
 }
+
 
 /** Registra todas as transições cujas duas espécies já existem no banco. */
 function sincronizarCadeiaEvolutiva(PDO $pdo, array $dadosCadeia, int $idMoonStone): array
@@ -196,32 +314,33 @@ function sincronizarCadeiaEvolutiva(PDO $pdo, array $dadosCadeia, int $idMoonSto
 
     $nomeImportado = str_replace(' ', '-', trim($nomeImportado));
 
-    if ($nomeImportado === 'basculin-white-striped') {
-        $chavePersonalizada = 'basculin-white-striped>basculegion-male';
 
-        if (!isset($transicoes[$chavePersonalizada])) {
-            $transicoes[$chavePersonalizada] = [
-                'origem' => 'basculin-white-striped',
-                'destino' => 'basculegion-male',
+    $nomeImportado = strtolower(
+        str_replace(
+            ' ',
+            '-',
+            trim((string) ($_POST['nome'] ?? ''))
+        )
+    );
+
+    $regrasPersonalizadas = obterRegrasPersonalizadasEvolucao();
+
+    foreach ($regrasPersonalizadas as $chave => $regraPersonalizada) {
+        // Só acrescentar uma transição especial quando
+        // o Pokémon importado for a origem dessa evolução.
+        if ($nomeImportado !== $regraPersonalizada['origem']) {
+            continue;
+        }
+
+        if (!isset($transicoes[$chave])) {
+            $transicoes[$chave] = [
+                'origem' => $regraPersonalizada['origem'],
+                'destino' => $regraPersonalizada['destino'],
                 'detalhes' => [],
             ];
         }
     }
 
-    /*
-    * Evolução personalizada do Yamask de Galar.
-    */
-    if ($nomeImportado === 'yamask-galar') {
-        $chavePersonalizada = 'yamask>runerigus';
-
-        if (!isset($transicoes[$chavePersonalizada])) {
-            $transicoes[$chavePersonalizada] = [
-                'origem' => 'yamask',
-                'destino' => 'runerigus',
-                'detalhes' => [],
-            ];
-        }
-    }
 
 
     $stmtEspecie = $pdo->prepare(
