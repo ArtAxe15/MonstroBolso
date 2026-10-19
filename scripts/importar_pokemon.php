@@ -223,6 +223,11 @@ function obterRegrasPersonalizadasEvolucao(): array
             'destino' => 'kingambit',
             'nivel' => 60,
         ],
+        'zorua-hisui>zoroark-hisui' => [
+            'origem' => 'zorua-hisui',
+            'destino' => 'zoroark-hisui',
+            'nivel' => 30,
+        ],  
     ];
 }
 
