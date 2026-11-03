@@ -22,6 +22,9 @@
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
+
+use monstrobouso;
+
 CREATE TABLE `batalha_log` (
   `id_batalha` int(11) NOT NULL AUTO_INCREMENT,
   `id_perfil` int(11) NOT NULL,
