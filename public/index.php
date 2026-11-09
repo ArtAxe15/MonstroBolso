@@ -56,3 +56,29 @@ if ($uri === '/logout') {
 
 http_response_code(404);
 echo 'Página não encontrada';
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POKELAIQUE</title>
+    <link rel="stylesheet" href="monstrobolso.css">
+</head>
+<body>
+    <h1>POKELAIQUE</h1>
+    <a>
+        <button type="button">Jojar</button>
+    </a>
+    <div class="caixa-texto">
+        <p>
+            Se desafia neste jogo muito bem desenvolvido e com batalhas épicas. 
+            <br>SEJA ESTRATEGISTA E VENÇA O DESAFIO!</br>
+        </p>
+    </div>
+    <div class="imagem">
+        <img src="monstrobolsoUnova.png" alt="Imagem do Monstrobolso">
+    </div>
+</body>
+</html>
