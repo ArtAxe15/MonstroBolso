@@ -1,39 +1,56 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Models;
 
 use PDO;
 
-class User
+final class User
 {
-    private PDO $conn;
-
-    public function __construct(PDO $conn)
-    {
-        $this->conn = $conn;
+    public function __construct(
+        private PDO $conn
+    ) {
     }
 
+    /**
+     * Busca um usuário pelo nome cadastrado.
+     */
     public function findByNomeUsuario(string $nomeUsuario): ?array
     {
-        $sql = 'SELECT * FROM usuario WHERE nome_usuario = :nome_usuario LIMIT 1';
+        $sql = '
+            SELECT
+                id_usuario,
+                nome_usuario,
+                senha_hash,
+                criado_em
+            FROM usuario
+            WHERE nome_usuario = :nome_usuario
+            LIMIT 1
+        ';
+
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([':nome_usuario' => $nomeUsuario]);
+        $stmt->bindValue(':nome_usuario', $nomeUsuario, PDO::PARAM_STR);
+        $stmt->execute();
 
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $usuario = $stmt->fetch();
 
-        return $user ?: null;
+        return $usuario === false ? null : $usuario;
     }
 
+    /**
+     * Cria um usuário usando o hash de senha já produzido pelo Controller.
+     */
     public function create(string $nomeUsuario, string $senhaHash): bool
     {
-        $sql = 'INSERT INTO usuario (nome_usuario, senha_hash, criado_em) VALUES (:nome_usuario, :senha_hash, NOW())';
-        $stmt = $this->conn->prepare($sql);
+        $sql = '
+            INSERT INTO usuario (nome_usuario, senha_hash)
+            VALUES (:nome_usuario, :senha_hash)
+        ';
 
-        return $stmt->execute([
-            ':nome_usuario' => $nomeUsuario,
-            ':senha_hash' => $senhaHash,
-        ]);
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':nome_usuario', $nomeUsuario, PDO::PARAM_STR);
+        $stmt->bindValue(':senha_hash', $senhaHash, PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 }

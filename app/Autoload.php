@@ -1,25 +1,33 @@
 <?php
+declare(strict_types=1);
 
-spl_autoload_register(function ($class) {
-    $prefixApp = 'App\\';
-    $baseDirApp = __DIR__ . DIRECTORY_SEPARATOR;
+spl_autoload_register(function (string $class): void {
 
-    if (strncmp($class, $prefixApp, strlen($prefixApp)) === 0) {
-        $relativeClass = substr($class, strlen($prefixApp));
+    // Caminho específico da classe Database.
+    if ($class === 'App\Config\Database') {
+        $file = dirname(__DIR__) . '/config/database.php';
 
-        if ($relativeClass === 'Config\\Database') {
-            $file = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php';
-            if (file_exists($file)) {
-                require $file;
-                return;
-            }
+        if (is_file($file)) {
+            require_once $file;
         }
 
-        $file = $baseDirApp . str_replace('\\', DIRECTORY_SEPARATOR, $relativeClass) . '.php';
+        return;
+    }
 
-        if (file_exists($file)) {
-            require $file;
-            return;
-        }
+    // Classes pertencentes à pasta app.
+    $prefix = 'App\\';
+
+    if (strncmp($prefix, $class, strlen($prefix)) !== 0) {
+        return;
+    }
+
+    $relativeClass = substr($class, strlen($prefix));
+
+    $file = __DIR__ . '/'
+        . str_replace('\\', DIRECTORY_SEPARATOR, $relativeClass)
+        . '.php';
+
+    if (is_file($file)) {
+        require_once $file;
     }
 });

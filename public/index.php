@@ -6,79 +6,61 @@ session_start();
 require_once __DIR__ . '/../app/Autoload.php';
 
 use App\Config\Database;
-use App\Controllers\AuthController;
+use App\Http\JsonResponse;
 
-$db = Database::getConnection();
-$controller = new AuthController($db);
+// Identifica o caminho acessado, inclusive quando a URL contém /index.php/dashboard.
+$uriCompleta = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$scriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '/index.php');
+$scriptDir = rtrim(str_replace('\\', '/', dirname($scriptName)), '/');
+$entryPath = ($scriptDir === '' ? '' : $scriptDir) . '/index.php';
 
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
-$scriptName = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
-$scriptDir = rtrim(dirname($scriptName), '/');
-
-if ($scriptDir !== '' && $scriptDir !== '/') {
-    $uri = preg_replace('#^' . preg_quote($scriptDir, '#') . '#', '', $uri, 1) ?? $uri;
+if ($uriCompleta === $entryPath) {
+    $rota = '/';
+} elseif (str_starts_with($uriCompleta, $entryPath . '/')) {
+    $rota = substr($uriCompleta, strlen($entryPath));
+} else {
+    $rota = '/';
 }
 
-$uri = preg_replace('#^/index\.php#', '', $uri, 1) ?? $uri;
+$metodo = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+$chaveRota = $metodo . ' ' . $rota;
+$rotas = require __DIR__ . '/../routes/routes.php';
 
-if ($uri === '' || $uri === '/') {
-    $redirect = ($scriptDir !== '' && $scriptDir !== '/') ? $scriptDir . '/index.php/login' : '/index.php/login';
-    header('Location: ' . $redirect);
+// 1. Requisições da API: recebem e devolvem JSON.
+if (isset($rotas[$chaveRota])) {
+    [$controllerClass, $metodoController] = $rotas[$chaveRota];
+
+    try {
+        $controller = new $controllerClass(Database::getConnection());
+        $controller->{$metodoController}();
+    } catch (Throwable $e) {
+        error_log('Erro na API (' . $chaveRota . '): ' . $e->getMessage());
+
+        JsonResponse::send([
+            'ok' => false,
+            'message' => 'Ocorreu um erro interno. Consulte o log do PHP para mais detalhes.'
+        ], 500);
+    }
+}
+
+// 2. Endpoints /api inexistentes não devem devolver HTML.
+if (str_starts_with($rota, '/api/')) {
+    JsonResponse::send([
+        'ok' => false,
+        'message' => 'Endpoint da API não encontrado.'
+    ], 404);
+}
+
+// 3. Rotas da interface: todas devolvem o mesmo app shell.
+$rotasFrontend = ['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map'];
+
+if (in_array($rota, $rotasFrontend, true)) {
+    $baseUrl = $scriptDir;
+    $entryUrl = $entryPath;
+
+    require __DIR__ . '/../app/Views/app.php';
     exit;
-}
-
-if ($uri === '/login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $controller->login();
-}
-
-if ($uri === '/login' && $_SERVER['REQUEST_METHOD'] === 'GET') {
-    $controller->index();
-    exit;
-}
-
-if ($uri === '/register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $controller->register();
-}
-
-if ($uri === '/register' && $_SERVER['REQUEST_METHOD'] === 'GET') {
-    $controller->showRegister();
-    exit;
-}
-
-if ($uri === '/dashboard') {
-    $controller->dashboard();
-    exit;
-}
-
-if ($uri === '/logout') {
-    $controller->logout();
 }
 
 http_response_code(404);
-echo 'Página não encontrada';
-
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POKELAIQUE</title>
-    <link rel="stylesheet" href="monstrobolso.css">
-</head>
-<body>
-    <h1>POKELAIQUE</h1>
-    <a>
-        <button type="button">Jojar</button>
-    </a>
-    <div class="caixa-texto">
-        <p>
-            Se desafia neste jogo muito bem desenvolvido e com batalhas épicas. 
-            <br>SEJA ESTRATEGISTA E VENÇA O DESAFIO!</br>
-        </p>
-    </div>
-    <div class="imagem">
-        <img src="monstrobolsoUnova.png" alt="Imagem do Monstrobolso">
-    </div>
-</body>
-</html>
+echo 'Página não encontrada.';

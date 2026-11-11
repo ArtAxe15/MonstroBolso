@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Http\JsonResponse;
 use App\Models\User;
 use PDO;
+use Throwable;
 
 class AuthController
 {
@@ -16,158 +18,193 @@ class AuthController
         $this->conn = $conn;
     }
 
-    private function basePath(string $path): string
+    /** Lê o corpo JSON enviado pelo JavaScript. */
+    private function obterDadosJson(): array
     {
-        $scriptName = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
-        $scriptDir = dirname($scriptName);
+        $corpo = file_get_contents('php://input');
+        $dados = json_decode($corpo ?: '', true);
 
-        if ($scriptDir === '/' || $scriptDir === '\\') {
-            return '/index.php' . $path;
+        if (!is_array($dados)) {
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'A solicitação não contém um JSON válido.'
+            ], 400);
         }
 
-        return rtrim($scriptDir, '/') . '/index.php' . $path;
+        return $dados;
     }
 
-    public function index(): void
+    /** Informa ao frontend se existe um usuário autenticado na sessão. */
+    public function session(): void
     {
-        require __DIR__ . '/../Views/auth/login.php';
+        $usuario = $_SESSION['usuario'] ?? null;
+
+        JsonResponse::send([
+            'ok' => true,
+            'autenticado' => is_array($usuario),
+            'usuario' => is_array($usuario) ? [
+                'id_usuario' => (int) ($usuario['id_usuario'] ?? 0),
+                'nome_usuario' => (string) ($usuario['nome_usuario'] ?? '')
+            ] : null
+        ]);
     }
 
-    public function showRegister(): void
-    {
-        require __DIR__ . '/../Views/auth/register.php';
-    }
-
-    public function dashboard(): void
-    {
-        if (empty($_SESSION['usuario'])) {
-            $_SESSION['erro'] = 'Você precisa fazer login para acessar o painel.';
-            header('Location: /login');
-            exit;
-        }
-
-        require __DIR__ . '/../Views/dashboard.php';
-    }
-
+    /** Autentica o usuário sem redirecionar ou renderizar uma página PHP. */
     public function login(): void
     {
-        $nomeUsuario = trim((string) ($_POST['nome_usuario'] ?? ''));
-        $password = (string) ($_POST['senha'] ?? '');
+        $dados = $this->obterDadosJson();
+        $nomeUsuario = trim((string) ($dados['nome_usuario'] ?? ''));
+        $password = (string) ($dados['senha'] ?? '');
 
         if ($nomeUsuario === '' || $password === '') {
-            $_SESSION['erro'] = 'Preencha o nome de usuário e a senha.';
-            header('Location: ' . $this->basePath('/login'));
-            exit;
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'Preencha o nome de usuário e a senha.'
+            ], 422);
         }
 
-        if (mb_strlen($nomeUsuario) < 3 || mb_strlen($nomeUsuario) > 50) {
-            $_SESSION['erro'] = 'O nome de usuário deve ter entre 3 e 50 caracteres.';
-            $_SESSION['nome_usuario'] = $nomeUsuario;
-            header('Location: ' . $this->basePath('/login'));
-            exit;
+        $tamanhoNome = mb_strlen($nomeUsuario);
+        if ($tamanhoNome < 3 || $tamanhoNome > 50) {
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'O nome de usuário deve ter entre 3 e 50 caracteres.'
+            ], 422);
         }
 
         $userModel = new User($this->conn);
         $user = $userModel->findByNomeUsuario($nomeUsuario);
 
-        if (!$user) {
-            $_SESSION['erro'] = 'Usuário não encontrado.';
-            $_SESSION['nome_usuario'] = $nomeUsuario;
-            header('Location: ' . $this->basePath('/login'));
-            exit;
+        if ($user === null || !password_verify($password, $user['senha_hash'])) {
+            // A mensagem não revela se o usuário existe ou se a senha está errada.
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'Nome de usuário ou senha inválidos.'
+            ], 401);
         }
 
-        if (!password_verify($password, $user['senha_hash'])) {
-            $_SESSION['erro'] = 'Senha inválida.';
-            $_SESSION['nome_usuario'] = $nomeUsuario;
-            header('Location: ' . $this->basePath('/login'));
-            exit;
-        }
+        // Troca o identificador da sessão após a autenticação.
+        session_regenerate_id(true);
 
         $_SESSION['usuario'] = [
             'id_usuario' => (int) $user['id_usuario'],
-            'nome_usuario' => $user['nome_usuario'],
+            'nome_usuario' => (string) $user['nome_usuario']
         ];
 
-        $_SESSION['sucesso'] = 'Login realizado com sucesso!';
-        header('Location: ' . $this->basePath('/dashboard'));
-        exit;
+        JsonResponse::send([
+            'ok' => true,
+            'message' => 'Login realizado com sucesso!',
+            'usuario' => $_SESSION['usuario']
+        ]);
     }
 
+    /** Cria uma conta e devolve o resultado em JSON. */
     public function register(): void
     {
-        $nomeUsuario = trim((string) ($_POST['nome_usuario'] ?? ''));
-        $password = (string) ($_POST['senha'] ?? '');
-        $confirmPassword = (string) ($_POST['confirmar_senha'] ?? '');
+        $dados = $this->obterDadosJson();
+        $nomeUsuario = trim((string) ($dados['nome_usuario'] ?? ''));
+        $password = (string) ($dados['senha'] ?? '');
+        $confirmPassword = (string) ($dados['confirmar_senha'] ?? '');
 
         if ($nomeUsuario === '' || $password === '' || $confirmPassword === '') {
-            $_SESSION['erro'] = 'Preencha todos os campos do cadastro.';
-            $_SESSION['nome_usuario'] = $nomeUsuario;
-            header('Location: ' . $this->basePath('/register'));
-            exit;
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'Preencha todos os campos do cadastro.'
+            ], 422);
         }
 
         if (!preg_match('/^[a-zA-Z0-9_-]+$/', $nomeUsuario)) {
-            $_SESSION['erro'] = 'O nome de usuário só pode conter letras, números, underline e hífen.';
-            $_SESSION['nome_usuario'] = $nomeUsuario;
-            header('Location: ' . $this->basePath('/register'));
-            exit;
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'O nome de usuário só pode conter letras, números, underline e hífen.'
+            ], 422);
         }
 
-        if (mb_strlen($nomeUsuario) < 3 || mb_strlen($nomeUsuario) > 50) {
-            $_SESSION['erro'] = 'O nome de usuário deve ter entre 3 e 50 caracteres.';
-            $_SESSION['nome_usuario'] = $nomeUsuario;
-            header('Location: ' . $this->basePath('/register'));
-            exit;
+        $tamanhoNome = mb_strlen($nomeUsuario);
+        if ($tamanhoNome < 3 || $tamanhoNome > 50) {
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'O nome de usuário deve ter entre 3 e 50 caracteres.'
+            ], 422);
         }
 
         if (mb_strlen($password) < 8) {
-            $_SESSION['erro'] = 'A senha deve ter no mínimo 8 caracteres.';
-            header('Location: ' . $this->basePath('/register'));
-            exit;
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'A senha deve ter no mínimo 8 caracteres.'
+            ], 422);
         }
 
         if (!preg_match('/^(?=.*[A-Za-z])(?=.*\d).+$/', $password)) {
-            $_SESSION['erro'] = 'A senha deve conter letras e números.';
-            header('Location: ' . $this->basePath('/register'));
-            exit;
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'A senha deve conter letras e números.'
+            ], 422);
         }
 
         if ($password !== $confirmPassword) {
-            $_SESSION['erro'] = 'As senhas não conferem.';
-            $_SESSION['nome_usuario'] = $nomeUsuario;
-            header('Location: ' . $this->basePath('/register'));
-            exit;
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'As senhas não conferem.'
+            ], 422);
         }
 
         $userModel = new User($this->conn);
 
         if ($userModel->findByNomeUsuario($nomeUsuario) !== null) {
-            $_SESSION['erro'] = 'Este nome de usuário já existe.';
-            $_SESSION['nome_usuario'] = $nomeUsuario;
-            header('Location: ' . $this->basePath('/register'));
-            exit;
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'Este nome de usuário já existe.'
+            ], 409);
         }
 
         $senhaHash = password_hash($password, PASSWORD_DEFAULT);
 
-        if (!$userModel->create($nomeUsuario, $senhaHash)) {
-            $_SESSION['erro'] = 'Não foi possível criar o usuário.';
-            $_SESSION['nome_usuario'] = $nomeUsuario;
-            header('Location: ' . $this->basePath('/register'));
-            exit;
+        try {
+            $criado = $userModel->create($nomeUsuario, $senhaHash);
+        } catch (Throwable $e) {
+            error_log('Erro ao cadastrar usuário: ' . $e->getMessage());
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'Não foi possível concluir o cadastro.'
+            ], 500);
         }
 
-        $_SESSION['sucesso'] = 'Usuário criado com sucesso! Faça login.';
-        header('Location: ' . $this->basePath('/login'));
-        exit;
+        if (!$criado) {
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'Não foi possível criar o usuário.'
+            ], 500);
+        }
+
+        JsonResponse::send([
+            'ok' => true,
+            'message' => 'Conta criada com sucesso! Agora você pode entrar.'
+        ], 201);
     }
 
+    /** Encerra a sessão atual sem recarregar a página. */
     public function logout(): void
     {
         $_SESSION = [];
+
+        if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+            setcookie(
+                session_name(),
+                '',
+                time() - 42000,
+                $params['path'],
+                $params['domain'],
+                (bool) $params['secure'],
+                (bool) $params['httponly']
+            );
+        }
+
         session_destroy();
-        header('Location: ' . $this->basePath('/login'));
-        exit;
+
+        JsonResponse::send([
+            'ok' => true,
+            'message' => 'Você saiu da sua conta.'
+        ]);
     }
 }
