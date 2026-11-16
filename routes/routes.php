@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Controllers\AuthController;
+use App\Controllers\BattleController;
 use App\Controllers\ProfileController;
 use App\Controllers\GameController;
 
@@ -26,4 +27,8 @@ return [
     'GET /api/game/starters' => [GameController::class, 'starters'],
     'POST /api/game/starter' => [GameController::class, 'chooseStarter'],
     'GET /api/game/map' => [GameController::class, 'map'],
+
+    'POST /api/battle/start' => [BattleController::class, 'start'],
+    'GET /api/battle/state' => [BattleController::class, 'state'],
+    'POST /api/battle/turn' => [BattleController::class, 'turn'],
 ];

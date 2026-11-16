@@ -3,7 +3,7 @@
 const appElement = document.querySelector('#app');
 const entryUrl = document.body.dataset.entryUrl.replace(/\/$/, '');
 const entryPath = new URL(entryUrl, window.location.origin).pathname;
-const state = { usuario: null, autenticado: false, perfil: null, perfis: [], jogo: null, excluindo: false };
+const state = { usuario: null, autenticado: false, perfil: null, perfis: [], jogo: null, excluindo: false, batalha: null };
 
 function escaparHtml(valor) {
     return String(valor ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
@@ -185,6 +185,130 @@ function renderizarMapa() {
     appElement.innerHTML = `<main class="game-shell"><header class="game-header"><div class="game-brand">MONSTROBOLSO <span>ROGUEMON</span></div><div class="game-status"><strong>${escaparHtml(jogo.perfil.nome)}</strong><span>₽ ${Number(jogo.perfil.dinheiro).toLocaleString('pt-BR')}</span><button data-acao="perfis">Trocar jornada</button><button data-acao="logout">Sair</button></div></header><div class="game-layout"><aside class="painel-lateral painel-time"><h2>TIME</h2>${teamHtml || '<p>Seu time está vazio.</p>'}</aside><section class="mapa-area"><div class="mapa-titulo"><span>UNOVA</span><strong>Rota inicial</strong></div><div class="mapa-tabuleiro"><svg class="mapa-conexoes" viewBox="0 0 100 100" preserveAspectRatio="none">${svgLinhas}</svg><div class="mapa-inicio" style="left:50%;top:92%">VOCÊ</div>${nos}<div class="mapa-chegada" style="left:50%;top:8%">★</div></div><p class="mapa-legenda">Selecione um treinador para consultar o desafio. As posições são salvas nesta jornada.</p></section><aside class="painel-lateral painel-itens"><h2>ITENS</h2><p>Bolsa vazia</p><h2>PROGRESSO</h2><p>Treinadores derrotados: ${npcs.filter(n => Number(n.derrotado) === 1).length}/${npcs.length}</p><button class="botao botao-secundario" data-acao="perfis">Jornadas</button></aside></div></main>`;
 }
 
+function renderizarBatalha(resposta = null) {
+    const dados = resposta || state.batalha;
+    const estado = dados?.estado || { jogador: { ativo: null, time: [] }, oponente: { ativo: null, time: [] } };
+    const jogador = estado.jogador?.time || [];
+    const oponente = estado.oponente?.time || [];
+    const jogadorAtivo = estado.jogador?.ativo || null;
+    const oponenteAtivo = estado.oponente?.ativo || null;
+    const ataqueJogador = jogadorAtivo ? jogador[jogadorAtivo] : null;
+    const ataqueOponente = oponenteAtivo ? oponente[oponenteAtivo] : null;
+    const itens = Array.isArray(dados?.itens) ? dados.itens : [];
+    const eventos = Array.isArray(dados?.eventos) ? dados.eventos.slice(-8) : [];
+
+    const renderTime = (lado, time, ativoIndex) => time.map((pokemon, index) => {
+        const hpAtual = Number(pokemon.hp || pokemon.hp_atual || 0);
+        const hpMax = Number(pokemon.hp_max || pokemon.hp || 1);
+        const largura = Math.max(0, Math.min(100, (hpAtual / Math.max(1, hpMax)) * 100));
+        const ativo = index === Number(ativoIndex);
+        return `
+            <div class="battle-card ${ativo ? 'is-active' : ''}">
+                <div class="battle-card-top">
+                    <span>${ativo ? 'ATIVO' : 'RESERVA'}</span>
+                    <strong>${escaparHtml(pokemon.nome || 'Pokemon')}</strong>
+                </div>
+                <div class="battle-card-status">
+                    <small>HP ${hpAtual}/${hpMax}</small>
+                    <div class="barra-hp"><i style="width:${largura}%"></i></div>
+                </div>
+            </div>
+        `;
+    }).join('') || '<p>Sem Pokémon.</p>';
+
+    const renderGolpes = () => {
+        if (!ataqueJogador || !Array.isArray(ataqueJogador.golpes)) return '<p>Este Pokémon não possui golpes.</p>';
+        return ataqueJogador.golpes.map((golpe, slot) => `
+            <button class="botao botao-principal batalha-acao" data-acao="atacar" data-slot="${slot}">
+                ${escaparHtml(golpe.nome || `Golpe ${slot + 1}`)}
+            </button>
+        `).join('');
+    };
+
+    const renderItens = () => {
+        if (!itens.length) return '<p>Bolsa vazia.</p>';
+        return itens.map(item => `
+            <button class="botao botao-secundario batalha-item" data-acao="usar-item" data-item-id="${Number(item.id_item)}" data-item-alvo="1">
+                ${escaparHtml(item.nome || 'Item')} (${Number(item.quantidade || 0)})
+            </button>
+        `).join('');
+    };
+
+    const renderEventos = () => eventos.map(ev => `
+        <li>
+            <strong>${escaparHtml(ev.tipo || 'evento')}</strong>
+            <span>${escaparHtml((ev.pokemon || ev.golpe || ev.item || ev.lado || 'Batalha'))}</span>
+        </li>
+    `).join('') || '<li>Sem eventos recentes.</li>';
+
+    appElement.innerHTML = `
+        <main class="battle-shell">
+            <header class="battle-header">
+                <div>
+                    <p class="eyebrow">MONSTROBOLSO</p>
+                    <h1>Batalha ativa</h1>
+                </div>
+                <button class="botao botao-voltar" data-acao="mapa-batalha">Voltar ao mapa</button>
+            </header>
+
+            <section class="battle-viewport">
+                <div class="battle-side">
+                    <h2>Seu time</h2>
+                    ${renderTime('JOGADOR', jogador, jogadorAtivo)}
+                </div>
+                <div class="battle-side enemy">
+                    <h2>Oponente</h2>
+                    ${renderTime('INIMIGO', oponente, oponenteAtivo)}
+                </div>
+            </section>
+
+            <section class="battle-actions">
+                <div class="battle-panel">
+                    <h3>Golpes</h3>
+                    <div class="battle-buttons">
+                        ${renderGolpes()}
+                    </div>
+                </div>
+                <div class="battle-panel">
+                    <h3>Itens</h3>
+                    <div class="battle-buttons">
+                        ${renderItens()}
+                    </div>
+                </div>
+            </section>
+
+            <section class="battle-log">
+                <h3>Últimos eventos</h3>
+                <ul>${renderEventos()}</ul>
+            </section>
+        </main>
+    `;
+}
+
+async function iniciarBatalhaNpc(idNpc, idDesafio = null) {
+    const desafio = Number(idDesafio ?? 1);
+    loading('Preparando a batalha...');
+    const resposta = await requisitarApi('/api/battle/start', {
+        method: 'POST',
+        body: { id_desafio: desafio }
+    });
+    state.batalha = resposta;
+    renderizarBatalha(resposta);
+}
+
+async function executarTurnoBatalha(payload) {
+    const resposta = await requisitarApi('/api/battle/turn', {
+        method: 'POST',
+        body: payload
+    });
+    state.batalha = resposta;
+    renderizarBatalha(resposta);
+    if (resposta.estado?.fim) {
+        const resultado = resposta.estado?.resultado || { status: resposta.estado.fim };
+        setTimeout(() => alert(`Batalha finalizada: ${resultado.status || resposta.estado.fim}`), 120);
+    }
+}
+
 async function navegar(rota, opcoes = {}) {
     const permitidas = ['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map'];
     if (!permitidas.includes(rota)) rota = '/';
@@ -263,7 +387,33 @@ document.addEventListener('click', async ev => {
         const npc = ev.target.closest('[data-npc]');
         if (npc) {
             const item = (state.jogo?.npc || []).find(n => Number(n.id_npc_mapa) === Number(npc.dataset.npc));
-            if (item) alert(Number(item.derrotado) === 1 ? 'Este treinador já foi derrotado.' : 'Treinador do tipo ' + item.tipo_nome + '. A tela e as regras de batalha serão implementadas na próxima etapa.');
+            if (!item) return;
+            if (Number(item.derrotado) === 1) {
+                alert('Este treinador já foi derrotado.');
+                return;
+            }
+            const desafioId = Number(item.ordem || item.id_npc_mapa || 1);
+            await iniciarBatalhaNpc(Number(item.id_npc_mapa), desafioId);
+            return;
+        }
+
+        if (acao === 'mapa-batalha') {
+            state.batalha = null;
+            await carregarMapa();
+            return;
+        }
+
+        if (acao === 'atacar') {
+            const slot = Number(ev.target.closest('[data-slot]')?.dataset.slot ?? -1);
+            await executarTurnoBatalha({ acao: 'golpe', slot });
+            return;
+        }
+
+        if (acao === 'usar-item') {
+            const itemId = Number(ev.target.closest('[data-item-id]')?.dataset.itemId ?? 0);
+            if (!itemId) return;
+            await executarTurnoBatalha({ acao: 'item', id_item: itemId, alvo_posicao: 1 });
+            return;
         }
     } catch (e) { alert(e.message); }
 });
