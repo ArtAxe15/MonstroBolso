@@ -501,3 +501,203 @@ body.tela-batalha { display:block; min-height:100vh; padding:24px 16px; backgrou
 .mapa-chegada[data-desafio] { cursor:pointer; }
 .mapa-chegada[data-desafio]:focus-visible { outline:3px solid #f2d17b; outline-offset:3px; }
 @media(max-width:650px){.battle-teams{grid-template-columns:1fr}.battle-shell{padding:10px}.battle-heading{padding:16px}.battle-pokemon img{flex-basis:54px;width:54px;height:54px}}
+
+
+/* Mapa roguelike: a área do jogo ocupa a janela sem rolagem vertical. */
+body.tela-mapa {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+}
+body.tela-mapa {
+    display: block;
+    padding: 0;
+    background: #77c6ef;
+    background-image: linear-gradient(180deg, #79c9f1 0 35%, #9ed8f1 35% 43%, #4e9ed4 43% 52%, #82b86a 52% 100%);
+    background-attachment: fixed;
+}
+.tela-mapa .app-shell,
+.tela-mapa #app {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+.tela-mapa .app-shell { display: block; }
+.tela-mapa .game-shell {
+    width: min(100%, 1420px);
+    height: 100dvh;
+    min-height: 0;
+    margin: 0 auto;
+    padding: 10px 16px 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.tela-mapa .game-header {
+    flex: 0 0 auto;
+    min-height: 58px;
+    padding: 8px 16px;
+}
+.tela-mapa .game-layout {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(145px, 190px) minmax(360px, 590px) minmax(145px, 190px);
+    justify-content: center;
+    align-items: stretch;
+    gap: 14px;
+    margin-top: 12px;
+}
+.tela-mapa .painel-lateral {
+    min-height: 0;
+    align-self: start;
+    max-height: 100%;
+    overflow: hidden;
+    padding: 12px;
+}
+.tela-mapa .painel-lateral h2 { margin-bottom: 10px; }
+.tela-mapa .mapa-area {
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.tela-mapa .mapa-titulo { flex: 0 0 auto; width: 100%; }
+.tela-mapa .mapa-tabuleiro {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: auto;
+    max-width: 100%;
+    aspect-ratio: .67;
+    border-width: 5px;
+    isolation: isolate;
+}
+.tela-mapa .mapa-conexoes { z-index: 1; }
+.tela-mapa .mapa-conexoes line {
+    stroke: #244d3d;
+    stroke-width: .55;
+    stroke-dasharray: 1.35 1.45;
+    opacity: .86;
+}
+.tela-mapa .mapa-no,
+.tela-mapa .mapa-inicio {
+    position: absolute;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+}
+.tela-mapa .mapa-no {
+    width: 46px;
+    height: 46px;
+    min-height: 46px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border: 2px solid #354c3e;
+    border-radius: 50%;
+    background: #f2eddb;
+    color: #203b31;
+    box-shadow: 2px 3px 0 #254d39;
+    cursor: pointer;
+    transition: transform .12s, filter .12s, opacity .12s;
+}
+.tela-mapa .mapa-no:hover:not(:disabled) {
+    transform: translate(-50%, -50%) scale(1.12);
+    filter: brightness(1.08);
+}
+.tela-mapa .mapa-no:disabled { cursor: not-allowed; }
+.tela-mapa .mapa-no-icone { font-size: 22px; line-height: 1; }
+.tela-mapa .mapa-no small {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 50%;
+    max-width: 100px;
+    transform: translateX(-50%);
+    padding: 2px 4px;
+    border: 1px solid #536c56;
+    border-radius: 3px;
+    background: #f7f1dd;
+    color: #294536;
+    font-size: 9px;
+    line-height: 1.1;
+    white-space: nowrap;
+    text-transform: capitalize;
+    box-shadow: 1px 1px 0 #34533d;
+}
+.tela-mapa .mapa-no.status-bloqueado {
+    opacity: .42;
+    filter: grayscale(1);
+    box-shadow: none;
+}
+.tela-mapa .mapa-no.status-concluido {
+    background: #b9d6a9;
+    opacity: .75;
+    cursor: default;
+}
+.tela-mapa .mapa-no.tipo-treinador { background: #f0dfb5; }
+.tela-mapa .mapa-no.tipo-selvagem { background: #d7edc0; }
+.tela-mapa .mapa-no.tipo-pokebola { background: #f5d6d2; }
+.tela-mapa .mapa-no.tipo-centro { background: #f5d9df; border-color: #91485a; }
+.tela-mapa .mapa-no.tipo-pokemart { background: #f5e3b7; border-color: #8c6c2c; }
+.tela-mapa .mapa-no.tipo-desafio { background: #33415f; color: #fff; border-color: #d5d9e4; }
+.tela-mapa .mapa-no.tipo-desafio .mapa-no-icone { font-size: 24px; }
+.tela-mapa .mapa-inicio {
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border: 2px solid #4c633d;
+    border-radius: 50%;
+    background: #f2d17b;
+    color: #60451c;
+    box-shadow: 2px 3px 0 #254d39;
+}
+.tela-mapa .mapa-inicio span { font-size: 21px; }
+.tela-mapa .mapa-inicio small {
+    position: absolute;
+    top: calc(100% + 2px);
+    padding: 2px 4px;
+    border-radius: 3px;
+    background: #f7f1dd;
+    color: #294536;
+    font-size: 9px;
+    font-weight: 800;
+}
+.tela-mapa .mapa-legenda {
+    flex: 0 0 auto;
+    margin: 7px 0 0;
+    font-size: 11px;
+}
+.tela-mapa .painel-time .mini-pokemon { gap: 5px; margin: 8px 0; font-size: 11px; }
+.tela-mapa .painel-time .mini-pokemon img { width: 38px; height: 38px; }
+.tela-mapa .painel-time .barra-hp { width: 86px; }
+.tela-mapa .painel-itens p { margin: 7px 0 12px; }
+.tela-mapa .game-status button { white-space: nowrap; }
+
+@media (max-width: 900px) {
+    .tela-mapa .game-shell { padding: 8px; }
+    .tela-mapa .game-layout {
+        grid-template-columns: 120px minmax(0, 1fr) 120px;
+        gap: 8px;
+    }
+    .tela-mapa .painel-lateral { padding: 8px; }
+    .tela-mapa .mapa-no { width: 39px; height: 39px; min-height: 39px; }
+    .tela-mapa .mapa-no-icone { font-size: 19px; }
+}
+@media (max-height: 720px) {
+    .tela-mapa .game-shell { padding-top: 6px; padding-bottom: 6px; }
+    .tela-mapa .game-header { min-height: 48px; padding-top: 5px; padding-bottom: 5px; }
+    .tela-mapa .game-layout { margin-top: 7px; }
+    .tela-mapa .mapa-legenda { display: none; }
+    .tela-mapa .painel-lateral { padding: 8px; }
+    .tela-mapa .mapa-no { width: 38px; height: 38px; min-height: 38px; }
+}
+
+@media (max-width: 520px) {
+    .tela-mapa .game-header { align-items: center; flex-direction: row; }
+    .tela-mapa .game-status { gap: 6px; font-size: 11px; }
+    .tela-mapa .game-status button { padding: 6px 7px; font-size: 10px; }
+}

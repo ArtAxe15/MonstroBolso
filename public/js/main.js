@@ -410,18 +410,108 @@ function renderizarMapa() {
     document.body.className = 'tela-mapa';
     const jogo = state.jogo;
     const team = jogo.time || [];
-    const npcs = jogo.npc || [];
-    const linhas = [[0, 1], [0, 2], [1, 3], [2, 3], [3, 4], [3, 5], [3, 6], [3, 7], [4, 8], [5, 8], [5, 9], [6, 9], [7, 9], [8, 10], [9, 10], [10, 11]];
-    const pontos = [[50, 8], [27, 18], [73, 18], [50, 30], [16, 41], [39, 45], [65, 45], [84, 41], [27, 62], [73, 62], [50, 77], [50, 92]];
-    const svgLinhas = linhas.map(([a, b]) => `<line x1="${pontos[a][0]}%" y1="${pontos[a][1]}%" x2="${pontos[b][0]}%" y2="${pontos[b][1]}%" />`).join('');
-    const nos = npcs.map(n => `<button class="mapa-npc ${Number(n.derrotado) === 1 ? 'derrotado' : ''}" style="left:${Number(n.posicao_x) / 10}%;top:${Number(n.posicao_y) / 10}%" data-npc="${Number(n.id_npc_mapa)}" title="Treinador tipo ${escaparHtml(n.tipo_nome)}" ${Number(n.derrotado) === 1 ? 'disabled' : ''}>${Number(n.derrotado) === 1 ? '✓' : '🧢'}<small>${escaparHtml(n.tipo_nome)}</small></button>`).join('');
-    const desafio = jogo.desafio_atual;
-    const noDesafio = desafio
-        ? `<div class="mapa-chegada" style="left:50%;top:8%" data-desafio="${Number(desafio.id_desafio)}" role="button" tabindex="0" title="${escaparHtml(desafio.nome)}" aria-label="Enfrentar ${escaparHtml(desafio.nome)}">★</div>`
-        : '<div class="mapa-chegada" style="left:50%;top:8%" aria-label="Todos os desafios foram concluídos">★</div>';
-    const principal = team[0];
-    const teamHtml = team.map(p => `<div class="mini-pokemon"><img src="${escaparHtml(p.imagem_url || '')}" alt=""><div><strong>${escaparHtml(p.nome_exibicao)}</strong><small>Nv. ${p.nivel}</small><div class="barra-hp"><i style="width:${Math.max(0, Math.min(100, Number(p.hp_percentual)))}%"></i></div></div></div>`).join('');
-    appElement.innerHTML = `<main class="game-shell"><header class="game-header"><div class="game-brand">MONSTROBOLSO <span>ROGUEMON</span></div><div class="game-status"><strong>${escaparHtml(jogo.perfil.nome)}</strong><span>₽ ${Number(jogo.perfil.dinheiro).toLocaleString('pt-BR')}</span><button data-acao="perfis">Trocar jornada</button><button data-acao="logout">Sair</button></div></header><div class="game-layout"><aside class="painel-lateral painel-time"><h2>TIME</h2>${teamHtml || '<p>Seu time está vazio.</p>'}</aside><section class="mapa-area"><div class="mapa-titulo"><span>UNOVA</span><strong>Rota inicial</strong></div><div class="mapa-tabuleiro"><svg class="mapa-conexoes" viewBox="0 0 100 100" preserveAspectRatio="none">${svgLinhas}</svg><div class="mapa-inicio" style="left:50%;top:92%">VOCÊ</div>${nos}${noDesafio}</div><p class="mapa-legenda">Selecione um treinador ou o desafio atual para consultar o encontro. As posições são salvas nesta jornada.</p></section><aside class="painel-lateral painel-itens"><h2>ITENS</h2><p>Bolsa vazia</p><h2>PROGRESSO</h2><p>Treinadores derrotados: ${npcs.filter(n => Number(n.derrotado) === 1).length}/${npcs.length}</p><button class="botao botao-secundario" data-acao="perfis">Jornadas</button></aside></div></main>`;
+    const nos = jogo.nos || [];
+    const conexoes = jogo.conexoes || [];
+
+    const tiposLocal = {
+        TREINADOR: { icone: '🧢', nome: 'Treinador', classe: 'treinador' },
+        SELVAGEM: { icone: '⚔️', nome: 'Selvagem', classe: 'selvagem' },
+        POKEBOLA: { icone: '🔴', nome: 'Pokébola', classe: 'pokebola' },
+        CENTRO_POKEMON: { icone: '✚', nome: 'Centro Pokémon', classe: 'centro' },
+        POKEMART: { icone: '🛒', nome: 'Poké Mart', classe: 'pokemart' },
+        DESAFIO: { icone: '★', nome: 'Desafio', classe: 'desafio' }
+    };
+
+    const porId = new Map(nos.map(no => [Number(no.id_mapa_no), no]));
+    const linhas = conexoes.map(conexao => {
+        const origem = porId.get(Number(conexao.origem));
+        const destino = porId.get(Number(conexao.destino));
+        if (!origem || !destino) return '';
+        return `<line x1="${Number(origem.posicao_x)}" y1="${Number(origem.posicao_y)}" x2="${Number(destino.posicao_x)}" y2="${Number(destino.posicao_y)}" />`;
+    }).join('');
+
+    // O início é visual; dele partem as três primeiras opções da rota.
+    const linhasInicio = nos.filter(no => Number(no.etapa) === 1).map(no =>
+        `<line x1="50" y1="94" x2="${Number(no.posicao_x)}" y2="${Number(no.posicao_y)}" />`
+    ).join('');
+
+    const botoesNos = nos.map(no => {
+        const tipo = tiposLocal[no.tipo_local] || { icone: '?', nome: 'Local', classe: 'desconhecido' };
+        const disponivel = no.status === 'DISPONIVEL';
+        const concluido = no.status === 'CONCLUIDO';
+        let subtitulo = tipo.nome;
+        if (no.tipo_local === 'TREINADOR' && no.tipo_nome) subtitulo = no.tipo_nome;
+
+        const atributosAcao = no.tipo_local === 'TREINADOR'
+            ? `data-no="${Number(no.id_mapa_no)}" data-npc="${Number(no.id_npc_mapa || 0)}"`
+            : no.tipo_local === 'DESAFIO'
+                ? `data-desafio="${Number(jogo.desafio_atual?.id_desafio || 0)}"`
+                : `data-no="${Number(no.id_mapa_no)}"`;
+        const desabilitado = !disponivel
+            || (no.tipo_local === 'TREINADOR' && !Number(no.id_npc_mapa))
+            || (no.tipo_local === 'DESAFIO' && !Number(jogo.desafio_atual?.id_desafio));
+        const icone = concluido ? '✓' : tipo.icone;
+
+        return `<button class="mapa-no tipo-${tipo.classe} status-${String(no.status).toLowerCase()}"
+            style="left:${Number(no.posicao_x)}%;top:${Number(no.posicao_y)}%"
+            ${atributosAcao} ${desabilitado ? 'disabled' : ''}
+            title="${escaparHtml(subtitulo)}" aria-label="${escaparHtml(subtitulo)}${disponivel ? ', disponível' : concluido ? ', concluído' : ', bloqueado'}">
+            <span class="mapa-no-icone">${icone}</span>
+            <small>${escaparHtml(subtitulo)}</small>
+        </button>`;
+    }).join('');
+
+    const teamHtml = team.map(p => `<div class="mini-pokemon">
+        <img src="${escaparHtml(p.imagem_url || '')}" alt="">
+        <div><strong>${escaparHtml(p.nome_exibicao)}</strong><small>Nv. ${Number(p.nivel)}</small>
+        <div class="barra-hp"><i style="width:${Math.max(0, Math.min(100, Number(p.hp_percentual)))}%"></i></div></div>
+    </div>`).join('');
+
+    const etapaAtual = Number(jogo.etapa_atual || 1);
+    const textoEtapa = etapaAtual >= 6 ? 'Desafio de Unova' : `Etapa ${etapaAtual} de 5`;
+    const locaisConcluidos = Number(jogo.progresso?.concluidos || 0);
+    const totalTreinadores = (jogo.npc || []).length;
+    const treinadoresDerrotados = (jogo.npc || []).filter(n => Number(n.derrotado) === 1).length;
+    const desafioAtual = jogo.desafio_atual;
+
+    appElement.innerHTML = `
+        <main class="game-shell">
+            <header class="game-header">
+                <div class="game-brand">MONSTROBOLSO <span>ROGUEMON</span></div>
+                <div class="game-status">
+                    <strong>${escaparHtml(jogo.perfil.nome)}</strong>
+                    <span>₽ ${Number(jogo.perfil.dinheiro).toLocaleString('pt-BR')}</span>
+                    <button data-acao="perfis">Trocar jornada</button>
+                    <button data-acao="logout">Sair</button>
+                </div>
+            </header>
+            <div class="game-layout">
+                <aside class="painel-lateral painel-time">
+                    <h2>TIME</h2>
+                    ${teamHtml || '<p>Seu time está vazio.</p>'}
+                </aside>
+                <section class="mapa-area">
+                    <div class="mapa-titulo"><span>UNOVA</span><strong>${textoEtapa}</strong></div>
+                    <div class="mapa-tabuleiro">
+                        <svg class="mapa-conexoes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                            ${linhasInicio}${linhas}
+                        </svg>
+                        <div class="mapa-inicio" style="left:50%;top:94%"><span>🧢</span><small>INÍCIO</small></div>
+                        ${botoesNos}
+                    </div>
+                    <p class="mapa-legenda">Escolha um caminho para avançar. Os caminhos anteriores não poderão ser revisitados.</p>
+                </section>
+                <aside class="painel-lateral painel-itens">
+                    <h2>ITENS</h2>
+                    <p>Bolsa vazia</p>
+                    <h2>PROGRESSO</h2>
+                    <p>${locaisConcluidos} locais concluídos</p>
+                    <p>Treinadores derrotados: ${treinadoresDerrotados}/${totalTreinadores}</p>
+                    <p>${desafioAtual ? `Próximo objetivo: ${escaparHtml(desafioAtual.nome)}` : 'Todos os desafios concluídos.'}</p>
+                </aside>
+            </div>
+        </main>
+    `;
 }
 
 async function navegar(rota, opcoes = {}) {
@@ -513,6 +603,24 @@ document.addEventListener('click', async ev => {
         if (starter) {
             if (!confirm(`Escolher ${starter.dataset.starter.toUpperCase()} como inicial desta jornada?`)) return;
             await requisitarApi('/api/game/starter', { method: 'POST', body: { nome: starter.dataset.starter } }); await navegar('/map'); return;
+        }
+        const noBotao = ev.target.closest('[data-no]');
+        if (noBotao) {
+            const no = (state.jogo?.nos || []).find(item => Number(item.id_mapa_no) === Number(noBotao.dataset.no));
+            if (!no || no.status !== 'DISPONIVEL') return;
+
+            // Pontos de treinador seguem para o handler de batalha logo abaixo.
+            // Os outros locais permanecem como marcadores até suas ações serem implementadas.
+            if (no.tipo_local !== 'TREINADOR') {
+                const mensagens = {
+                    SELVAGEM: 'Batalha selvagem: ao vencer, os Pokémon da equipe recebem 1 nível e você ganha ₽ 25.',
+                    POKEBOLA: 'Pokébola: este local concederá um Pokémon aleatório.',
+                    CENTRO_POKEMON: 'Centro Pokémon: recupera todo o time antes do desafio.',
+                    POKEMART: 'Poké Mart: permite comprar itens antes do desafio.'
+                };
+                alert(`${mensagens[no.tipo_local] || 'Local da rota.'}\n\nA ação deste local ainda será integrada. O sistema de batalhas existente foi mantido sem alterações.`);
+                return;
+            }
         }
         const npc = ev.target.closest('[data-npc]');
         if (npc) {

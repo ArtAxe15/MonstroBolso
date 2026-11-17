@@ -14,11 +14,6 @@ use Throwable;
 
 final class GameController
 {
-    private const POSICOES_MAPA = [
-        [270, 180], [730, 180], [500, 300],
-        [160, 410], [390, 450], [650, 450], [840, 410],
-        [270, 620], [730, 620], [500, 770]
-    ];
 
     public function __construct(private PDO $conn) {}
 
@@ -127,23 +122,204 @@ final class GameController
 
     private function gerarMapaSeNecessario(int $idPerfil): void
     {
-        $check = $this->conn->prepare('SELECT COUNT(*) FROM npc_mapa WHERE id_perfil = :perfil');
+        $check = $this->conn->prepare(
+            'SELECT COUNT(*) AS total, '
+            . "SUM(CASE WHEN etapa = 1 THEN 1 ELSE 0 END) AS etapa_um, "
+            . "SUM(CASE WHEN etapa = 2 THEN 1 ELSE 0 END) AS etapa_dois, "
+            . "SUM(CASE WHEN etapa = 3 THEN 1 ELSE 0 END) AS etapa_tres, "
+            . "SUM(CASE WHEN etapa = 4 THEN 1 ELSE 0 END) AS etapa_quatro, "
+            . "SUM(CASE WHEN etapa = 5 THEN 1 ELSE 0 END) AS etapa_cinco, "
+            . "SUM(CASE WHEN etapa = 6 AND tipo_local = 'DESAFIO' THEN 1 ELSE 0 END) AS desafio_final "
+            . 'FROM mapa_no WHERE id_perfil = :perfil'
+        );
         $check->execute(['perfil' => $idPerfil]);
-        if ((int) $check->fetchColumn() > 0) return;
+        $mapaExistente = $check->fetch(PDO::FETCH_ASSOC) ?: [];
 
-        $tipos = $this->conn->query('SELECT id_npc_tipo FROM npc_tipo ORDER BY id_npc_tipo')->fetchAll(PDO::FETCH_COLUMN);
-        if (!$tipos) throw new \RuntimeException('Nenhum tipo de treinador NPC foi cadastrado.');
-        $posicoes = self::POSICOES_MAPA;
-        shuffle($tipos);
-        shuffle($posicoes);
+        $checkConexoes = $this->conn->prepare(
+            'SELECT COUNT(*) FROM mapa_conexao mc '
+            . 'INNER JOIN mapa_no mn ON mn.id_mapa_no = mc.id_mapa_no_origem '
+            . 'WHERE mn.id_perfil = :perfil'
+        );
+        $checkConexoes->execute(['perfil' => $idPerfil]);
 
-        $insert = $this->conn->prepare('INSERT INTO npc_mapa (id_perfil, id_npc_tipo, posicao_x, posicao_y, ordem) VALUES (:perfil, :tipo, :x, :y, :ordem)');
-        for ($i = 0; $i < count(self::POSICOES_MAPA); $i++) {
-            $tipo = $tipos[$i % count($tipos)];
-            $insert->execute([
-                'perfil' => $idPerfil, 'tipo' => $tipo,
-                'x' => $posicoes[$i][0], 'y' => $posicoes[$i][1], 'ordem' => $i + 1
+        $checkVinculos = $this->conn->prepare(
+            "SELECT COUNT(*) FROM mapa_no WHERE id_perfil = :perfil "
+            . "AND tipo_local = 'TREINADOR' AND id_npc_mapa IS NOT NULL"
+        );
+        $checkVinculos->execute(['perfil' => $idPerfil]);
+        $quantidadeTreinadores = $this->conn->prepare(
+            "SELECT COUNT(*) FROM mapa_no WHERE id_perfil = :perfil AND tipo_local = 'TREINADOR'"
+        );
+        $quantidadeTreinadores->execute(['perfil' => $idPerfil]);
+
+        // Confere a distribuição visual alinhada: 3 -> 4 -> 3 -> 2 -> 2 -> desafio.
+        // Também valida os vínculos com npc_mapa para manter o combate existente.
+        $mapaAtualizado = (int) ($mapaExistente['total'] ?? 0) === 15
+            && (int) ($mapaExistente['etapa_um'] ?? 0) === 3
+            && (int) ($mapaExistente['etapa_dois'] ?? 0) === 4
+            && (int) ($mapaExistente['etapa_tres'] ?? 0) === 3
+            && (int) ($mapaExistente['etapa_quatro'] ?? 0) === 2
+            && (int) ($mapaExistente['etapa_cinco'] ?? 0) === 2
+            && (int) ($mapaExistente['desafio_final'] ?? 0) === 1
+            && (int) $checkConexoes->fetchColumn() === 20
+            && (int) $checkVinculos->fetchColumn() === (int) $quantidadeTreinadores->fetchColumn();
+        if ($mapaAtualizado) {
+            return;
+        }
+
+        // Ao migrar do mapa antigo, recria somente os pontos da rota e os NPCs
+        // correspondentes. O time, dinheiro, perfil e registros de batalha permanecem.
+        $apagarMapa = $this->conn->prepare('DELETE FROM mapa_no WHERE id_perfil = :perfil');
+        $apagarMapa->execute(['perfil' => $idPerfil]);
+        $apagarNpcsAntigos = $this->conn->prepare('DELETE FROM npc_mapa WHERE id_perfil = :perfil');
+        $apagarNpcsAntigos->execute(['perfil' => $idPerfil]);
+
+        $tiposTreinador = $this->conn->query(
+            'SELECT id_npc_tipo FROM npc_tipo ORDER BY id_npc_tipo'
+        )->fetchAll(PDO::FETCH_COLUMN);
+        if (!$tiposTreinador) {
+            throw new \RuntimeException('Nenhum tipo de treinador NPC foi cadastrado.');
+        }
+
+        // Coordenadas percentuais (x, y), iguais às da referência visual.
+        $etapas = [
+            1 => ['posicoes' => [[14, 79], [50, 79], [86, 79]], 'tipos' => ['TREINADOR', 'SELVAGEM', 'POKEBOLA']],
+            2 => ['posicoes' => [[10, 61], [36, 61], [64, 61], [90, 61]], 'tipos' => ['TREINADOR', 'TREINADOR', 'SELVAGEM', 'POKEBOLA']],
+            3 => ['posicoes' => [[25, 43], [50, 43], [75, 43]], 'tipos' => ['TREINADOR', 'SELVAGEM', 'POKEBOLA']],
+            4 => ['posicoes' => [[36, 30], [64, 30]], 'tipos' => ['TREINADOR', 'SELVAGEM']],
+            5 => ['posicoes' => [[36, 17], [64, 17]], 'tipos' => ['CENTRO_POKEMON', 'POKEMART']],
+            6 => ['posicoes' => [[50, 7]], 'tipos' => ['DESAFIO']],
+        ];
+
+        $insertNpc = $this->conn->prepare(
+            'INSERT INTO npc_mapa (id_perfil, id_npc_tipo, posicao_x, posicao_y, ordem) '
+            . 'VALUES (:perfil, :tipo, :x, :y, :ordem)'
+        );
+        $insertNo = $this->conn->prepare(
+            'INSERT INTO mapa_no '
+            . '(id_perfil, tipo_local, id_npc_tipo, id_npc_mapa, posicao_x, posicao_y, etapa, ordem_no, status) '
+            . 'VALUES (:perfil, :tipo, :npc_tipo, :npc_mapa, :x, :y, :etapa, :ordem, :status)'
+        );
+
+        $ids = [];
+        $ordemNpc = 1;
+        foreach ($etapas as $numeroEtapa => $configuracao) {
+            $tiposLocais = $configuracao['tipos'];
+            shuffle($tiposLocais);
+
+            foreach ($configuracao['posicoes'] as $indice => [$x, $y]) {
+                $tipoLocal = $tiposLocais[$indice];
+                $idNpcTipo = null;
+                $idNpcMapa = null;
+
+                if ($tipoLocal === 'TREINADOR') {
+                    $idNpcTipo = (int) $tiposTreinador[array_rand($tiposTreinador)];
+
+                    // O sistema de batalha atual usa npc_mapa.id_npc_mapa.
+                    // Cada nó de treinador recebe um NPC ligado por FK, sem
+                    // alterar BattleController, BattleService ou seus contratos.
+                    $insertNpc->execute([
+                        'perfil' => $idPerfil,
+                        'tipo' => $idNpcTipo,
+                        'x' => $x * 10,
+                        'y' => $y * 10,
+                        'ordem' => $ordemNpc++,
+                    ]);
+                    $idNpcMapa = (int) $this->conn->lastInsertId();
+                }
+
+                $insertNo->execute([
+                    'perfil' => $idPerfil,
+                    'tipo' => $tipoLocal,
+                    'npc_tipo' => $idNpcTipo,
+                    'npc_mapa' => $idNpcMapa,
+                    'x' => $x,
+                    'y' => $y,
+                    'etapa' => $numeroEtapa,
+                    'ordem' => $indice + 1,
+                    'status' => $numeroEtapa === 1 ? 'DISPONIVEL' : 'BLOQUEADO',
+                ]);
+                $ids[$numeroEtapa][$indice] = (int) $this->conn->lastInsertId();
+            }
+        }
+
+        // Ramificações e convergências da rota, sempre seguindo para cima.
+        $conexoes = [
+            // Início -> primeira fileira (três escolhas).
+            [1, 0, 2, 0], [1, 0, 2, 1],
+            [1, 1, 2, 1], [1, 1, 2, 2],
+            [1, 2, 2, 2], [1, 2, 2, 3],
+
+            // 4 pontos -> 3 pontos.
+            [2, 0, 3, 0],
+            [2, 1, 3, 0], [2, 1, 3, 1],
+            [2, 2, 3, 1], [2, 2, 3, 2],
+            [2, 3, 3, 2],
+
+            // 3 pontos -> 2 pontos.
+            [3, 0, 4, 0],
+            [3, 1, 4, 0], [3, 1, 4, 1],
+            [3, 2, 4, 1],
+
+            // Dois caminhos finais de preparação, Centro ou Poké Mart.
+            [4, 0, 5, 0], [4, 1, 5, 1],
+            [5, 0, 6, 0], [5, 1, 6, 0],
+        ];
+
+        $insertConexao = $this->conn->prepare(
+            'INSERT INTO mapa_conexao (id_mapa_no_origem, id_mapa_no_destino) '
+            . 'VALUES (:origem, :destino)'
+        );
+        foreach ($conexoes as [$etapaOrigem, $indiceOrigem, $etapaDestino, $indiceDestino]) {
+            $insertConexao->execute([
+                'origem' => $ids[$etapaOrigem][$indiceOrigem],
+                'destino' => $ids[$etapaDestino][$indiceDestino],
             ]);
+        }
+    }
+
+    /**
+     * Sincroniza a rota com o estado de derrota já registrado pelo sistema
+     * de encontros. Não inicia nem altera batalhas: apenas reflete npc_mapa.derrotado.
+     */
+    private function sincronizarProgressoMapa(int $idPerfil): void
+    {
+        $consulta = $this->conn->prepare(
+            "SELECT mn.id_mapa_no, mn.etapa "
+            . 'FROM mapa_no mn '
+            . 'INNER JOIN npc_mapa nm ON nm.id_npc_mapa = mn.id_npc_mapa '
+            . "WHERE mn.id_perfil = :perfil AND mn.tipo_local = 'TREINADOR' "
+            . "AND nm.derrotado = 1 AND mn.status = 'DISPONIVEL'"
+        );
+        $consulta->execute(['perfil' => $idPerfil]);
+        $concluidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($concluidos as $no) {
+            $concluir = $this->conn->prepare(
+                "UPDATE mapa_no SET status = 'CONCLUIDO', concluido_em = CURRENT_TIMESTAMP() "
+                . 'WHERE id_mapa_no = :no AND id_perfil = :perfil'
+            );
+            $concluir->execute(['no' => (int) $no['id_mapa_no'], 'perfil' => $idPerfil]);
+
+            $ignorarAlternativas = $this->conn->prepare(
+                "UPDATE mapa_no SET status = 'IGNORADO' "
+                . "WHERE id_perfil = :perfil AND etapa = :etapa AND status = 'DISPONIVEL' "
+                . 'AND id_mapa_no <> :no'
+            );
+            $ignorarAlternativas->execute([
+                'perfil' => $idPerfil,
+                'etapa' => (int) $no['etapa'],
+                'no' => (int) $no['id_mapa_no'],
+            ]);
+
+            $liberar = $this->conn->prepare(
+                "UPDATE mapa_no destino "
+                . 'INNER JOIN mapa_conexao conexao ON conexao.id_mapa_no_destino = destino.id_mapa_no '
+                . "SET destino.status = 'DISPONIVEL' "
+                . 'WHERE conexao.id_mapa_no_origem = :no AND destino.id_perfil = :perfil '
+                . "AND destino.status = 'BLOQUEADO'"
+            );
+            $liberar->execute(['no' => (int) $no['id_mapa_no'], 'perfil' => $idPerfil]);
         }
     }
 
@@ -159,9 +335,12 @@ final class GameController
         try {
             $this->conn->beginTransaction();
             $this->gerarMapaSeNecessario($idPerfil);
+            $this->sincronizarProgressoMapa($idPerfil);
             $this->conn->commit();
         } catch (Throwable $e) {
-            if ($this->conn->inTransaction()) $this->conn->rollBack();
+            if ($this->conn->inTransaction()) {
+                $this->conn->rollBack();
+            }
             throw $e;
         }
 
@@ -169,18 +348,73 @@ final class GameController
         $perfilStmt->execute(['perfil' => $idPerfil]);
         $perfil = $perfilStmt->fetch();
 
-        $teamStmt = $this->conn->prepare('SELECT id_pokemon_time, nome_especie, nome_exibicao, imagem_url, nivel, hp_atual, hp_max, hp_percentual, status FROM vw_time_pokemon WHERE id_perfil = :perfil ORDER BY posicao');
+        $teamStmt = $this->conn->prepare(
+            'SELECT id_pokemon_time, nome_especie, nome_exibicao, imagem_url, nivel, '
+            . 'hp_atual, hp_max, hp_percentual, status '
+            . 'FROM vw_time_pokemon WHERE id_perfil = :perfil ORDER BY posicao'
+        );
         $teamStmt->execute(['perfil' => $idPerfil]);
 
-        $npcStmt = $this->conn->prepare('SELECT nm.id_npc_mapa, nm.posicao_x, nm.posicao_y, nm.ordem, nm.derrotado, nt.id_npc_tipo, t.nome AS tipo_nome, nt.descricao FROM npc_mapa nm JOIN npc_tipo nt ON nt.id_npc_tipo = nm.id_npc_tipo JOIN tipo t ON t.id_tipo = nt.id_tipo WHERE nm.id_perfil = :perfil ORDER BY nm.ordem');
-        $npcStmt->execute(['perfil' => $idPerfil]);
+        $nosStmt = $this->conn->prepare(
+            'SELECT mn.id_mapa_no, mn.tipo_local, mn.posicao_x, mn.posicao_y, mn.etapa, '
+            . 'mn.ordem_no, mn.status, mn.id_npc_mapa, '
+            . 'nm.derrotado, nt.id_npc_tipo, t.nome AS tipo_nome, nt.descricao AS tipo_descricao '
+            . 'FROM mapa_no mn '
+            . 'LEFT JOIN npc_mapa nm ON nm.id_npc_mapa = mn.id_npc_mapa '
+            . 'LEFT JOIN npc_tipo nt ON nt.id_npc_tipo = mn.id_npc_tipo '
+            . 'LEFT JOIN tipo t ON t.id_tipo = nt.id_tipo '
+            . 'WHERE mn.id_perfil = :perfil ORDER BY mn.etapa, mn.ordem_no'
+        );
+        $nosStmt->execute(['perfil' => $idPerfil]);
+        $nos = $nosStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $conexoesStmt = $this->conn->prepare(
+            'SELECT mc.id_mapa_no_origem AS origem, mc.id_mapa_no_destino AS destino '
+            . 'FROM mapa_conexao mc '
+            . 'INNER JOIN mapa_no mn ON mn.id_mapa_no = mc.id_mapa_no_origem '
+            . 'WHERE mn.id_perfil = :perfil'
+        );
+        $conexoesStmt->execute(['perfil' => $idPerfil]);
+        $conexoes = $conexoesStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Mantém o formato npc que a abertura de batalha já utiliza.
+        $npc = [];
+        foreach ($nos as $no) {
+            if ($no['id_npc_mapa'] !== null) {
+                $npc[] = [
+                    'id_npc_mapa' => (int) $no['id_npc_mapa'],
+                    'posicao_x' => (int) $no['posicao_x'] * 10,
+                    'posicao_y' => (int) $no['posicao_y'] * 10,
+                    'ordem' => (int) $no['ordem_no'],
+                    'derrotado' => (int) ($no['derrotado'] ?? 0),
+                    'id_npc_tipo' => (int) $no['id_npc_tipo'],
+                    'tipo_nome' => $no['tipo_nome'],
+                    'descricao' => $no['tipo_descricao'],
+                ];
+            }
+        }
+
         $estadoDesafios = (new MontadorTimeAdversario($this->conn))->obterEstadoDoPerfil($idPerfil);
+        $etapasDisponiveis = array_values(array_filter(
+            array_map(static fn(array $no): int => $no['status'] === 'DISPONIVEL' ? (int) $no['etapa'] : 99, $nos),
+            static fn(int $etapa): bool => $etapa !== 99
+        ));
+        $etapaAtual = $etapasDisponiveis === [] ? 6 : min($etapasDisponiveis);
+        $concluidos = count(array_filter($nos, static fn(array $no): bool => $no['status'] === 'CONCLUIDO'));
 
         JsonResponse::send([
             'ok' => true,
-            'perfil' => ['id_perfil' => $idPerfil, 'nome' => $perfil['nome'], 'dinheiro' => (int) $perfil['dinheiro']],
+            'perfil' => [
+                'id_perfil' => $idPerfil,
+                'nome' => $perfil['nome'],
+                'dinheiro' => (int) $perfil['dinheiro'],
+            ],
             'time' => $teamStmt->fetchAll(),
-            'npc' => $npcStmt->fetchAll(),
+            'npc' => $npc,
+            'nos' => $nos,
+            'conexoes' => $conexoes,
+            'progresso' => ['concluidos' => $concluidos, 'total' => count($nos)],
+            'etapa_atual' => $etapaAtual,
             'area_atual' => $estadoDesafios['area_atual'],
             'desafio_atual' => $estadoDesafios['desafio_atual'],
         ]);
