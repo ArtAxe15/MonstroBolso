@@ -3,7 +3,7 @@
 const appElement = document.querySelector('#app');
 const entryUrl = document.body.dataset.entryUrl.replace(/\/$/, '');
 const entryPath = new URL(entryUrl, window.location.origin).pathname;
-const state = { usuario: null, autenticado: false, perfil: null, perfis: [], jogo: null, excluindo: false };
+const state = { usuario: null, autenticado: false, perfil: null, perfis: [], jogo: null, excluindo: false, encounterSelection: null, encounter: null };
 
 function escaparHtml(valor) {
     return String(valor ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
@@ -171,6 +171,80 @@ async function carregarMapa() {
     state.perfil = dados.perfil;
     renderizarMapa();
 }
+
+async function abrirPreBatalha() {
+    if (!state.encounterSelection) {
+        await navegar('/map', { substituir: true });
+        return;
+    }
+
+    loading('Preparando o encontro...');
+    const [chave, valor] = Object.entries(state.encounterSelection)[0];
+    const parametros = new URLSearchParams({ [chave]: String(valor) });
+    state.encounter = await requisitarApi(`/api/game/encounter?${parametros.toString()}`);
+    renderizarPreBatalha();
+}
+
+function renderizarPreBatalha() {
+    const encontro = state.encounter;
+    const timeJogador = state.jogo?.time || [];
+    const timeAdversario = encontro.time_adversario || [];
+    const titulo = encontro.tipo_encontro === 'desafio'
+        ? encontro.desafio.nome
+        : `Treinador tipo ${encontro.treinador.tipo_nome}`;
+    const jogadorHtml = timeJogador.map(p => renderizarPokemonPreBatalha(p, true)).join('');
+    const adversarioHtml = timeAdversario.map(p => renderizarPokemonPreBatalha(p, false)).join('');
+
+    document.body.className = 'tela-batalha';
+    appElement.innerHTML = `
+        <main class="battle-shell">
+            <header class="game-header">
+                <div class="game-brand">MONSTROBOLSO <span>PRÉ-BATALHA</span></div>
+                <strong>${escaparHtml(state.perfil?.nome || '')}</strong>
+            </header>
+            <section class="battle-heading">
+                <p class="eyebrow">ENCONTRO</p>
+                <h1>${escaparHtml(titulo)}</h1>
+                <p>Área ${escaparHtml(encontro.area_atual)}</p>
+            </section>
+            <div class="battle-teams">
+                <section class="battle-panel">
+                    <h2>SEU TIME</h2>
+                    ${jogadorHtml || '<p class="battle-empty">Nenhum Pokémon no time.</p>'}
+                </section>
+                <section class="battle-panel">
+                    <h2>TIME ADVERSÁRIO</h2>
+                    ${adversarioHtml || '<p class="battle-empty">Nenhum Pokémon cadastrado.</p>'}
+                </section>
+            </div>
+            <p class="battle-notice">Esta é somente a prévia do encontro. As regras e o motor de batalha serão implementados na próxima etapa.</p>
+            <button class="botao botao-voltar" data-acao="voltar-mapa">Voltar ao mapa</button>
+        </main>
+    `;
+}
+
+function renderizarPokemonPreBatalha(pokemon, jogador) {
+    const nome = jogador ? pokemon.nome_exibicao : pokemon.nome;
+    const detalhes = [`Nv. ${escaparHtml(pokemon.nivel)}`];
+
+    if (!jogador) {
+        detalhes.unshift(`Tipos: ${escaparHtml(pokemon.tipos || 'Tipo desconhecido')}`);
+        detalhes.push(`Ordem ${escaparHtml(pokemon.ordem)}`);
+        if (pokemon.item) detalhes.push(`Item: ${escaparHtml(pokemon.item)}`);
+        if (pokemon.golpe_status) detalhes.push(`Golpe de status: ${escaparHtml(pokemon.golpe_status)}`);
+    }
+
+    return `
+        <article class="battle-pokemon">
+            <img src="${escaparHtml(pokemon.imagem_url || '')}" alt="${escaparHtml(nome || '')}">
+            <div>
+                <strong>${escaparHtml(nome || 'Pokémon')}</strong>
+                ${detalhes.map(detalhe => `<small>${detalhe}</small>`).join('')}
+            </div>
+        </article>
+    `;
+}
+
 function renderizarMapa() {
     document.body.className = 'tela-mapa';
     const jogo = state.jogo;
@@ -179,14 +253,18 @@ function renderizarMapa() {
     const linhas = [[0, 1], [0, 2], [1, 3], [2, 3], [3, 4], [3, 5], [3, 6], [3, 7], [4, 8], [5, 8], [5, 9], [6, 9], [7, 9], [8, 10], [9, 10], [10, 11]];
     const pontos = [[50, 8], [27, 18], [73, 18], [50, 30], [16, 41], [39, 45], [65, 45], [84, 41], [27, 62], [73, 62], [50, 77], [50, 92]];
     const svgLinhas = linhas.map(([a, b]) => `<line x1="${pontos[a][0]}%" y1="${pontos[a][1]}%" x2="${pontos[b][0]}%" y2="${pontos[b][1]}%" />`).join('');
-    const nos = npcs.map(n => `<button class="mapa-npc ${Number(n.derrotado) === 1 ? 'derrotado' : ''}" style="left:${Number(n.posicao_x) / 10}%;top:${Number(n.posicao_y) / 10}%" data-npc="${Number(n.id_npc_mapa)}" title="Treinador tipo ${escaparHtml(n.tipo_nome)}">${Number(n.derrotado) === 1 ? '✓' : '🧢'}<small>${escaparHtml(n.tipo_nome)}</small></button>`).join('');
+    const nos = npcs.map(n => `<button class="mapa-npc ${Number(n.derrotado) === 1 ? 'derrotado' : ''}" style="left:${Number(n.posicao_x) / 10}%;top:${Number(n.posicao_y) / 10}%" data-npc="${Number(n.id_npc_mapa)}" title="Treinador tipo ${escaparHtml(n.tipo_nome)}" ${Number(n.derrotado) === 1 ? 'disabled' : ''}>${Number(n.derrotado) === 1 ? '✓' : '🧢'}<small>${escaparHtml(n.tipo_nome)}</small></button>`).join('');
+    const desafio = jogo.desafio_atual;
+    const noDesafio = desafio
+        ? `<div class="mapa-chegada" style="left:50%;top:8%" data-desafio="${Number(desafio.id_desafio)}" role="button" tabindex="0" title="${escaparHtml(desafio.nome)}" aria-label="Enfrentar ${escaparHtml(desafio.nome)}">★</div>`
+        : '<div class="mapa-chegada" style="left:50%;top:8%" aria-label="Todos os desafios foram concluídos">★</div>';
     const principal = team[0];
     const teamHtml = team.map(p => `<div class="mini-pokemon"><img src="${escaparHtml(p.imagem_url || '')}" alt=""><div><strong>${escaparHtml(p.nome_exibicao)}</strong><small>Nv. ${p.nivel}</small><div class="barra-hp"><i style="width:${Math.max(0, Math.min(100, Number(p.hp_percentual)))}%"></i></div></div></div>`).join('');
-    appElement.innerHTML = `<main class="game-shell"><header class="game-header"><div class="game-brand">MONSTROBOLSO <span>ROGUEMON</span></div><div class="game-status"><strong>${escaparHtml(jogo.perfil.nome)}</strong><span>₽ ${Number(jogo.perfil.dinheiro).toLocaleString('pt-BR')}</span><button data-acao="perfis">Trocar jornada</button><button data-acao="logout">Sair</button></div></header><div class="game-layout"><aside class="painel-lateral painel-time"><h2>TIME</h2>${teamHtml || '<p>Seu time está vazio.</p>'}</aside><section class="mapa-area"><div class="mapa-titulo"><span>UNOVA</span><strong>Rota inicial</strong></div><div class="mapa-tabuleiro"><svg class="mapa-conexoes" viewBox="0 0 100 100" preserveAspectRatio="none">${svgLinhas}</svg><div class="mapa-inicio" style="left:50%;top:92%">VOCÊ</div>${nos}<div class="mapa-chegada" style="left:50%;top:8%">★</div></div><p class="mapa-legenda">Selecione um treinador para consultar o desafio. As posições são salvas nesta jornada.</p></section><aside class="painel-lateral painel-itens"><h2>ITENS</h2><p>Bolsa vazia</p><h2>PROGRESSO</h2><p>Treinadores derrotados: ${npcs.filter(n => Number(n.derrotado) === 1).length}/${npcs.length}</p><button class="botao botao-secundario" data-acao="perfis">Jornadas</button></aside></div></main>`;
+    appElement.innerHTML = `<main class="game-shell"><header class="game-header"><div class="game-brand">MONSTROBOLSO <span>ROGUEMON</span></div><div class="game-status"><strong>${escaparHtml(jogo.perfil.nome)}</strong><span>₽ ${Number(jogo.perfil.dinheiro).toLocaleString('pt-BR')}</span><button data-acao="perfis">Trocar jornada</button><button data-acao="logout">Sair</button></div></header><div class="game-layout"><aside class="painel-lateral painel-time"><h2>TIME</h2>${teamHtml || '<p>Seu time está vazio.</p>'}</aside><section class="mapa-area"><div class="mapa-titulo"><span>UNOVA</span><strong>Rota inicial</strong></div><div class="mapa-tabuleiro"><svg class="mapa-conexoes" viewBox="0 0 100 100" preserveAspectRatio="none">${svgLinhas}</svg><div class="mapa-inicio" style="left:50%;top:92%">VOCÊ</div>${nos}${noDesafio}</div><p class="mapa-legenda">Selecione um treinador ou o desafio atual para consultar o encontro. As posições são salvas nesta jornada.</p></section><aside class="painel-lateral painel-itens"><h2>ITENS</h2><p>Bolsa vazia</p><h2>PROGRESSO</h2><p>Treinadores derrotados: ${npcs.filter(n => Number(n.derrotado) === 1).length}/${npcs.length}</p><button class="botao botao-secundario" data-acao="perfis">Jornadas</button></aside></div></main>`;
 }
 
 async function navegar(rota, opcoes = {}) {
-    const permitidas = ['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map'];
+    const permitidas = ['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map', '/battle'];
     if (!permitidas.includes(rota)) rota = '/';
     if (!state.autenticado && !['/', '/login', '/register'].includes(rota)) rota = '/login';
     if (state.autenticado && ['/', '/login', '/register'].includes(rota)) rota = '/dashboard';
@@ -197,13 +275,16 @@ async function navegar(rota, opcoes = {}) {
         else if (rota === '/profiles') await carregarPerfis();
         else if (rota === '/starter') await abrirStarter();
         else if (rota === '/map') await carregarMapa();
+        else if (rota === '/battle') await abrirPreBatalha();
         else renderizarLogin(opcoes.mensagem || null);
     } catch (e) {
         if (e.message.includes('sessão') || e.message.includes('Selecione uma jornada')) {
             state.perfil = null;
             await navegar('/profiles', { substituir: true, mensagem: { texto: e.message, tipo: 'erro' } });
         } else {
-            appElement.innerHTML = `<main class="loading-card">${mensagem(e.message, 'erro')}<button class="botao botao-principal" data-acao="perfis">Voltar</button></main>`;
+            const acaoVoltar = rota === '/battle' ? 'voltar-mapa' : 'perfis';
+            const textoVoltar = rota === '/battle' ? 'Voltar ao mapa' : 'Voltar';
+            appElement.innerHTML = `<main class="loading-card">${mensagem(e.message, 'erro')}<button class="botao botao-principal" data-acao="${acaoVoltar}">${textoVoltar}</button></main>`;
         }
     }
 }
@@ -214,7 +295,7 @@ async function verificarSessaoInicial() {
         const dados = await requisitarApi('/api/session');
         state.autenticado = dados.autenticado === true; state.usuario = dados.usuario || null;
         let rota = rotaAtual();
-        if (!['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map'].includes(rota)) rota = '/';
+        if (!['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map', '/battle'].includes(rota)) rota = '/';
         await navegar(rota, { substituir: true });
     } catch (e) { state.autenticado = false; state.usuario = null; await navegar('/login', { substituir: true, mensagem: { texto: e.message, tipo: 'erro' } }); }
 }
@@ -237,13 +318,19 @@ document.addEventListener('click', async ev => {
     try {
         if (acao === 'jogar') { await navegar('/profiles'); return; }
         if (acao === 'dashboard') { await navegar('/dashboard'); return; }
-        if (acao === 'perfis') { state.perfil = null; await navegar('/profiles'); return; }
+        if (acao === 'perfis') { state.perfil = null; state.encounterSelection = null; state.encounter = null; await navegar('/profiles'); return; }
+        if (acao === 'voltar-mapa') {
+            state.encounterSelection = null;
+            state.encounter = null;
+            await navegar('/map');
+            return;
+        }
         if (acao === 'nova-jornada') {
             const nome = prompt('Qual será o nome desta jornada?'); if (nome === null) return;
             const r = await requisitarApi('/api/profiles', { method: 'POST', body: { nome } }); state.perfil = { id_perfil: r.id_perfil, nome }; await navegar('/starter'); return;
         }
         if (acao === 'modo-excluir') { state.excluindo = !state.excluindo; renderizarPerfis(); return; }
-        if (acao === 'logout') { await requisitarApi('/api/logout', { method: 'POST' }); state.autenticado = false; state.usuario = null; state.perfil = null; state.jogo = null; await navegar('/login', { mensagem: { texto: 'Você saiu da sua conta.', tipo: 'sucesso' } }); return; }
+        if (acao === 'logout') { await requisitarApi('/api/logout', { method: 'POST' }); state.autenticado = false; state.usuario = null; state.perfil = null; state.jogo = null; state.encounterSelection = null; state.encounter = null; await navegar('/login', { mensagem: { texto: 'Você saiu da sua conta.', tipo: 'sucesso' } }); return; }
         const perfilCard = ev.target.closest('[data-perfil-selecionar]');
         if (perfilCard) {
             const id = Number(perfilCard.dataset.perfilSelecionar);
@@ -253,7 +340,7 @@ document.addEventListener('click', async ev => {
                 await requisitarApi('/api/profiles/delete', { method: 'POST', body: { id_perfil: id } }); await carregarPerfis(); return;
             }
             const r = await requisitarApi('/api/profiles/select', { method: 'POST', body: { id_perfil: id } });
-            state.perfil = r.perfil || null; await navegar(r.proxima_etapa === 'starter' ? '/starter' : '/map'); return;
+            state.perfil = r.perfil || null; state.encounterSelection = null; state.encounter = null; await navegar(r.proxima_etapa === 'starter' ? '/starter' : '/map'); return;
         }
         const starter = ev.target.closest('[data-starter]');
         if (starter) {
@@ -263,9 +350,25 @@ document.addEventListener('click', async ev => {
         const npc = ev.target.closest('[data-npc]');
         if (npc) {
             const item = (state.jogo?.npc || []).find(n => Number(n.id_npc_mapa) === Number(npc.dataset.npc));
-            if (item) alert(Number(item.derrotado) === 1 ? 'Este treinador já foi derrotado.' : 'Treinador do tipo ' + item.tipo_nome + '. A tela e as regras de batalha serão implementadas na próxima etapa.');
+            if (item && Number(item.derrotado) !== 1) {
+                state.encounterSelection = { id_npc_mapa: Number(item.id_npc_mapa) };
+                await navegar('/battle');
+            }
+            return;
+        }
+        const desafio = ev.target.closest('[data-desafio]');
+        if (desafio) {
+            state.encounterSelection = { id_desafio: Number(desafio.dataset.desafio) };
+            await navegar('/battle');
         }
     } catch (e) { alert(e.message); }
+});
+document.addEventListener('keydown', ev => {
+    if (ev.key !== 'Enter' && ev.key !== ' ') return;
+    const desafio = ev.target.closest('[data-desafio]');
+    if (!desafio) return;
+    ev.preventDefault();
+    desafio.click();
 });
 window.addEventListener('popstate', () => navegar(rotaAtual(), { atualizarUrl: false }));
 verificarSessaoInicial();

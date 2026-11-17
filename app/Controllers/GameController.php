@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Http\JsonResponse;
+use App\Models\Encontro;
 use PDO;
+use App\Services\MontadorTimeAdversario;
 use Throwable;
 
 final class GameController
@@ -181,12 +183,114 @@ final class GameController
 
         $npcStmt = $this->conn->prepare('SELECT nm.id_npc_mapa, nm.posicao_x, nm.posicao_y, nm.ordem, nm.derrotado, nt.id_npc_tipo, t.nome AS tipo_nome, nt.descricao FROM npc_mapa nm JOIN npc_tipo nt ON nt.id_npc_tipo = nm.id_npc_tipo JOIN tipo t ON t.id_tipo = nt.id_tipo WHERE nm.id_perfil = :perfil ORDER BY nm.ordem');
         $npcStmt->execute(['perfil' => $idPerfil]);
+        $estadoDesafios = (new MontadorTimeAdversario($this->conn))->obterEstadoDoPerfil($idPerfil);
 
         JsonResponse::send([
             'ok' => true,
             'perfil' => ['id_perfil' => $idPerfil, 'nome' => $perfil['nome'], 'dinheiro' => (int) $perfil['dinheiro']],
             'time' => $teamStmt->fetchAll(),
-            'npc' => $npcStmt->fetchAll()
+            'npc' => $npcStmt->fetchAll(),
+            'area_atual' => $estadoDesafios['area_atual'],
+            'desafio_atual' => $estadoDesafios['desafio_atual'],
+        ]);
+    }
+
+    public function encounter(): void
+    {
+        $idPerfil = $this->perfilAtivo();
+        $temNpc = array_key_exists('id_npc_mapa', $_GET);
+        $temDesafio = array_key_exists('id_desafio', $_GET);
+        if ($temNpc === $temDesafio) {
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'Informe somente um id_npc_mapa ou id_desafio válido.',
+            ], 422);
+        }
+
+        $chaveId = $temNpc ? 'id_npc_mapa' : 'id_desafio';
+        $valorId = $_GET[$chaveId];
+        if (!is_string($valorId) || !ctype_digit($valorId) || (int) $valorId <= 0) {
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'O identificador do encontro é inválido.',
+            ], 422);
+        }
+
+        $id = (int) $valorId;
+        $montador = new MontadorTimeAdversario($this->conn);
+        $estadoDesafios = $montador->obterEstadoDoPerfil($idPerfil);
+        $area = $estadoDesafios['area_atual'];
+        $encontroModel = new Encontro($this->conn);
+
+        if ($temNpc) {
+            $npc = $encontroModel->encontrarDoPerfil($id, $idPerfil);
+            if ($npc === null) {
+                JsonResponse::send([
+                    'ok' => false,
+                    'message' => 'Treinador não encontrado nesta jornada.',
+                ], 404);
+            }
+            if ((int) $npc['derrotado'] === 1) {
+                JsonResponse::send([
+                    'ok' => false,
+                    'message' => 'Este treinador já foi derrotado.',
+                ], 409);
+            }
+            $limitesVerticais = $encontroModel->encontrarLimitesVerticaisDoPerfil($idPerfil);
+            if ($limitesVerticais === null) {
+                throw new \RuntimeException('Não há posições de treinador cadastradas nesta jornada.');
+            }
+
+            JsonResponse::send([
+                'ok' => true,
+                'area_atual' => $area,
+                'tipo_encontro' => 'treinador',
+                'treinador' => [
+                    'id_npc_mapa' => (int) $npc['id_npc_mapa'],
+                    'tipo_nome' => $npc['tipo_nome'],
+                    'descricao' => $npc['descricao'],
+                ],
+                'time_adversario' => $montador->montarTimeTreinador(
+                    (int) $npc['id_npc_mapa'],
+                    (int) $npc['id_npc_tipo'],
+                    $area,
+                    (int) $npc['posicao_y'],
+                    $estadoDesafios['desafio_atual'],
+                    $limitesVerticais
+                ),
+            ]);
+        }
+
+        $desafio = $encontroModel->encontrarPorId($id);
+        if ($desafio === null) {
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'Desafio não encontrado.',
+            ], 404);
+        }
+
+        $desafioAtual = $encontroModel->encontrarAtual($idPerfil);
+        if (
+            $desafioAtual === null
+            || (int) $desafioAtual['id_desafio'] !== (int) $desafio['id_desafio']
+        ) {
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'Somente o desafio atual pode ser enfrentado.',
+            ], 409);
+        }
+
+        $time = $encontroModel->encontrarPokemon($id);
+        if ($time === []) {
+            throw new \RuntimeException('O desafio atual não possui Pokémon cadastrado.');
+        }
+
+        JsonResponse::send([
+            'ok' => true,
+            'area_atual' => $area,
+            'tipo_encontro' => 'desafio',
+            'desafio' => $desafio,
+            'time_adversario' => $time,
         ]);
     }
 }

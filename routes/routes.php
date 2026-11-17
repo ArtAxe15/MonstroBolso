@@ -26,4 +26,5 @@ return [
     'GET /api/game/starters' => [GameController::class, 'starters'],
     'POST /api/game/starter' => [GameController::class, 'chooseStarter'],
     'GET /api/game/map' => [GameController::class, 'map'],
+    'GET /api/game/encounter' => [GameController::class, 'encounter'],
 ];

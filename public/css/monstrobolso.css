@@ -443,3 +443,24 @@ body.tela-mapa { display:block; min-height:100vh; padding:0; background:#77c6ef;
 .mapa-npc,.mapa-inicio,.mapa-chegada { position:absolute; z-index:2; transform:translate(-50%,-50%); }.mapa-npc { width:42px; min-height:42px; border:2px solid #394f44; border-radius:50%; background:#eee4c8; font-size:20px; cursor:pointer; box-shadow:2px 3px 0 #254d39; }.mapa-npc small { position:absolute; top:100%; left:50%; transform:translateX(-50%); padding:2px 4px; border-radius:3px; background:#f4f0dc; color:#344a3a; font-size:9px; white-space:nowrap; text-transform:capitalize; }.mapa-npc.derrotado { background:#b9c8b4; opacity:.55; }.mapa-inicio { padding:7px 10px; border:2px solid #4c633d; border-radius:8px; background:#f2d17b; color:#60451c; font-size:10px; font-weight:900; }.mapa-chegada { width:34px; height:34px; display:grid; place-items:center; border-radius:50%; background:#33415f; color:#fff; font-size:20px; }.mapa-legenda { color:#f4faee; text-align:center; font-size:12px; text-shadow:1px 1px 2px #244b38; }
 @media(max-width:850px){.game-layout{grid-template-columns:1fr}.painel-lateral{min-height:0}.painel-time{order:2}.mapa-area{order:1}.painel-itens{order:3}.mapa-tabuleiro{max-height:900px}.game-status{flex-wrap:wrap;justify-content:flex-end}.perfis-grid,.starter-grid{grid-template-columns:1fr}.selecao-shell,.starter-shell{padding:22px 16px}}
 @media(max-width:520px){.jogo-topo,.game-header{align-items:flex-start;flex-direction:column}.game-status{justify-content:flex-start}.perfil-card{min-height:150px}.mapa-npc{width:34px;min-height:34px;font-size:16px}}
+
+body.tela-batalha { display:block; min-height:100vh; padding:24px 16px; background:#77c6ef; background-image:linear-gradient(180deg,#79c9f1 0 35%,#9ed8f1 35% 43%,#4e9ed4 43% 52%,#82b86a 52% 100%); background-attachment:fixed; }
+.tela-batalha .app-shell { display:block; }
+.battle-shell { width:min(100%,1000px); margin:0 auto; padding:14px; }
+.battle-heading { margin:24px auto; padding:20px; border:2px solid #263b4c; background:#f3efe3; box-shadow:4px 4px 0 #263b4c; text-align:center; }
+.battle-heading h1 { margin:0 0 8px; color:#1c3554; text-transform:capitalize; }
+.battle-heading p:last-child { margin:0; color:#61738a; font-weight:700; }
+.battle-teams { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+.battle-panel { min-width:0; padding:16px; border:2px solid #263b4c; background:#f3efe3; box-shadow:4px 4px 0 #263b4c; }
+.battle-panel h2 { margin:0 0 14px; color:#6e6b5f; font-size:14px; letter-spacing:.08em; }
+.battle-pokemon { display:flex; align-items:center; gap:12px; margin:10px 0; padding:10px; border:1px solid #c8d0ca; border-radius:8px; background:#fffdf6; }
+.battle-pokemon img { flex:0 0 64px; width:64px; height:64px; object-fit:contain; image-rendering:pixelated; }
+.battle-pokemon strong,.battle-pokemon span,.battle-pokemon small { display:block; overflow-wrap:anywhere; }
+.battle-pokemon strong { color:#263b4c; text-transform:capitalize; }
+.battle-pokemon span,.battle-pokemon small { margin-top:4px; color:#657386; font-size:12px; }
+.battle-empty { color:#7d7b72; font-size:13px; }
+.battle-notice { margin:24px 0 12px; color:#f4faee; text-align:center; text-shadow:1px 1px 2px #244b38; }
+.battle-shell > .botao-voltar { display:flex; margin:0 auto; }
+.mapa-chegada[data-desafio] { cursor:pointer; }
+.mapa-chegada[data-desafio]:focus-visible { outline:3px solid #f2d17b; outline-offset:3px; }
+@media(max-width:650px){.battle-teams{grid-template-columns:1fr}.battle-shell{padding:10px}.battle-heading{padding:16px}.battle-pokemon img{flex-basis:54px;width:54px;height:54px}}

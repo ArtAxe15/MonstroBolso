@@ -52,7 +52,7 @@ if (str_starts_with($rota, '/api/')) {
 }
 
 // 3. Rotas da interface: todas devolvem o mesmo app shell.
-$rotasFrontend = ['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map'];
+$rotasFrontend = ['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map', '/battle'];
 
 if (in_array($rota, $rotasFrontend, true)) {
     $baseUrl = $scriptDir;
