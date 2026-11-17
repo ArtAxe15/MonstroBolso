@@ -152,6 +152,7 @@ final class MontadorTimeAdversario
             }
 
             $time[] = [
+                'id_pokemon_especie' => $idEspecie,
                 'nome' => $especies[$idEspecie]['nome'],
                 'imagem_url' => $especies[$idEspecie]['imagem_url'],
                 'tipos' => $especies[$idEspecie]['tipos'],

@@ -67,6 +67,9 @@ final class Encontro
             'SELECT
                  dp.ordem,
                  dp.nivel,
+                 dp.id_pokemon_especie,
+                 dp.id_held_item,
+                 dp.id_golpe_status,
                  pe.nome,
                  pe.imagem_url,
                  GROUP_CONCAT(DISTINCT t.nome ORDER BY t.id_tipo SEPARATOR \', \') AS tipos,
@@ -85,6 +88,9 @@ final class Encontro
                  dp.id_desafio_pokemon,
                  dp.ordem,
                  dp.nivel,
+                 dp.id_pokemon_especie,
+                 dp.id_held_item,
+                 dp.id_golpe_status,
                  pe.nome,
                  pe.imagem_url,
                  hi.nome,
@@ -92,6 +98,213 @@ final class Encontro
              ORDER BY dp.ordem',
             ['desafio' => $idDesafio]
         )->fetchAll();
+    }
+
+    public function encontrarTimeDoJogador(int $idPerfil): array
+    {
+        return $this->consultar(
+            'SELECT
+                 pt.id_pokemon_time,
+                 pt.id_pokemon_especie,
+                 pt.id_held_item,
+                 pt.id_golpe_status,
+                 pt.apelido,
+                 pt.nivel,
+                 pt.hp_max,
+                 pt.hp_atual,
+                 pt.ataque,
+                 pt.defesa,
+                 pt.ataque_especial,
+                 pt.defesa_especial,
+                 pt.velocidade,
+                 pt.status,
+                 pt.posicao,
+                 pe.nome AS nome_especie,
+                 pe.imagem_url
+             FROM pokemon_time pt
+             INNER JOIN pokemon_especie pe
+                 ON pe.id_pokemon_especie = pt.id_pokemon_especie
+             WHERE pt.id_perfil = :perfil
+             ORDER BY pt.posicao',
+            ['perfil' => $idPerfil]
+        )->fetchAll();
+    }
+
+    public function encontrarInventario(int $idPerfil): array
+    {
+        return $this->consultar(
+            'SELECT
+                 i.id_item,
+                 i.nome,
+                 i.categoria,
+                 i.valor_efeito,
+                 i.descricao,
+                 i.tipo_efeito,
+                 inv.quantidade
+             FROM inventario inv
+             INNER JOIN item i ON i.id_item = inv.id_item
+             WHERE inv.id_perfil = :perfil
+               AND inv.quantidade > 0
+             ORDER BY i.nome',
+            ['perfil' => $idPerfil]
+        )->fetchAll();
+    }
+
+    public function encontrarDadosDasEspecies(array $idsEspecie): array
+    {
+        [$idsEspecie, $marcadores] = $this->prepararListaIds($idsEspecie);
+        if ($idsEspecie === []) {
+            return [];
+        }
+
+        $especies = $this->consultar(
+            "SELECT
+                 id_pokemon_especie,
+                 nome,
+                 imagem_url,
+                 hp_base,
+                 ataque_base,
+                 defesa_base,
+                 ataque_especial_base,
+                 defesa_especial_base,
+                 velocidade_base
+             FROM pokemon_especie
+             WHERE id_pokemon_especie IN ({$marcadores})",
+            $idsEspecie
+        )->fetchAll();
+
+        $resultado = [];
+        foreach ($especies as $especie) {
+            $resultado[(int) $especie['id_pokemon_especie']] = $especie;
+        }
+
+        return $resultado;
+    }
+
+    public function encontrarTiposDasEspecies(array $idsEspecie): array
+    {
+        [$idsEspecie, $marcadores] = $this->prepararListaIds($idsEspecie);
+        if ($idsEspecie === []) {
+            return [];
+        }
+
+        $tipos = $this->consultar(
+            "SELECT pet.id_pokemon_especie, t.nome
+             FROM pokemon_especie_tipo pet
+             INNER JOIN tipo t ON t.id_tipo = pet.id_tipo
+             WHERE pet.id_pokemon_especie IN ({$marcadores})
+             ORDER BY pet.id_pokemon_especie, t.id_tipo",
+            $idsEspecie
+        )->fetchAll();
+
+        $resultado = [];
+        foreach ($tipos as $tipo) {
+            $resultado[(int) $tipo['id_pokemon_especie']][] = $tipo['nome'];
+        }
+
+        return $resultado;
+    }
+
+    public function encontrarGolpesDeDanoDasEspecies(array $idsEspecie): array
+    {
+        [$idsEspecie, $marcadores] = $this->prepararListaIds($idsEspecie);
+        if ($idsEspecie === []) {
+            return [];
+        }
+
+        $golpes = $this->consultar(
+            "SELECT
+                 peg.id_pokemon_especie,
+                 peg.slot,
+                 g.id_golpe,
+                 g.nome,
+                 t.nome AS tipo,
+                 g.categoria,
+                 g.poder,
+                 g.precisao,
+                 g.pp,
+                 g.prioridade,
+                 g.classe_dano,
+                 g.descricao
+             FROM pokemon_especie_golpe peg
+             INNER JOIN golpe g ON g.id_golpe = peg.id_golpe
+             INNER JOIN tipo t ON t.id_tipo = g.id_tipo
+             WHERE peg.id_pokemon_especie IN ({$marcadores})
+               AND g.categoria = 'DANO'
+             ORDER BY peg.id_pokemon_especie, peg.slot",
+            $idsEspecie
+        )->fetchAll();
+
+        $resultado = [];
+        foreach ($golpes as $golpe) {
+            $resultado[(int) $golpe['id_pokemon_especie']][] = $golpe;
+        }
+
+        return $resultado;
+    }
+
+    public function encontrarGolpesPorIds(array $idsGolpe): array
+    {
+        [$idsGolpe, $marcadores] = $this->prepararListaIds($idsGolpe);
+        if ($idsGolpe === []) {
+            return [];
+        }
+
+        $golpes = $this->consultar(
+            "SELECT
+                 g.id_golpe,
+                 g.nome,
+                 t.nome AS tipo,
+                 g.categoria,
+                 g.poder,
+                 g.precisao,
+                 g.pp,
+                 g.prioridade,
+                 g.classe_dano,
+                 g.descricao
+             FROM golpe g
+             INNER JOIN tipo t ON t.id_tipo = g.id_tipo
+             WHERE g.id_golpe IN ({$marcadores})",
+            $idsGolpe
+        )->fetchAll();
+
+        $resultado = [];
+        foreach ($golpes as $golpe) {
+            $resultado[(int) $golpe['id_golpe']] = $golpe;
+        }
+
+        return $resultado;
+    }
+
+    public function encontrarItensPorIds(array $idsHeldItem): array
+    {
+        [$idsHeldItem, $marcadores] = $this->prepararListaIds($idsHeldItem);
+        if ($idsHeldItem === []) {
+            return [];
+        }
+
+        $itens = $this->consultar(
+            "SELECT
+                 id_held_item,
+                 nome,
+                 tipo_efeito,
+                 base_calculo,
+                 numerador,
+                 denominador,
+                 gatilho,
+                 limiar_hp,
+                 consumivel
+             FROM held_item
+             WHERE id_held_item IN ({$marcadores})",
+            $idsHeldItem
+        )->fetchAll();
+
+        $resultado = [];
+        foreach ($itens as $item) {
+            $resultado[(int) $item['id_held_item']] = $item;
+        }
+
+        return $resultado;
     }
 
     public function encontrarLimitesDeNivel(int $ordemInicial, int $ordemFinal): ?array
@@ -220,5 +433,18 @@ final class Encontro
         $stmt->execute($parametros);
 
         return $stmt;
+    }
+
+    private function prepararListaIds(array $ids): array
+    {
+        $ids = array_values(array_unique(array_filter(
+            array_map('intval', $ids),
+            static fn(int $id): bool => $id > 0
+        )));
+
+        return [
+            $ids,
+            implode(',', array_fill(0, count($ids), '?')),
+        ];
     }
 }

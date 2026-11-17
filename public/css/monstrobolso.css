@@ -446,7 +446,7 @@ body.tela-mapa { display:block; min-height:100vh; padding:0; background:#77c6ef;
 
 body.tela-batalha { display:block; min-height:100vh; padding:24px 16px; background:#77c6ef; background-image:linear-gradient(180deg,#79c9f1 0 35%,#9ed8f1 35% 43%,#4e9ed4 43% 52%,#82b86a 52% 100%); background-attachment:fixed; }
 .tela-batalha .app-shell { display:block; }
-.battle-shell { width:min(100%,1000px); margin:0 auto; padding:14px; }
+.battle-shell { width:min(100%,1150px); margin:0 auto; padding:14px; }
 .battle-heading { margin:24px auto; padding:20px; border:2px solid #263b4c; background:#f3efe3; box-shadow:4px 4px 0 #263b4c; text-align:center; }
 .battle-heading h1 { margin:0 0 8px; color:#1c3554; text-transform:capitalize; }
 .battle-heading p:last-child { margin:0; color:#61738a; font-weight:700; }
@@ -461,6 +461,43 @@ body.tela-batalha { display:block; min-height:100vh; padding:24px 16px; backgrou
 .battle-empty { color:#7d7b72; font-size:13px; }
 .battle-notice { margin:24px 0 12px; color:#f4faee; text-align:center; text-shadow:1px 1px 2px #244b38; }
 .battle-shell > .botao-voltar { display:flex; margin:0 auto; }
+.battle-active { padding:12px; border:1px solid #c8d0ca; border-radius:8px; background:#fffdf6; }
+.battle-active-heading { display:flex; align-items:center; gap:12px; }
+.battle-active-heading img { flex:0 0 88px; width:88px; height:88px; object-fit:contain; image-rendering:pixelated; }
+.battle-active-heading strong,.battle-active-heading span { display:block; overflow-wrap:anywhere; }
+.battle-active-heading strong { color:#263b4c; font-size:17px; text-transform:capitalize; }
+.battle-active-heading span { margin-top:5px; color:#657386; font-size:12px; }
+.battle-hp { margin:12px 0; color:#263b4c; font-size:12px; font-weight:700; }
+.battle-hp-bar { height:9px; overflow:hidden; border:1px solid #687b75; background:#cbd3d5; }
+.battle-hp-bar i { display:block; height:100%; background:#45b85a; }
+.battle-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin:12px 0; }
+.battle-stats > div { display:flex; justify-content:space-between; gap:5px; padding:6px; border:1px solid #d6ddd8; border-radius:4px; background:#f3efe3; color:#61738a; font-size:11px; }
+.battle-stats strong { color:#263b4c; }
+.battle-reserve,.battle-moves { margin-top:16px; }
+.battle-reserve h3,.battle-moves h3 { margin:0 0 8px; color:#6e6b5f; font-size:11px; letter-spacing:.06em; }
+.battle-reserve-pokemon { display:flex; align-items:center; gap:8px; margin-top:7px; padding:7px; border:1px solid #d6ddd8; border-radius:5px; background:#fffdf6; }
+.battle-reserve-pokemon img { width:42px; height:42px; object-fit:contain; image-rendering:pixelated; }
+.battle-reserve-pokemon strong,.battle-reserve-pokemon small { display:block; overflow-wrap:anywhere; }
+.battle-reserve-pokemon strong { color:#263b4c; font-size:12px; text-transform:capitalize; }
+.battle-reserve-pokemon small { margin:3px 0; color:#657386; font-size:10px; }
+.battle-move { display:grid; grid-template-columns:1fr auto; gap:3px 8px; margin-top:6px; padding:7px; border:1px solid #d6ddd8; border-radius:5px; background:#fffdf6; }
+.battle-move strong { color:#263b4c; font-size:12px; }
+.battle-move span,.battle-move small { color:#657386; font-size:10px; }
+.battle-move span { text-align:right; }
+.battle-move small { grid-column:1 / -1; }
+.battle-actions { margin-top:16px; }
+.battle-actions > h3,.battle-action-view > h3 { margin:0 0 8px; color:#6e6b5f; font-size:11px; letter-spacing:.06em; }
+.battle-action-menu { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
+.battle-action-option { min-height:42px; border:2px solid #263b4c; border-radius:5px; background:#e4e9e5; color:#263b4c; box-shadow:2px 2px 0 #263b4c; cursor:pointer; font-weight:800; }
+.battle-action-option.selecionada,.battle-action-option:hover { background:#f2d17b; }
+.battle-action-option:focus-visible,.battle-action-back:focus-visible { outline:3px solid #4e9ed4; outline-offset:2px; }
+.battle-action-back { margin:10px 0 2px; padding:6px 9px; border:1px solid #263b4c; border-radius:4px; background:#dce7ef; color:#263b4c; cursor:pointer; font-size:11px; font-weight:700; }
+.battle-action-view { margin-top:12px; }
+.battle-action-note { margin:8px 0 0; color:#657386; font-size:11px; }
+.battle-item { margin-top:7px; padding:8px; border:1px solid #d6ddd8; border-radius:5px; background:#fffdf6; }
+.battle-item strong,.battle-item span,.battle-item small { display:block; overflow-wrap:anywhere; }
+.battle-item strong { color:#263b4c; font-size:12px; }
+.battle-item span,.battle-item small { margin-top:4px; color:#657386; font-size:10px; }
 .mapa-chegada[data-desafio] { cursor:pointer; }
 .mapa-chegada[data-desafio]:focus-visible { outline:3px solid #f2d17b; outline-offset:3px; }
 @media(max-width:650px){.battle-teams{grid-template-columns:1fr}.battle-shell{padding:10px}.battle-heading{padding:16px}.battle-pokemon img{flex-basis:54px;width:54px;height:54px}}

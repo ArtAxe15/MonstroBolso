@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Controllers\AuthController;
 use App\Controllers\ProfileController;
 use App\Controllers\GameController;
+use App\Controllers\BattleController;
 
 /*
  * Rotas da API.
@@ -27,4 +28,7 @@ return [
     'POST /api/game/starter' => [GameController::class, 'chooseStarter'],
     'GET /api/game/map' => [GameController::class, 'map'],
     'GET /api/game/encounter' => [GameController::class, 'encounter'],
+
+    'POST /api/battle/start' => [BattleController::class, 'start'],
+    'GET /api/battle/state' => [BattleController::class, 'state'],
 ];

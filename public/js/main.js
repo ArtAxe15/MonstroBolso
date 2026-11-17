@@ -3,7 +3,7 @@
 const appElement = document.querySelector('#app');
 const entryUrl = document.body.dataset.entryUrl.replace(/\/$/, '');
 const entryPath = new URL(entryUrl, window.location.origin).pathname;
-const state = { usuario: null, autenticado: false, perfil: null, perfis: [], jogo: null, excluindo: false, encounterSelection: null, encounter: null };
+const state = { usuario: null, autenticado: false, perfil: null, perfis: [], jogo: null, excluindo: false, encounterSelection: null, battle: null, battleMenu: 'menu' };
 
 function escaparHtml(valor) {
     return String(valor ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
@@ -29,7 +29,11 @@ async function requisitarApi(caminho, opcoes = {}) {
     const tipo = resposta.headers.get('content-type') || '';
     if (!tipo.includes('application/json')) throw new Error('O servidor não retornou JSON. Confira o log do PHP.');
     const dados = await resposta.json();
-    if (!resposta.ok || dados.ok === false) throw new Error(dados.message || 'Não foi possível concluir a operação.');
+    if (!resposta.ok || dados.ok === false) {
+        const erro = new Error(dados.message || 'Não foi possível concluir a operação.');
+        erro.status = resposta.status;
+        throw erro;
+    }
     return dados;
 }
 function mensagem(texto, tipo = 'erro') { return texto ? `<div class="mensagem ${tipo}" role="status">${escaparHtml(texto)}</div>` : ''; }
@@ -172,74 +176,231 @@ async function carregarMapa() {
     renderizarMapa();
 }
 
-async function abrirPreBatalha() {
-    if (!state.encounterSelection) {
-        await navegar('/map', { substituir: true });
-        return;
+async function abrirBatalha() {
+    loading('Preparando a batalha...');
+
+    if (state.encounterSelection) {
+        const dados = await requisitarApi('/api/battle/start', {
+            method: 'POST',
+            body: state.encounterSelection
+        });
+        state.battle = dados.batalha;
+        state.encounterSelection = null;
+    } else {
+        try {
+            const dados = await requisitarApi('/api/battle/state');
+            state.battle = dados.batalha;
+        } catch (e) {
+            if (e.status === 404) {
+                state.battle = null;
+                await navegar('/map', { substituir: true });
+                return;
+            }
+            throw e;
+        }
     }
 
-    loading('Preparando o encontro...');
-    const [chave, valor] = Object.entries(state.encounterSelection)[0];
-    const parametros = new URLSearchParams({ [chave]: String(valor) });
-    state.encounter = await requisitarApi(`/api/game/encounter?${parametros.toString()}`);
-    renderizarPreBatalha();
+    state.battleMenu = 'menu';
+    renderizarBatalha();
 }
 
-function renderizarPreBatalha() {
-    const encontro = state.encounter;
-    const timeJogador = state.jogo?.time || [];
-    const timeAdversario = encontro.time_adversario || [];
-    const titulo = encontro.tipo_encontro === 'desafio'
-        ? encontro.desafio.nome
-        : `Treinador tipo ${encontro.treinador.tipo_nome}`;
-    const jogadorHtml = timeJogador.map(p => renderizarPokemonPreBatalha(p, true)).join('');
-    const adversarioHtml = timeAdversario.map(p => renderizarPokemonPreBatalha(p, false)).join('');
-
+function renderizarBatalha() {
+    const batalha = state.battle;
     document.body.className = 'tela-batalha';
     appElement.innerHTML = `
         <main class="battle-shell">
             <header class="game-header">
-                <div class="game-brand">MONSTROBOLSO <span>PRÉ-BATALHA</span></div>
-                <strong>${escaparHtml(state.perfil?.nome || '')}</strong>
+                <div class="game-brand">MONSTROBOLSO <span>PREPARAÇÃO DE BATALHA</span></div>
+                <strong>${escaparHtml(state.perfil?.nome || `Jornada ${batalha.id_perfil}`)}</strong>
             </header>
             <section class="battle-heading">
-                <p class="eyebrow">ENCONTRO</p>
-                <h1>${escaparHtml(titulo)}</h1>
-                <p>Área ${escaparHtml(encontro.area_atual)}</p>
+                <p class="eyebrow">ÁREA ${escaparHtml(batalha.area_atual)}</p>
+                <h1>${escaparHtml(batalha.alvo.nome)}</h1>
             </section>
             <div class="battle-teams">
-                <section class="battle-panel">
-                    <h2>SEU TIME</h2>
-                    ${jogadorHtml || '<p class="battle-empty">Nenhum Pokémon no time.</p>'}
-                </section>
-                <section class="battle-panel">
-                    <h2>TIME ADVERSÁRIO</h2>
-                    ${adversarioHtml || '<p class="battle-empty">Nenhum Pokémon cadastrado.</p>'}
-                </section>
+                ${renderizarLadoBatalha(batalha.jogador, 'SEU TIME', true)}
+                ${renderizarLadoBatalha(batalha.adversario, 'TIME ADVERSÁRIO', false)}
             </div>
-            <p class="battle-notice">Esta é somente a prévia do encontro. As regras e o motor de batalha serão implementados na próxima etapa.</p>
+            <p class="battle-notice">O combate e as ações dos treinadores serão adicionados na próxima etapa.</p>
             <button class="botao botao-voltar" data-acao="voltar-mapa">Voltar ao mapa</button>
         </main>
     `;
 }
 
-function renderizarPokemonPreBatalha(pokemon, jogador) {
-    const nome = jogador ? pokemon.nome_exibicao : pokemon.nome;
-    const detalhes = [`Nv. ${escaparHtml(pokemon.nivel)}`];
+function renderizarLadoBatalha(lado, titulo, ehJogador) {
+    const time = Array.isArray(lado.time) ? lado.time : [];
+    const indiceAtivo = Number(lado.indice_ativo);
+    const ativo = time[indiceAtivo];
+    if (!ativo) {
+        return `<section class="battle-panel"><h2>${escaparHtml(titulo)}</h2><p class="battle-empty">Nenhum Pokémon disponível.</p></section>`;
+    }
 
-    if (!jogador) {
-        detalhes.unshift(`Tipos: ${escaparHtml(pokemon.tipos || 'Tipo desconhecido')}`);
-        detalhes.push(`Ordem ${escaparHtml(pokemon.ordem)}`);
-        if (pokemon.item) detalhes.push(`Item: ${escaparHtml(pokemon.item)}`);
-        if (pokemon.golpe_status) detalhes.push(`Golpe de status: ${escaparHtml(pokemon.golpe_status)}`);
+    const reserva = time
+        .filter((_, indice) => indice !== indiceAtivo)
+        .map(renderizarReservaBatalha)
+        .join('');
+
+    return `
+        <section class="battle-panel">
+            <h2>${escaparHtml(titulo)}</h2>
+            ${renderizarPokemonAtivo(ativo, ehJogador)}
+            <section class="battle-reserve">
+                <h3>RESERVA</h3>
+                ${reserva || '<p class="battle-empty">Sem outros Pokémon.</p>'}
+            </section>
+        </section>
+    `;
+}
+
+function renderizarPokemonAtivo(pokemon, ehJogador) {
+    const atributos = pokemon.atributos;
+    const hpMax = Math.max(0, Number(atributos.hp_max) || 0);
+    const hpAtual = Math.max(0, Math.min(hpMax, Number(atributos.hp_atual) || 0));
+    const hpPercentual = hpMax > 0 ? (hpAtual / hpMax) * 100 : 0;
+    const tipos = Array.isArray(pokemon.tipos) ? pokemon.tipos.join(', ') : '';
+    const status = pokemon.status === 'normal' ? 'Sem condição' : pokemon.status;
+    const nome = pokemon.nome_exibicao || pokemon.nome_especie;
+
+    return `
+        <article class="battle-active">
+            <div class="battle-active-heading">
+                <img src="${escaparHtml(pokemon.imagem_url || '')}" alt="${escaparHtml(nome)}">
+                <div>
+                    <strong>${escaparHtml(nome)}</strong>
+                    <span>${escaparHtml(tipos || 'Tipo desconhecido')} · Nv. ${escaparHtml(pokemon.nivel)}</span>
+                    <span>Condição: ${escaparHtml(status)}</span>
+                    ${pokemon.held_item ? `<span>Item: ${escaparHtml(pokemon.held_item.nome)}</span>` : ''}
+                </div>
+            </div>
+            <div class="battle-hp">
+                <span>HP ${escaparHtml(hpAtual)} / ${escaparHtml(hpMax)}</span>
+                <div class="battle-hp-bar"><i style="width:${hpPercentual}%"></i></div>
+            </div>
+            ${renderizarAtributosBatalha(atributos)}
+            ${ehJogador ? renderizarMenuAcoesBatalha() : renderizarGolpesAtivos(pokemon.golpes)}
+        </article>
+    `;
+}
+
+function renderizarAtributosBatalha(atributos) {
+    const linhas = [
+        ['HP', atributos.hp_max],
+        ['ATQ', atributos.ataque],
+        ['DEF', atributos.defesa],
+        ['ATQ. ESP', atributos.ataque_especial],
+        ['DEF. ESP', atributos.defesa_especial],
+        ['VEL', atributos.velocidade]
+    ];
+
+    return `
+        <div class="battle-stats" aria-label="Atributos">
+            ${linhas.map(([nome, valor]) => `
+                <div><span>${escaparHtml(nome)}</span><strong>${escaparHtml(valor)}</strong></div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function renderizarGolpesAtivos(golpes) {
+    const movimentos = [
+        ...(golpes.dano || []).map(golpe => ({ ...golpe, tipo_golpe: 'Dano' })),
+        ...(golpes.status ? [{ ...golpes.status, tipo_golpe: 'Status' }] : [])
+    ];
+
+    return `
+        <section class="battle-moves">
+            <h3>GOLPES DO POKÉMON ATIVO</h3>
+            ${movimentos.length ? movimentos.map(golpe => `
+                <article class="battle-move">
+                    <strong>${escaparHtml(golpe.nome)}</strong>
+                    <span>${escaparHtml(golpe.tipo_golpe)} · ${escaparHtml(golpe.tipo)} · ${escaparHtml(golpe.categoria)}</span>
+                    <small>Poder: ${escaparHtml(golpe.poder ?? '—')} · PP: ${escaparHtml(golpe.pp ?? '—')}</small>
+                </article>
+            `).join('') : '<p class="battle-empty">Nenhum golpe cadastrado.</p>'}
+        </section>
+    `;
+}
+
+function renderizarMenuAcoesBatalha() {
+    const menu = state.battleMenu || 'menu';
+    const opcoes = [
+        ['fight', 'Lutar'],
+        ['switch', 'Trocar'],
+        ['item', 'Item']
+    ];
+    let conteudo = '';
+
+    if (menu === 'fight') {
+        const jogador = state.battle.jogador;
+        const pokemon = jogador.time[Number(jogador.indice_ativo)];
+        conteudo = renderizarGolpesAtivos(pokemon.golpes);
+    } else if (menu === 'switch') {
+        const jogador = state.battle.jogador;
+        const reserva = jogador.time
+            .filter((_, indice) => indice !== Number(jogador.indice_ativo))
+            .map(renderizarReservaBatalha)
+            .join('');
+        conteudo = `
+            <section class="battle-action-view">
+                <h3>POKÉMON DO TIME</h3>
+                ${reserva || '<p class="battle-empty">Não há outros Pokémon no time.</p>'}
+                <p class="battle-action-note">A troca será habilitada na etapa de ações.</p>
+            </section>
+        `;
+    } else if (menu === 'item') {
+        const itens = state.battle.jogador.itens || [];
+        conteudo = `
+            <section class="battle-action-view">
+                <h3>ITENS NA BOLSA</h3>
+                ${itens.length ? itens.map(item => `
+                    <article class="battle-item">
+                        <div>
+                            <strong>${escaparHtml(item.nome)}</strong>
+                            <span>${escaparHtml(item.categoria)} · Quantidade: ${escaparHtml(item.quantidade)}</span>
+                            <small>${escaparHtml(item.descricao)}</small>
+                        </div>
+                    </article>
+                `).join('') : '<p class="battle-empty">Sua bolsa está vazia.</p>'}
+                <p class="battle-action-note">O uso de itens será habilitado na etapa de ações.</p>
+            </section>
+        `;
     }
 
     return `
-        <article class="battle-pokemon">
-            <img src="${escaparHtml(pokemon.imagem_url || '')}" alt="${escaparHtml(nome || '')}">
+        <section class="battle-actions">
+            <h3>O QUE FAZER?</h3>
+            <div class="battle-action-menu">
+                ${opcoes.map(([valor, rotulo]) => `
+                    <button
+                        type="button"
+                        class="battle-action-option ${menu === valor ? 'selecionada' : ''}"
+                        data-battle-menu="${valor}"
+                        aria-pressed="${menu === valor}"
+                    >${rotulo}</button>
+                `).join('')}
+            </div>
+            ${menu !== 'menu' ? `
+                <button type="button" class="battle-action-back" data-battle-menu="menu">Voltar às opções</button>
+                ${conteudo}
+            ` : ''}
+        </section>
+    `;
+}
+
+function renderizarReservaBatalha(pokemon) {
+    const atributos = pokemon.atributos;
+    const nome = pokemon.nome_exibicao || pokemon.nome_especie;
+    const hpMax = Math.max(0, Number(atributos.hp_max) || 0);
+    const hpAtual = Math.max(0, Math.min(hpMax, Number(atributos.hp_atual) || 0));
+    const hpPercentual = hpMax > 0 ? (hpAtual / hpMax) * 100 : 0;
+
+    return `
+        <article class="battle-reserve-pokemon">
+            <img src="${escaparHtml(pokemon.imagem_url || '')}" alt="${escaparHtml(nome)}">
             <div>
-                <strong>${escaparHtml(nome || 'Pokémon')}</strong>
-                ${detalhes.map(detalhe => `<small>${detalhe}</small>`).join('')}
+                <strong>${escaparHtml(nome)}</strong>
+                <small>Nv. ${escaparHtml(pokemon.nivel)} · HP ${escaparHtml(hpAtual)}/${escaparHtml(hpMax)}</small>
+                <div class="battle-hp-bar"><i style="width:${hpPercentual}%"></i></div>
             </div>
         </article>
     `;
@@ -275,7 +436,7 @@ async function navegar(rota, opcoes = {}) {
         else if (rota === '/profiles') await carregarPerfis();
         else if (rota === '/starter') await abrirStarter();
         else if (rota === '/map') await carregarMapa();
-        else if (rota === '/battle') await abrirPreBatalha();
+        else if (rota === '/battle') await abrirBatalha();
         else renderizarLogin(opcoes.mensagem || null);
     } catch (e) {
         if (e.message.includes('sessão') || e.message.includes('Selecione uma jornada')) {
@@ -316,12 +477,18 @@ document.addEventListener('click', async ev => {
     const link = ev.target.closest('[data-rota]'); if (link) { ev.preventDefault(); await navegar(link.dataset.rota); return; }
     const acao = ev.target.closest('[data-acao]')?.dataset.acao;
     try {
+        const menuBatalha = ev.target.closest('[data-battle-menu]');
+        if (menuBatalha && state.battle) {
+            state.battleMenu = menuBatalha.dataset.battleMenu;
+            renderizarBatalha();
+            return;
+        }
         if (acao === 'jogar') { await navegar('/profiles'); return; }
         if (acao === 'dashboard') { await navegar('/dashboard'); return; }
-        if (acao === 'perfis') { state.perfil = null; state.encounterSelection = null; state.encounter = null; await navegar('/profiles'); return; }
+        if (acao === 'perfis') { state.perfil = null; state.encounterSelection = null; state.battle = null; await navegar('/profiles'); return; }
         if (acao === 'voltar-mapa') {
             state.encounterSelection = null;
-            state.encounter = null;
+            state.battle = null;
             await navegar('/map');
             return;
         }
@@ -330,7 +497,7 @@ document.addEventListener('click', async ev => {
             const r = await requisitarApi('/api/profiles', { method: 'POST', body: { nome } }); state.perfil = { id_perfil: r.id_perfil, nome }; await navegar('/starter'); return;
         }
         if (acao === 'modo-excluir') { state.excluindo = !state.excluindo; renderizarPerfis(); return; }
-        if (acao === 'logout') { await requisitarApi('/api/logout', { method: 'POST' }); state.autenticado = false; state.usuario = null; state.perfil = null; state.jogo = null; state.encounterSelection = null; state.encounter = null; await navegar('/login', { mensagem: { texto: 'Você saiu da sua conta.', tipo: 'sucesso' } }); return; }
+        if (acao === 'logout') { await requisitarApi('/api/logout', { method: 'POST' }); state.autenticado = false; state.usuario = null; state.perfil = null; state.jogo = null; state.encounterSelection = null; state.battle = null; await navegar('/login', { mensagem: { texto: 'Você saiu da sua conta.', tipo: 'sucesso' } }); return; }
         const perfilCard = ev.target.closest('[data-perfil-selecionar]');
         if (perfilCard) {
             const id = Number(perfilCard.dataset.perfilSelecionar);
@@ -340,7 +507,7 @@ document.addEventListener('click', async ev => {
                 await requisitarApi('/api/profiles/delete', { method: 'POST', body: { id_perfil: id } }); await carregarPerfis(); return;
             }
             const r = await requisitarApi('/api/profiles/select', { method: 'POST', body: { id_perfil: id } });
-            state.perfil = r.perfil || null; state.encounterSelection = null; state.encounter = null; await navegar(r.proxima_etapa === 'starter' ? '/starter' : '/map'); return;
+            state.perfil = r.perfil || null; state.encounterSelection = null; state.battle = null; await navegar(r.proxima_etapa === 'starter' ? '/starter' : '/map'); return;
         }
         const starter = ev.target.closest('[data-starter]');
         if (starter) {
