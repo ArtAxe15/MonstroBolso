@@ -8,7 +8,6 @@ use InvalidArgumentException;
 
 final class CalculadoraAtributos
 {
-    private const BONUS_POR_NIVEL = 3;
     private const NIVEL_MINIMO = 1;
     private const NIVEL_MAXIMO = 100;
 
@@ -41,15 +40,13 @@ final class CalculadoraAtributos
             }
         }
 
-        $bonusNivel = self::BONUS_POR_NIVEL * ($nivel - 1);
-
         return [
-            'hp_max' => $hpBase + $bonusNivel,
-            'ataque' => $ataqueBase + $bonusNivel,
-            'defesa' => $defesaBase + $bonusNivel,
-            'ataque_especial' => $ataqueEspecialBase + $bonusNivel,
-            'defesa_especial' => $defesaEspecialBase + $bonusNivel,
-            'velocidade' => $velocidadeBase + $bonusNivel,
+            'hp_max' => intdiv(2 * $hpBase * $nivel, 100) + $nivel + 10,
+            'ataque' => intdiv(2 * $ataqueBase * $nivel, 100) + 5,
+            'defesa' => intdiv(2 * $defesaBase * $nivel, 100) + 5,
+            'ataque_especial' => intdiv(2 * $ataqueEspecialBase * $nivel, 100) + 5,
+            'defesa_especial' => intdiv(2 * $defesaEspecialBase * $nivel, 100) + 5,
+            'velocidade' => intdiv(2 * $velocidadeBase * $nivel, 100) + 5,
         ];
     }
 }

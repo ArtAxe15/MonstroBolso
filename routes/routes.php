@@ -30,6 +30,7 @@ return [
     'GET /api/game/map' => [GameController::class, 'map'],
     'GET /api/game/pokemart' => [GameController::class, 'pokemart'],
     'POST /api/game/map/service' => [GameController::class, 'visitarServicoMapa'],
+    'POST /api/game/items/use' => [GameController::class, 'usarItem'],
     'GET /api/game/encounter' => [GameController::class, 'encounter'],
 
     'GET /api/battle/history' => [BattleHistoryController::class, 'index'],

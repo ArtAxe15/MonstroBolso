@@ -110,7 +110,7 @@ final class BattleService
             'jogador' => [
                 'indice_ativo' => $this->primeiroPokemonVivo($timeJogador),
                 'time' => $timeJogador,
-                'itens' => $this->itensDeCura($idPerfil),
+                'itens' => (new UsoDeItens($this->conn))->itensDeBatalha($idPerfil),
             ],
             'adversario' => [
                 'indice_ativo' => $this->primeiroPokemonVivo($timeAdversario),
@@ -246,7 +246,10 @@ final class BattleService
         $idItem = null;
         if ($acao === 'item') {
             $idItem = $this->inteiroSolicitado($solicitacao['id_item'] ?? null, 'item');
-            $this->usarItemDeCura($batalha, $idItem, $eventos);
+            $idAlvo = isset($solicitacao['id_pokemon_time'])
+                ? $this->inteiroSolicitado($solicitacao['id_pokemon_time'], 'Pokémon')
+                : (int) $pokemonJogador['id_pokemon_time'];
+            $this->usarItemDeCura($batalha, $idItem, $idAlvo, $eventos);
         }
         foreach ($ordem as [$lado, $golpe]) {
             $outroLado = $lado === 'jogador' ? 'adversario' : 'jogador';
@@ -751,49 +754,25 @@ final class BattleService
         }
     }
 
-    private function itensDeCura(int $idPerfil): array
-    {
-        $curas = $this->encontro->encontrarCurasDeStatus();
-        $itens = [];
-        foreach ($this->encontro->encontrarInventario($idPerfil) as $item) {
-            if (isset($curas[(int) $item['id_item']])) {
-                $item['cura_status'] = $curas[(int) $item['id_item']];
-                $itens[] = $item;
-            }
-        }
-        return $itens;
-    }
-
-    private function usarItemDeCura(array &$batalha, int $idItem, array &$eventos): void
+    private function usarItemDeCura(array &$batalha, int $idItem, int $idAlvo, array &$eventos): void
     {
         $jogador = &$batalha['jogador'];
-        $jogador['itens'] = $this->itensDeCura((int) $batalha['id_perfil']);
-        $pokemon = &$jogador['time'][$jogador['indice_ativo']];
-        foreach ($jogador['itens'] as &$item) {
-            if ((int) $item['id_item'] !== $idItem) {
-                continue;
-            }
-            $curaStatus = in_array($pokemon['status'], $item['cura_status'], true);
-            $atributos = &$pokemon['atributos'];
-            $curaHp = $item['categoria'] === 'HP_STATUS' && $atributos['hp_atual'] < $atributos['hp_max'];
-            if (!$curaStatus && !$curaHp) {
-                throw new ApiException('Este item não tem efeito no Pokémon ativo.', 422);
-            }
-            if ($curaStatus) {
-                $pokemon['status'] = 'normal';
-                unset($pokemon['turnos_condicao']);
-            }
-            if ($curaHp) {
-                $valor = (int) $item['valor_efeito'];
-                $recuperacao = $item['tipo_efeito'] === 'PERCENTUAL'
-                    ? intdiv((int) $atributos['hp_max'] * $valor, 100)
-                    : $valor;
-                $atributos['hp_atual'] = min($atributos['hp_max'], $atributos['hp_atual'] + $recuperacao);
-            }
-            $item['quantidade']--;
-            $eventos[] = $this->evento('item', $item['nome'] . ' foi usado em ' . $this->nomePokemon($pokemon) . '!');
-            return;
+        $jogador['itens'] = (new UsoDeItens($this->conn))->itensDeBatalha((int) $batalha['id_perfil']);
+        $indice = array_search($idAlvo, array_column($jogador['time'], 'id_pokemon_time'), true);
+        if ($indice === false) {
+            throw new ApiException('Pokémon não encontrado no seu time.', 404);
         }
+
+        foreach ($jogador['itens'] as &$item) {
+            if ((int) $item['id_item'] === $idItem) {
+                $pokemon = &$jogador['time'][$indice];
+                UsoDeItens::aplicarCura($item, $pokemon);
+                $item['quantidade']--;
+                $eventos[] = $this->evento('item', $item['nome'] . ' foi usado em ' . $this->nomePokemon($pokemon) . '!');
+                return;
+            }
+        }
+
         throw new ApiException('Este item não está disponível no inventário.', 422);
     }
 

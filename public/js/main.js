@@ -630,21 +630,31 @@ function renderizarMenuAcoesBatalha() {
     }
     if (menu === 'item') {
         const jogador = state.battle.jogador;
-        const pokemon = jogador.time[Number(jogador.indice_ativo)];
-        const itens = (jogador.itens || []).filter(item => Array.isArray(item.cura_status));
-        conteudo = itens.length ? `<section class="battle-moves" aria-label="Itens de cura">
-            ${itens.map(item => {
-                const podeUsar = item.cura_status.includes(pokemon.status)
-                    || (item.categoria === 'HP_STATUS'
-                        && Number(pokemon.atributos.hp_atual) < Number(pokemon.atributos.hp_max));
-                return `
-                    <button type="button" class="battle-move battle-move-button"
-                        data-battle-item="${Number(item.id_item)}" ${!podeUsar || state.battleBusy ? 'disabled' : ''}>
-                        <strong>${escaparHtml(item.nome)} × ${Number(item.quantidade)}</strong>
+        const itens = jogador.itens || [];
+        conteudo = itens.length ? itens.map(item => {
+            const alvos = jogador.time.filter(pokemon => {
+                const hp = Number(pokemon.atributos.hp_atual);
+                if (item.categoria === 'REVIVE') return hp === 0;
+                if (hp <= 0) return false;
+                const podeCurarHp = ['HP', 'HP_STATUS'].includes(item.categoria)
+                    && hp < Number(pokemon.atributos.hp_max);
+                return podeCurarHp || item.cura_status?.includes(pokemon.status);
+            });
+            return `
+                <form class="battle-moves" data-item-batalha="${Number(item.id_item)}">
+                    <label>
+                        <strong>${escaparHtml(item.nome)} · ${Number(item.quantidade)}</strong>
                         <span>${escaparHtml(item.descricao)}</span>
-                    </button>`;
-            }).join('')}
-        </section>` : '<p class="battle-empty">Nenhum item de cura de status no inventário.</p>';
+                        <select name="id_pokemon_time" aria-label="Alvo de ${escaparHtml(item.nome)}"
+                            required ${!alvos.length || state.battleBusy ? 'disabled' : ''}>
+                            <option value="">${alvos.length ? 'Escolha um Pokémon' : 'Sem alvo válido'}</option>
+                            ${opcoesAlvoItem(alvos)}
+                        </select>
+                    </label>
+                    <button type="submit" class="battle-move battle-move-button"
+                        ${!alvos.length || state.battleBusy ? 'disabled' : ''}>Usar item</button>
+                </form>`;
+        }).join('') : '<p class="battle-empty">Nenhum item de cura na bolsa.</p>';
     }
 
     return `
@@ -749,6 +759,14 @@ async function abrirHistoricoBatalhas() {
     }
 }
 
+function opcoesAlvoItem(time) {
+    return time.map(pokemon => {
+        const atributos = pokemon.atributos ?? pokemon;
+        const nome = pokemon.nome_exibicao || pokemon.nome_especie;
+        return `<option value="${Number(pokemon.id_pokemon_time)}">${escaparHtml(nome)} · HP ${Number(atributos.hp_atual)}/${Number(atributos.hp_max)} · ${escaparHtml(pokemon.status)}</option>`;
+    }).join('');
+}
+
 function renderizarMapa(aviso = '') {
     document.body.className = 'tela-mapa';
     const jogo = state.jogo;
@@ -849,9 +867,24 @@ function renderizarMapa(aviso = '') {
                 </section>
                 <aside class="painel-lateral painel-itens">
                     <h2>ITENS</h2>
-                    ${jogo.inventario?.length ? `<ul>${jogo.inventario.map(item =>
-                        `<li>${escaparHtml(item.nome)} × ${Number(item.quantidade)}</li>`
-                    ).join('')}</ul>` : '<p>Bolsa vazia</p>'}
+                    ${jogo.inventario?.length ? `
+                        <form id="form-item-mapa">
+                            <label>Item
+                                <select name="id_item" required>
+                                    <option value="">Escolha um item</option>
+                                    ${jogo.inventario.map(item =>
+                                        `<option value="${Number(item.id_item)}">${escaparHtml(item.nome)} · ${Number(item.quantidade)}</option>`
+                                    ).join('')}
+                                </select>
+                            </label>
+                            <label>Pokémon
+                                <select name="id_pokemon_time" required>
+                                    <option value="">Escolha um Pokémon</option>
+                                    ${opcoesAlvoItem(jogo.time || [])}
+                                </select>
+                            </label>
+                            <button type="submit" class="botao botao-principal">Usar item</button>
+                        </form>` : '<p>Bolsa vazia</p>'}
                     <h2>PROGRESSO</h2>
                     <p>${locaisConcluidos} locais concluídos</p>
                     <p>Treinadores derrotados: ${treinadoresDerrotados}/${totalTreinadores}</p>
@@ -902,6 +935,34 @@ async function verificarSessaoInicial() {
 
 document.addEventListener('submit', async ev => {
     const form = ev.target;
+    if (form.matches('[data-item-batalha], #form-item-mapa')) {
+        ev.preventDefault();
+        const botao = form.querySelector('button[type="submit"]');
+        if (botao.disabled) return;
+        const dados = new FormData(form);
+        const idPokemon = Number(dados.get('id_pokemon_time'));
+        botao.disabled = true;
+        try {
+            if (form.matches('[data-item-batalha]')) {
+                await enviarTurnoBatalha({
+                    acao: 'item',
+                    id_item: Number(form.dataset.itemBatalha),
+                    id_pokemon_time: idPokemon
+                });
+            } else {
+                const resposta = await requisitarApi('/api/game/items/use', {
+                    method: 'POST',
+                    body: { id_item: Number(dados.get('id_item')), id_pokemon_time: idPokemon }
+                });
+                await carregarMapa(resposta.message);
+            }
+        } catch (e) {
+            alert(e.message);
+        } finally {
+            if (botao.isConnected) botao.disabled = false;
+        }
+        return;
+    }
     if (!['form-login', 'form-cadastro'].includes(form.id)) return;
     ev.preventDefault(); const btn = form.querySelector('button[type="submit"]'); const old = btn.textContent; btn.disabled = true; btn.textContent = 'Enviando...';
     try {
@@ -925,11 +986,6 @@ document.addEventListener('click', async ev => {
         const golpeBatalha = ev.target.closest('[data-battle-move]');
         if (golpeBatalha && state.battle) {
             await enviarTurnoBatalha({ acao: 'golpe', id_golpe: Number(golpeBatalha.dataset.battleMove) });
-            return;
-        }
-        const itemBatalha = ev.target.closest('[data-battle-item]');
-        if (itemBatalha && state.battle) {
-            await enviarTurnoBatalha({ acao: 'item', id_item: Number(itemBatalha.dataset.battleItem) });
             return;
         }
         if (acao === 'ver-batalhas') { await abrirHistoricoBatalhas(); return; }

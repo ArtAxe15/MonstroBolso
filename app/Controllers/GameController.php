@@ -12,6 +12,7 @@ use App\Models\ServicosMapa;
 use PDO;
 use App\Services\BattleService;
 use App\Services\CalculadoraAtributos;
+use App\Services\UsoDeItens;
 use App\Services\MontadorTimeAdversario;
 use Throwable;
 
@@ -59,7 +60,7 @@ final class GameController
         $pokemon = $stmt->fetch();
         if (!$pokemon) JsonResponse::send(['ok' => false, 'message' => 'Dados do Pokémon inicial não encontrados.'], 404);
 
-        $nivel = 97;
+        $nivel = 50;
         $idEspecie = (int) $pokemon['id_pokemon_especie'];
         $opcoesStatus = (new Encontro($this->conn))->encontrarOpcoesDeGolpeStatus([$idEspecie]);
         $idGolpeStatus = $opcoesStatus[$idEspecie][0] ?? null;
@@ -498,6 +499,29 @@ final class GameController
             $item = $acao === 'comprar' ? $this->idServicoMapa($dados['id_item'] ?? null) : null;
             $resposta = (new ServicosMapa($this->conn))->visitar($idPerfil, $no, $acao, $item);
             JsonResponse::send(['ok' => true] + $resposta);
+        } catch (ApiException $e) {
+            JsonResponse::send(['ok' => false, 'message' => $e->getMessage()], $e->statusCode());
+        }
+    }
+
+    public function usarItem(): void
+    {
+        $idPerfil = $this->perfilAtivo();
+        $dados = $this->dados();
+        try {
+            $idItem = $this->idServicoMapa($dados['id_item'] ?? null);
+            $idPokemon = $this->idServicoMapa($dados['id_pokemon_time'] ?? null);
+            $batalha = $_SESSION['batalha'] ?? [];
+            $temBatalha = (int) ($batalha['id_perfil'] ?? 0) === $idPerfil;
+            if ($temBatalha && ($batalha['persistencia_pendente'] ?? false)) {
+                throw new ApiException('Conclua o salvamento da batalha antes de usar itens no mapa.', 409);
+            }
+
+            $mensagem = (new UsoDeItens($this->conn))->usarNoMapa($idPerfil, $idItem, $idPokemon);
+            if ($temBatalha) {
+                unset($_SESSION['batalha']);
+            }
+            JsonResponse::send(['ok' => true, 'message' => $mensagem]);
         } catch (ApiException $e) {
             JsonResponse::send(['ok' => false, 'message' => $e->getMessage()], $e->statusCode());
         }

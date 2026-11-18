@@ -925,3 +925,21 @@ body.tela-mapa {
     .historico-lista { padding: 0 12px 14px; }
     .historico-cabecalho h2 { font-size: 19px; }
 }
+
+#form-item-mapa,
+#form-item-mapa label,
+[data-item-batalha] label {
+    display: grid;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+#form-item-mapa {
+    margin-bottom: 1rem;
+}
+
+#form-item-mapa select,
+[data-item-batalha] select {
+    width: 100%;
+    padding: 0.35rem;
+}
