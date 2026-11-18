@@ -15,7 +15,16 @@ final class BattleService
 {
     private const CHANCE_CRITICO_DENOMINADOR = 16;
     private const NIVEL_MAXIMO = 100;
-    private const RECOMPENSA_SELVA = 25;
+    private const RECOMPENSA_SELVA = 100;
+    private const RECOMPENSA_TREINADOR = 300;
+    private const CONDICAO_POR_TIPO = [
+        'Fogo' => 'Queimadura',
+        'Eletrico' => 'Paralisia',
+        'Gelo' => 'Congelamento',
+        'Veneno' => 'Envenenamento',
+        'Psiquico' => 'Sono',
+    ];
+    private const ATRIBUTO_POR_GOLPE_STATUS = [14 => 'ATAQUE', 417 => 'ATAQUE_ESPECIAL'];
     private const NIVEIS_POR_ENCONTRO = [
         'treinador' => 2,
         'selvagem' => 1,
@@ -60,10 +69,8 @@ final class BattleService
             array_column($timeJogadorBanco, 'id_pokemon_especie'),
             array_column($timeAdversarioBanco, 'id_pokemon_especie')
         );
-        $idsGolpeStatus = array_merge(
-            array_column($timeJogadorBanco, 'id_golpe_status'),
-            array_column($timeAdversarioBanco, 'id_golpe_status')
-        );
+        $opcoesStatus = $this->encontro->encontrarOpcoesDeGolpeStatus($idsEspecie);
+        $idsGolpeStatus = array_merge([], ...array_values($opcoesStatus));
         $idsHeldItem = array_merge(
             array_column($timeJogadorBanco, 'id_held_item'),
             array_column($timeAdversarioBanco, 'id_held_item')
@@ -74,6 +81,7 @@ final class BattleService
             'tipos' => $this->encontro->encontrarTiposDasEspecies($idsEspecie),
             'golpes_dano' => $this->encontro->encontrarGolpesDeDanoDasEspecies($idsEspecie),
             'golpes_status' => $this->encontro->encontrarGolpesPorIds($idsGolpeStatus),
+            'opcoes_status' => $opcoesStatus,
             'held_items' => $this->encontro->encontrarItensPorIds($idsHeldItem),
             'efetividades' => $this->encontro->encontrarEfetividadesPorNome(),
         ];
@@ -102,13 +110,14 @@ final class BattleService
             'jogador' => [
                 'indice_ativo' => $this->primeiroPokemonVivo($timeJogador),
                 'time' => $timeJogador,
-                'itens' => $this->encontro->encontrarInventario($idPerfil),
+                'itens' => $this->itensDeCura($idPerfil),
             ],
             'adversario' => [
                 'indice_ativo' => $this->primeiroPokemonVivo($timeAdversario),
                 'time' => $timeAdversario,
             ],
             '_interno' => [
+                'golpes_status_atualizados' => true,
                 'efetividades' => $catalogo['efetividades'],
                 'turnos_processados' => 0,
                 'eventos_turno_pendente' => [],
@@ -152,9 +161,11 @@ final class BattleService
             return null;
         }
 
-        return (int) $batalha['id_perfil'] === $idPerfil
-            ? $this->estadoPublico($batalha)
-            : null;
+        if ((int) $batalha['id_perfil'] !== $idPerfil) {
+            return null;
+        }
+        $this->atualizarGolpesStatusDaSessao($batalha);
+        return $this->estadoPublico($batalha);
     }
 
     public function executarTurno(int $idPerfil, array $solicitacao): array
@@ -171,7 +182,8 @@ final class BattleService
             );
         }
 
-        if (($solicitacao['acao'] ?? null) !== 'golpe') {
+        $acao = $solicitacao['acao'] ?? null;
+        if (!in_array($acao, ['golpe', 'item'], true)) {
             throw new ApiException('A ação da batalha é inválida.', 422);
         }
 
@@ -187,7 +199,7 @@ final class BattleService
             throw new ApiException('Esta batalha já foi finalizada.', 409);
         }
 
-        $idGolpe = $this->inteiroSolicitado($solicitacao['id_golpe'] ?? null, 'golpe');
+        $this->atualizarGolpesStatusDaSessao($batalha);
         $indiceJogador = (int) $batalha['jogador']['indice_ativo'];
         $pokemonJogador = $batalha['jogador']['time'][$indiceJogador] ?? null;
         if (
@@ -197,16 +209,9 @@ final class BattleService
             throw new ApiException('O Pokémon ativo do jogador não pode atacar.', 409);
         }
 
-        $golpeJogador = null;
-        foreach ($pokemonJogador['golpes']['dano'] ?? [] as $golpe) {
-            if ((int) $golpe['id_golpe'] === $idGolpe) {
-                $golpeJogador = $golpe;
-                break;
-            }
-        }
-        if ($golpeJogador === null) {
-            throw new ApiException('Esse golpe não pertence ao Pokémon ativo.', 422);
-        }
+        $golpeJogador = $acao === 'golpe'
+            ? $this->selecionarGolpe($pokemonJogador, $this->inteiroSolicitado($solicitacao['id_golpe'] ?? null, 'golpe'))
+            : null;
 
         $indiceAdversario = (int) $batalha['adversario']['indice_ativo'];
         $pokemonAdversario = $batalha['adversario']['time'][$indiceAdversario] ?? null;
@@ -223,14 +228,26 @@ final class BattleService
         $golpeAdversario = $golpesAdversario[
             $this->aleatoriedade->inteiro(0, count($golpesAdversario) - 1)
         ];
+        $statusAdversario = $pokemonAdversario['golpes']['status'] ?? null;
+        $atributo = self::ATRIBUTO_POR_GOLPE_STATUS[$statusAdversario['api_id'] ?? 0] ?? null;
+        if ($atributo !== null && ($pokemonAdversario['estagios'][$atributo] ?? 0) < 6
+            && $this->aleatoriedade->inteiro(1, 4) === 1
+        ) {
+            $golpeAdversario = $statusAdversario;
+        }
 
-        $ordem = $this->determinarOrdem(
+        $ordem = $golpeJogador === null ? [['adversario', $golpeAdversario]] : $this->determinarOrdem(
             $pokemonJogador,
             $golpeJogador,
             $pokemonAdversario,
             $golpeAdversario
         );
         $eventos = [];
+        $idItem = null;
+        if ($acao === 'item') {
+            $idItem = $this->inteiroSolicitado($solicitacao['id_item'] ?? null, 'item');
+            $this->usarItemDeCura($batalha, $idItem, $eventos);
+        }
         foreach ($ordem as [$lado, $golpe]) {
             $outroLado = $lado === 'jogador' ? 'adversario' : 'jogador';
             $atacante = $batalha[$lado]['time'][$batalha[$lado]['indice_ativo']];
@@ -244,7 +261,17 @@ final class BattleService
             $this->executarGolpe($batalha, $lado, $golpe, $eventos);
         }
 
+        $this->aplicarDanoDeCondicao($batalha, $eventos);
         $this->trocarDesmaiadosAutomaticamente($batalha, $eventos);
+        if ($idItem !== null) {
+            if (!$this->encontro->consumirItem($idPerfil, $idItem)) {
+                throw new ApiException('Este item não está mais disponível.', 409);
+            }
+            $batalha['jogador']['itens'] = array_values(array_filter(
+                $batalha['jogador']['itens'],
+                static fn(array $item): bool => (int) $item['quantidade'] > 0
+            ));
+        }
         $batalha['_interno']['turnos_processados']++;
         $batalha['log'] = array_merge($batalha['log'], $eventos);
 
@@ -252,7 +279,13 @@ final class BattleService
         $adversarioSemPokemon = !$this->timePossuiPokemonVivo($batalha['adversario']['time']);
         if ($jogadorSemPokemon || $adversarioSemPokemon) {
             $batalha['finalizada'] = true;
-            $batalha['resultado'] = $adversarioSemPokemon ? 'VITORIA' : 'DERROTA';
+            foreach (['jogador', 'adversario'] as $lado) {
+                foreach ($batalha[$lado]['time'] as &$pokemon) {
+                    $pokemon['estagios'] = $this->estagiosIniciais();
+                }
+                unset($pokemon);
+            }
+            $batalha['resultado'] = $jogadorSemPokemon ? 'DERROTA' : 'VITORIA';
             $eventoFinal = $batalha['resultado'] === 'VITORIA'
                 ? $this->evento(
                     'fim',
@@ -287,9 +320,14 @@ final class BattleService
 
         $batalhaFinal = $batalha;
         $eventos = $batalha['_interno']['eventos_turno_pendente'] ?? [];
+        // A recompensa é definida pelo tipo de encontro e concedida uma só vez,
+        // na mesma transação que salva o resultado e o histórico da batalha.
         $dinheiroGanho = $batalha['resultado'] === 'VITORIA'
-            && $batalha['tipo_encontro'] === 'selvagem'
-            ? self::RECOMPENSA_SELVA
+            ? match ($batalha['tipo_encontro']) {
+                'selvagem' => self::RECOMPENSA_SELVA,
+                'treinador' => self::RECOMPENSA_TREINADOR,
+                default => 0,
+            }
             : 0;
         $resumo = [
             'resultado' => $batalha['resultado'],
@@ -342,6 +380,11 @@ final class BattleService
                     (int) $batalha['id_perfil'],
                     (int) $batalha['alvo']['id']
                 );
+            }
+
+            // Tanto treinadores quanto selvagens recebem a recompensa.
+            // Executar aqui evita pagamentos duplicados para o mesmo encontro.
+            if ($dinheiroGanho > 0) {
                 $this->batalhaModel->adicionarDinheiroPerfil(
                     (int) $batalha['id_perfil'],
                     $dinheiroGanho
@@ -443,8 +486,46 @@ final class BattleService
                 $idEspecie = (int) $pokemon['id_pokemon_especie'];
                 $especie = $especies[$idEspecie] ?? null;
                 if ($especie === null) {
-                    throw new RuntimeException('A espécie do Pokémon evoluído não foi encontrada.');
+                    throw new RuntimeException('A espécie do Pokémon não foi encontrada.');
                 }
+                $eventos[] = $this->evento(
+                    'nivel',
+                    $this->nomePokemon($pokemon) . ' subiu para o Nv. ' . $nivelDepois . '!'
+                );
+
+                $nivelEvolucao = $nivelAntes + 1;
+                while ($nivelEvolucao <= $nivelDepois) {
+                    $evolucao = $this->encontro->encontrarEvolucaoPorNivel($idEspecie, $nivelDepois);
+                    if ($evolucao === null) {
+                        break;
+                    }
+
+                    $idEspecie = (int) $evolucao['id_pokemon_destino'];
+                    $destino = $this->encontro->encontrarDadosDasEspecies([$idEspecie])[$idEspecie] ?? null;
+                    if ($destino === null) {
+                        throw new RuntimeException('A espécie do Pokémon evoluído não foi encontrada.');
+                    }
+
+                    $eventos[] = $this->evento(
+                        'evolucao',
+                        $this->formatarNome($especie['nome']) . ' evoluiu para '
+                        . $this->formatarNome($destino['nome']) . '!'
+                    );
+                    $especie = $destino;
+                    $nivelEvolucao = max($nivelEvolucao, (int) $evolucao['nivel_requisito']) + 1;
+                }
+
+                if ($idEspecie !== (int) $pokemon['id_pokemon_especie']) {
+                    $apelido = $pokemon['apelido'] ?? (
+                        $pokemon['nome_exibicao'] !== $pokemon['nome_especie'] ? $pokemon['nome_exibicao'] : ''
+                    );
+                    $pokemon['id_pokemon_especie'] = $idEspecie;
+                    $pokemon['nome_especie'] = $especie['nome'];
+                    $pokemon['nome_exibicao'] = trim($apelido) !== '' ? $apelido : $especie['nome'];
+                    $pokemon['imagem_url'] = $especie['imagem_url'];
+                    $pokemon['tipos'] = $this->encontro->encontrarTiposDasEspecies([$idEspecie])[$idEspecie] ?? [];
+                }
+
                 $atributosAntigos = $pokemon['atributos'];
                 $atributosNovos = $this->calculadora->calcular(
                     (int) $especie['hp_base'],
@@ -457,17 +538,13 @@ final class BattleService
                 );
                 $hpAtual = (int) $atributosAntigos['hp_atual'];
                 $atributosNovos['hp_atual'] = $hpAtual > 0
-                    ? min(
+                    ? max(1, min(
                         $atributosNovos['hp_max'],
                         $hpAtual + ($atributosNovos['hp_max'] - (int) $atributosAntigos['hp_max'])
-                    )
+                    ))
                     : 0;
                 $pokemon['nivel'] = $nivelDepois;
                 $pokemon['atributos'] = $atributosNovos;
-                $eventos[] = $this->evento(
-                    'nivel',
-                    $this->nomePokemon($pokemon) . ' subiu para o Nv. ' . $nivelDepois . '!'
-                );
             }
 
             $this->batalhaModel->atualizarPokemonTime(
@@ -518,13 +595,27 @@ final class BattleService
         $ladoDefensor = $ladoAtacante === 'jogador' ? 'adversario' : 'jogador';
         $indiceAtacante = (int) $batalha[$ladoAtacante]['indice_ativo'];
         $indiceDefensor = (int) $batalha[$ladoDefensor]['indice_ativo'];
-        $atacante = $batalha[$ladoAtacante]['time'][$indiceAtacante];
-        $defensor = $batalha[$ladoDefensor]['time'][$indiceDefensor];
+        $atacante = &$batalha[$ladoAtacante]['time'][$indiceAtacante];
+        $defensor = &$batalha[$ladoDefensor]['time'][$indiceDefensor];
+        if (!$this->podeAtacar($atacante, $eventos)) {
+            return;
+        }
         $eventos[] = $this->evento(
             'golpe',
             $this->nomePokemon($atacante) . ' usou '
                 . $this->formatarNome((string) $golpe['nome']) . '!'
         );
+
+        $atributo = self::ATRIBUTO_POR_GOLPE_STATUS[$golpe['api_id'] ?? 0] ?? null;
+        if ($atributo !== null) {
+            $estagio = (int) ($atacante['estagios'][$atributo] ?? 0);
+            $atacante['estagios'][$atributo] = min(6, $estagio + 2);
+            $nomeAtributo = $atributo === 'ATAQUE' ? 'Ataque' : 'Ataque Especial';
+            $eventos[] = $this->evento('status', $estagio === 6
+                ? $nomeAtributo . ' já está no máximo!'
+                : $nomeAtributo . ' de ' . $this->nomePokemon($atacante) . ' aumentou!');
+            return;
+        }
 
         $precisao = $golpe['precisao'];
         if ($precisao !== null && $this->aleatoriedade->inteiro(1, 100) > (int) $precisao) {
@@ -571,16 +662,139 @@ final class BattleService
         }
 
         $hpAtual = (int) $defensor['atributos']['hp_atual'];
-        $batalha[$ladoDefensor]['time'][$indiceDefensor]['atributos']['hp_atual'] = max(
+        $defensor['atributos']['hp_atual'] = max(
             0,
             $hpAtual - (int) $resultado['dano']
         );
-        if ($batalha[$ladoDefensor]['time'][$indiceDefensor]['atributos']['hp_atual'] === 0) {
+        $hpPerdido = $hpAtual - $defensor['atributos']['hp_atual'];
+        $eventos[] = $this->evento('dano', $this->nomePokemon($defensor) . ' perdeu ' . $hpPerdido . ' HP.');
+        if ($defensor['atributos']['hp_atual'] === 0) {
             $eventos[] = $this->evento(
                 'desmaio',
                 $this->nomePokemon($defensor) . ' desmaiou!'
             );
+            return;
         }
+
+        $condicao = self::CONDICAO_POR_TIPO[$golpe['tipo']] ?? null;
+        if ($condicao !== null && $defensor['status'] === 'normal'
+            && $this->aleatoriedade->inteiro(1, 100) <= 100
+        ) {
+            $defensor['status'] = $condicao;
+            $defensor['turnos_condicao'] = 0;
+            $eventos[] = $this->evento('status', $this->nomePokemon($defensor) . ' recebeu ' . $condicao . '!');
+        }
+    }
+
+    private function selecionarGolpe(array $pokemon, int $idGolpe): array
+    {
+        $status = $pokemon['golpes']['status'] ?? null;
+        if (isset(self::ATRIBUTO_POR_GOLPE_STATUS[$status['api_id'] ?? 0])
+            && (int) $status['id_golpe'] === $idGolpe
+        ) {
+            return $status;
+        }
+        foreach ($pokemon['golpes']['dano'] as $golpe) {
+            if ((int) $golpe['id_golpe'] === $idGolpe) {
+                return $golpe;
+            }
+        }
+        throw new ApiException('Esse golpe não pertence ao Pokémon ativo.', 422);
+    }
+
+    private function podeAtacar(array &$pokemon, array &$eventos): bool
+    {
+        $condicao = $pokemon['status'];
+        if ($condicao === 'Paralisia' && $this->aleatoriedade->inteiro(1, 100) <= 20) {
+            $eventos[] = $this->evento('status', $this->nomePokemon($pokemon) . ' travou de paralisia!');
+            return false;
+        }
+        if ($condicao !== 'Sono' && $condicao !== 'Congelamento') {
+            return true;
+        }
+
+        $turnos = (int) ($pokemon['turnos_condicao'] ?? 0) + 1;
+        if ($turnos >= 3 || $this->aleatoriedade->inteiro(1, 100) <= 20) {
+            $pokemon['status'] = 'normal';
+            unset($pokemon['turnos_condicao']);
+            $mensagem = $condicao === 'Sono' ? ' acordou!' : ' descongelou!';
+            $eventos[] = $this->evento('status', $this->nomePokemon($pokemon) . $mensagem);
+            return true;
+        }
+
+        $pokemon['turnos_condicao'] = $turnos;
+        $mensagem = $condicao === 'Sono' ? ' está dormindo!' : ' está congelado!';
+        $eventos[] = $this->evento('status', $this->nomePokemon($pokemon) . $mensagem);
+        return false;
+    }
+
+    private function aplicarDanoDeCondicao(array &$batalha, array &$eventos): void
+    {
+        foreach (['jogador', 'adversario'] as $lado) {
+            $pokemon = &$batalha[$lado]['time'][$batalha[$lado]['indice_ativo']];
+            $percentual = match ($pokemon['status']) {
+                'Queimadura' => 3,
+                'Envenenamento' => 6,
+                default => 0,
+            };
+            if ($percentual === 0 || (int) $pokemon['atributos']['hp_atual'] <= 0) {
+                continue;
+            }
+
+            $dano = max(1, intdiv((int) $pokemon['atributos']['hp_max'] * $percentual, 100));
+            $pokemon['atributos']['hp_atual'] = max(0, (int) $pokemon['atributos']['hp_atual'] - $dano);
+            $nome = $this->nomePokemon($pokemon);
+            $eventos[] = $this->evento('status', $nome . ' perdeu HP por ' . $pokemon['status'] . '!');
+            if ($pokemon['atributos']['hp_atual'] === 0) {
+                $eventos[] = $this->evento('desmaio', $nome . ' desmaiou!');
+            }
+        }
+    }
+
+    private function itensDeCura(int $idPerfil): array
+    {
+        $curas = $this->encontro->encontrarCurasDeStatus();
+        $itens = [];
+        foreach ($this->encontro->encontrarInventario($idPerfil) as $item) {
+            if (isset($curas[(int) $item['id_item']])) {
+                $item['cura_status'] = $curas[(int) $item['id_item']];
+                $itens[] = $item;
+            }
+        }
+        return $itens;
+    }
+
+    private function usarItemDeCura(array &$batalha, int $idItem, array &$eventos): void
+    {
+        $jogador = &$batalha['jogador'];
+        $jogador['itens'] = $this->itensDeCura((int) $batalha['id_perfil']);
+        $pokemon = &$jogador['time'][$jogador['indice_ativo']];
+        foreach ($jogador['itens'] as &$item) {
+            if ((int) $item['id_item'] !== $idItem) {
+                continue;
+            }
+            $curaStatus = in_array($pokemon['status'], $item['cura_status'], true);
+            $atributos = &$pokemon['atributos'];
+            $curaHp = $item['categoria'] === 'HP_STATUS' && $atributos['hp_atual'] < $atributos['hp_max'];
+            if (!$curaStatus && !$curaHp) {
+                throw new ApiException('Este item não tem efeito no Pokémon ativo.', 422);
+            }
+            if ($curaStatus) {
+                $pokemon['status'] = 'normal';
+                unset($pokemon['turnos_condicao']);
+            }
+            if ($curaHp) {
+                $valor = (int) $item['valor_efeito'];
+                $recuperacao = $item['tipo_efeito'] === 'PERCENTUAL'
+                    ? intdiv((int) $atributos['hp_max'] * $valor, 100)
+                    : $valor;
+                $atributos['hp_atual'] = min($atributos['hp_max'], $atributos['hp_atual'] + $recuperacao);
+            }
+            $item['quantidade']--;
+            $eventos[] = $this->evento('item', $item['nome'] . ' foi usado em ' . $this->nomePokemon($pokemon) . '!');
+            return;
+        }
+        throw new ApiException('Este item não está disponível no inventário.', 422);
     }
 
     private function trocarDesmaiadosAutomaticamente(array &$batalha, array &$eventos): void
@@ -620,6 +834,16 @@ final class BattleService
     private function estadoPublico(array $batalha): array
     {
         unset($batalha['_interno']);
+
+        foreach (['jogador', 'adversario'] as $lado) {
+            foreach ($batalha[$lado]['time'] as &$pokemon) {
+                $pokemon['ataques_efetivos'] = [
+                    'ataque' => $this->calculadoraDano->ataqueEfetivo($pokemon, 'ataque'),
+                    'ataque_especial' => $this->calculadoraDano->ataqueEfetivo($pokemon, 'ataque_especial'),
+                ];
+            }
+            unset($pokemon);
+        }
 
         return $batalha;
     }
@@ -808,6 +1032,7 @@ final class BattleService
         return [
             'id_pokemon_time' => (int) $pokemon['id_pokemon_time'],
             'id_pokemon_especie' => $idEspecie,
+            'apelido' => $pokemon['apelido'] ?? null,
             'nome_exibicao' => trim((string) ($pokemon['apelido'] ?? '')) !== ''
                 ? $pokemon['apelido']
                 : $pokemon['nome_especie'],
@@ -895,20 +1120,50 @@ final class BattleService
             $golpesDeDano[] = $this->formatarGolpe($golpe);
         }
 
-        $golpeStatus = null;
-        if ($idGolpeStatus !== null) {
-            $idGolpeStatus = (int) $idGolpeStatus;
-            $golpeStatus = $catalogo['golpes_status'][$idGolpeStatus] ?? null;
-            if ($golpeStatus === null) {
-                throw new RuntimeException('Um golpe de status configurado não foi encontrado.');
-            }
-            $golpeStatus = $this->formatarGolpe($golpeStatus);
-        }
-
         return [
             'dano' => $golpesDeDano,
-            'status' => $golpeStatus,
+            'status' => $this->golpeStatusDoPokemon($idEspecie, $idGolpeStatus, $catalogo),
         ];
+    }
+
+    private function golpeStatusDoPokemon(int $idEspecie, mixed $idGolpeStatus, array $catalogo): ?array
+    {
+        $opcoes = $catalogo['opcoes_status'][$idEspecie] ?? [];
+        $idGolpeStatus = in_array((int) $idGolpeStatus, $opcoes, true)
+            ? (int) $idGolpeStatus
+            : ($opcoes[0] ?? null);
+        $golpeStatus = $catalogo['golpes_status'][$idGolpeStatus] ?? null;
+
+        return $golpeStatus === null ? null : $this->formatarGolpe($golpeStatus);
+    }
+
+    private function atualizarGolpesStatusDaSessao(array &$batalha): void
+    {
+        if (($batalha['_interno']['golpes_status_atualizados'] ?? false) || ($batalha['finalizada'] ?? false)) {
+            return;
+        }
+
+        $idsEspecie = array_merge(
+            array_column($batalha['jogador']['time'], 'id_pokemon_especie'),
+            array_column($batalha['adversario']['time'], 'id_pokemon_especie')
+        );
+        $opcoes = $this->encontro->encontrarOpcoesDeGolpeStatus($idsEspecie);
+        $catalogo = [
+            'opcoes_status' => $opcoes,
+            'golpes_status' => $this->encontro->encontrarGolpesPorIds(array_merge([], ...array_values($opcoes))),
+        ];
+        foreach (['jogador', 'adversario'] as $lado) {
+            foreach ($batalha[$lado]['time'] as &$pokemon) {
+                $pokemon['golpes']['status'] = $this->golpeStatusDoPokemon(
+                    (int) $pokemon['id_pokemon_especie'],
+                    $pokemon['golpes']['status']['id_golpe'] ?? null,
+                    $catalogo
+                );
+            }
+            unset($pokemon);
+        }
+        $batalha['_interno']['golpes_status_atualizados'] = true;
+        $_SESSION['batalha'] = $batalha;
     }
 
     private function heldItemDoCatalogo(mixed $idHeldItem, array $catalogo): ?array
@@ -942,6 +1197,7 @@ final class BattleService
     {
         return [
             'id_golpe' => (int) $golpe['id_golpe'],
+            'api_id' => (int) ($golpe['api_id'] ?? 0),
             'nome' => $golpe['nome'],
             'tipo' => $golpe['tipo'],
             'categoria' => $golpe['categoria'],

@@ -32,7 +32,8 @@ final class MontadorTimeAdversario
 
     public function obterEstadoDoPerfil(int $idPerfil): array
     {
-        $area = $this->areaPorDesafiosConcluidos(
+        $rota = $this->encontro->encontrarRotaGerada($idPerfil);
+        $area = $rota['area'] ?? $this->areaPorDesafiosConcluidos(
             $this->encontro->contarConcluidos($idPerfil)
         );
 

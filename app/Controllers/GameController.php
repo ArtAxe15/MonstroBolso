@@ -7,8 +7,11 @@ namespace App\Controllers;
 use App\Http\JsonResponse;
 use App\Http\ApiException;
 use App\Http\PerfilAtivo;
+use App\Models\Encontro;
+use App\Models\ServicosMapa;
 use PDO;
 use App\Services\BattleService;
+use App\Services\CalculadoraAtributos;
 use App\Services\MontadorTimeAdversario;
 use Throwable;
 
@@ -56,14 +59,19 @@ final class GameController
         $pokemon = $stmt->fetch();
         if (!$pokemon) JsonResponse::send(['ok' => false, 'message' => 'Dados do Pokémon inicial não encontrados.'], 404);
 
-        // Fórmula simplificada para gerar os atributos iniciais no nível 5.
-        $nivel = 5;
-        $hp = (int) floor((2 * (int) $pokemon['hp_base'] * $nivel) / 100) + $nivel + 10;
-        $ataque = (int) floor((2 * (int) $pokemon['ataque_base'] * $nivel) / 100) + 5;
-        $defesa = (int) floor((2 * (int) $pokemon['defesa_base'] * $nivel) / 100) + 5;
-        $ataqueEsp = (int) floor((2 * (int) $pokemon['ataque_especial_base'] * $nivel) / 100) + 5;
-        $defesaEsp = (int) floor((2 * (int) $pokemon['defesa_especial_base'] * $nivel) / 100) + 5;
-        $velocidade = (int) floor((2 * (int) $pokemon['velocidade_base'] * $nivel) / 100) + 5;
+        $nivel = 97;
+        $idEspecie = (int) $pokemon['id_pokemon_especie'];
+        $opcoesStatus = (new Encontro($this->conn))->encontrarOpcoesDeGolpeStatus([$idEspecie]);
+        $idGolpeStatus = $opcoesStatus[$idEspecie][0] ?? null;
+        $atributos = (new CalculadoraAtributos())->calcular(
+            (int) $pokemon['hp_base'],
+            (int) $pokemon['ataque_base'],
+            (int) $pokemon['defesa_base'],
+            (int) $pokemon['ataque_especial_base'],
+            (int) $pokemon['defesa_especial_base'],
+            (int) $pokemon['velocidade_base'],
+            $nivel
+        );
 
         try {
             $this->conn->beginTransaction();
@@ -71,6 +79,7 @@ final class GameController
                 INSERT INTO pokemon_time (
                     id_perfil,
                     id_pokemon_especie,
+                    id_golpe_status,
                     nivel,
                     hp_max,
                     hp_atual,
@@ -84,7 +93,8 @@ final class GameController
                 ) VALUES (
                     :perfil,
                     :especie,
-                    5,
+                    :golpe_status,
+                    :nivel,
                     :hp_max,
                     :hp_atual,
                     :ataque,
@@ -99,14 +109,16 @@ final class GameController
 
             $insert->execute([
                 'perfil' => $idPerfil,
-                'especie' => $pokemon['id_pokemon_especie'],
-                'hp_max' => $hp,
-                'hp_atual' => $hp,
-                'ataque' => $ataque,
-                'defesa' => $defesa,
-                'ataque_esp' => $ataqueEsp,
-                'defesa_esp' => $defesaEsp,
-                'velocidade' => $velocidade
+                'especie' => $idEspecie,
+                'golpe_status' => $idGolpeStatus,
+                'nivel' => $nivel,
+                'hp_max' => $atributos['hp_max'],
+                'hp_atual' => $atributos['hp_max'],
+                'ataque' => $atributos['ataque'],
+                'defesa' => $atributos['defesa'],
+                'ataque_esp' => $atributos['ataque_especial'],
+                'defesa_esp' => $atributos['defesa_especial'],
+                'velocidade' => $atributos['velocidade']
             ]);
             $this->conn->prepare("INSERT INTO perfil_log (id_perfil, acao, descricao, detalhes) VALUES (:perfil, 'INICIAL_ESCOLHIDO', 'Pokémon inicial escolhido.', :detalhes)")
                 ->execute(['perfil' => $idPerfil, 'detalhes' => json_encode(['pokemon' => $nome], JSON_UNESCAPED_UNICODE)]);
@@ -122,6 +134,29 @@ final class GameController
 
     private function gerarMapaSeNecessario(int $idPerfil): void
     {
+        $bloqueio = $this->conn->prepare('SELECT id_perfil FROM perfil WHERE id_perfil = :perfil FOR UPDATE');
+        $bloqueio->execute(['perfil' => $idPerfil]);
+        $bloqueio->closeCursor();
+
+        $encontro = new Encontro($this->conn);
+        $desafioAtual = $encontro->encontrarAtual($idPerfil);
+        if ($desafioAtual === null) {
+            $concluirDesafio = $this->conn->prepare(
+                "UPDATE mapa_no SET status = 'CONCLUIDO', concluido_em = CURRENT_TIMESTAMP()
+                 WHERE id_perfil = :perfil AND tipo_local = 'DESAFIO' AND status <> 'CONCLUIDO'"
+            );
+            $concluirDesafio->execute(['perfil' => $idPerfil]);
+            $encerrarRota = $this->conn->prepare(
+                "UPDATE mapa_no SET status = 'IGNORADO' WHERE id_perfil = :perfil AND status = 'DISPONIVEL'"
+            );
+            $encerrarRota->execute(['perfil' => $idPerfil]);
+            return;
+        }
+
+        $idDesafio = (int) $desafioAtual['id_desafio'];
+        $rota = $encontro->encontrarRotaGerada($idPerfil);
+        $primeiroDesafio = (int) $desafioAtual['ordem'] === 1;
+        $mesmoDesafio = $rota !== null && (int) $rota['id_desafio'] === $idDesafio;
         $check = $this->conn->prepare(
             'SELECT COUNT(*) AS total, '
             . "SUM(CASE WHEN etapa = 1 THEN 1 ELSE 0 END) AS etapa_um, "
@@ -163,12 +198,22 @@ final class GameController
             && (int) ($mapaExistente['desafio_final'] ?? 0) === 1
             && (int) $checkConexoes->fetchColumn() === 20
             && (int) $checkVinculos->fetchColumn() === (int) $quantidadeTreinadores->fetchColumn();
-        if ($mapaAtualizado) {
+        if ($mapaAtualizado && ($mesmoDesafio || ($rota === null && $primeiroDesafio))) {
+            if ($rota === null) {
+                $encontro->registrarRotaGerada($idPerfil, $idDesafio, 1);
+            }
             return;
         }
 
-        // Ao migrar do mapa antigo, recria somente os pontos da rota e os NPCs
-        // correspondentes. O time, dinheiro, perfil e registros de batalha permanecem.
+        $area = $rota['area'] ?? 1;
+        if (!$mesmoDesafio && !$primeiroDesafio) {
+            if ($rota === null) {
+                $area = (new MontadorTimeAdversario($this->conn))->obterEstadoDoPerfil($idPerfil)['area_atual'];
+            }
+            $outrasAreas = array_values(array_diff([1, 2, 3], [$area]));
+            $area = $outrasAreas[array_rand($outrasAreas)];
+        }
+
         $apagarMapa = $this->conn->prepare('DELETE FROM mapa_no WHERE id_perfil = :perfil');
         $apagarMapa->execute(['perfil' => $idPerfil]);
         $apagarNpcsAntigos = $this->conn->prepare('DELETE FROM npc_mapa WHERE id_perfil = :perfil');
@@ -206,6 +251,11 @@ final class GameController
         foreach ($etapas as $numeroEtapa => $configuracao) {
             $tiposLocais = $configuracao['tipos'];
             shuffle($tiposLocais);
+            if ($numeroEtapa === 3) {
+                // As extremidades são a única saída de alguns nós da etapa anterior.
+                $indicePokebola = array_search('POKEBOLA', $tiposLocais, true);
+                [$tiposLocais[1], $tiposLocais[$indicePokebola]] = [$tiposLocais[$indicePokebola], $tiposLocais[1]];
+            }
 
             foreach ($configuracao['posicoes'] as $indice => [$x, $y]) {
                 $tipoLocal = $tiposLocais[$indice];
@@ -276,6 +326,7 @@ final class GameController
                 'destino' => $ids[$etapaDestino][$indiceDestino],
             ]);
         }
+        $encontro->registrarRotaGerada($idPerfil, $idDesafio, $area);
     }
 
     /**
@@ -336,6 +387,7 @@ final class GameController
             $this->conn->beginTransaction();
             $this->gerarMapaSeNecessario($idPerfil);
             $this->sincronizarProgressoMapa($idPerfil);
+            $estadoDesafios = (new MontadorTimeAdversario($this->conn))->obterEstadoDoPerfil($idPerfil);
             $this->conn->commit();
         } catch (Throwable $e) {
             if ($this->conn->inTransaction()) {
@@ -394,7 +446,6 @@ final class GameController
             }
         }
 
-        $estadoDesafios = (new MontadorTimeAdversario($this->conn))->obterEstadoDoPerfil($idPerfil);
         $etapasDisponiveis = array_values(array_filter(
             array_map(static fn(array $no): int => $no['status'] === 'DISPONIVEL' ? (int) $no['etapa'] : 99, $nos),
             static fn(int $etapa): bool => $etapa !== 99
@@ -410,6 +461,7 @@ final class GameController
                 'dinheiro' => (int) $perfil['dinheiro'],
             ],
             'time' => $teamStmt->fetchAll(),
+            'inventario' => (new Encontro($this->conn))->encontrarInventario($idPerfil),
             'npc' => $npc,
             'nos' => $nos,
             'conexoes' => $conexoes,
@@ -417,7 +469,47 @@ final class GameController
             'etapa_atual' => $etapaAtual,
             'area_atual' => $estadoDesafios['area_atual'],
             'desafio_atual' => $estadoDesafios['desafio_atual'],
+            'jornada_concluida' => $estadoDesafios['desafio_atual'] === null,
         ]);
+    }
+
+    public function pokemart(): void
+    {
+        $idPerfil = $this->perfilAtivo();
+        try {
+            $no = $this->idServicoMapa($_GET['id_mapa_no'] ?? null);
+            $dados = (new ServicosMapa($this->conn))->catalogo($idPerfil, $no);
+            JsonResponse::send(['ok' => true] + $dados);
+        } catch (ApiException $e) {
+            JsonResponse::send(['ok' => false, 'message' => $e->getMessage()], $e->statusCode());
+        }
+    }
+
+    public function visitarServicoMapa(): void
+    {
+        $idPerfil = $this->perfilAtivo();
+        $dados = $this->dados();
+        try {
+            $acao = $dados['acao'] ?? null;
+            if (!in_array($acao, ['curar', 'comprar', 'concluir_pokemart'], true)) {
+                throw new ApiException('Ação inválida.', 422);
+            }
+            $no = $this->idServicoMapa($dados['id_mapa_no'] ?? null);
+            $item = $acao === 'comprar' ? $this->idServicoMapa($dados['id_item'] ?? null) : null;
+            $resposta = (new ServicosMapa($this->conn))->visitar($idPerfil, $no, $acao, $item);
+            JsonResponse::send(['ok' => true] + $resposta);
+        } catch (ApiException $e) {
+            JsonResponse::send(['ok' => false, 'message' => $e->getMessage()], $e->statusCode());
+        }
+    }
+
+    private function idServicoMapa(mixed $valor): int
+    {
+        $id = is_int($valor) || is_string($valor) ? filter_var($valor, FILTER_VALIDATE_INT) : false;
+        if ($id === false || $id <= 0) {
+            throw new ApiException('Identificador inválido.', 422);
+        }
+        return $id;
     }
 
     public function encounter(): void

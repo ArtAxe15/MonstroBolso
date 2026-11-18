@@ -170,13 +170,96 @@ function renderizarStarter(iniciais) {
     `;
 }
 
-async function carregarMapa() {
+async function carregarMapa(aviso = '') {
     loading('Carregando o mapa da sua jornada...');
     const dados = await requisitarApi('/api/game/map');
     if (dados.proxima_etapa === 'starter') { await navegar('/starter'); return; }
     state.jogo = dados;
     state.perfil = dados.perfil;
-    renderizarMapa();
+    renderizarMapa(aviso);
+}
+
+function visitarLocalMapa(idMapaNo, acao, item = {}) {
+    return requisitarApi('/api/game/map/service', {
+        method: 'POST',
+        body: { id_mapa_no: idMapaNo, acao, ...item }
+    });
+}
+
+async function abrirPokemart(idMapaNo) {
+    const catalogo = await requisitarApi(`/api/game/pokemart?id_mapa_no=${idMapaNo}`);
+    const dialogo = document.createElement('dialog');
+    dialogo.className = 'pokemart-dialogo';
+    dialogo.setAttribute('aria-labelledby', 'pokemart-titulo');
+    let ocupado = false;
+    let comprou = false;
+
+    function renderizar(aviso = '', tipo = 'sucesso') {
+        dialogo.innerHTML = `
+            <header><h2 id="pokemart-titulo">Poké Mart</h2>
+                <button type="button" data-mart-acao="fechar">Fechar</button>
+            </header>
+            <p>Saldo: ₽ ${Number(catalogo.dinheiro).toLocaleString('pt-BR')}</p>
+            ${mensagem(aviso, tipo)}
+            <ul class="pokemart-catalogo">
+                ${catalogo.itens.map(item => `
+                    <li>
+                        <div><strong>${escaparHtml(item.nome)}</strong>
+                            <p>${escaparHtml(item.descricao)}</p>
+                            <small>Na bolsa: ${Number(item.quantidade)}</small></div>
+                        <button type="button" data-mart-item="${Number(item.id_item)}"
+                            ${Number(item.preco) > Number(catalogo.dinheiro) ? 'disabled' : ''}>
+                            Comprar · ₽ ${Number(item.preco).toLocaleString('pt-BR')}
+                        </button>
+                    </li>`).join('')}
+            </ul>
+            <button type="button" data-mart-acao="concluir">Concluir visita</button>`;
+    }
+
+    dialogo.addEventListener('cancel', ev => { if (ocupado) ev.preventDefault(); });
+    dialogo.addEventListener('close', async () => {
+        dialogo.remove();
+        if (comprou && rotaAtual() === '/map') {
+            try { await carregarMapa(); } catch (e) { alert(e.message); }
+        }
+    });
+    dialogo.addEventListener('click', async ev => {
+        const botao = ev.target.closest('button');
+        if (!botao || ocupado) return;
+        if (botao.dataset.martAcao === 'fechar') {
+            dialogo.close();
+            return;
+        }
+        ocupado = true;
+        dialogo.querySelectorAll('button').forEach(botao => { botao.disabled = true; });
+        const idItem = Number(botao.dataset.martItem);
+        try {
+            if (botao.dataset.martAcao === 'concluir') {
+                await visitarLocalMapa(idMapaNo, 'concluir_pokemart');
+                comprou = false;
+                dialogo.close();
+                await carregarMapa('Visita ao Poké Mart concluída.');
+                return;
+            }
+            const item = catalogo.itens.find(item => Number(item.id_item) === idItem);
+            const resposta = await visitarLocalMapa(idMapaNo, 'comprar', { id_item: idItem });
+            comprou = true;
+            catalogo.dinheiro = resposta.dinheiro;
+            item.quantidade = Number(item.quantidade) + 1;
+            renderizar(`${item.nome} adicionado à bolsa.`);
+        } catch (e) {
+            if (dialogo.open) renderizar(e.message, 'erro');
+            else alert(e.message);
+        } finally {
+            ocupado = false;
+            const foco = dialogo.querySelector(`[data-mart-item="${idItem}"]:enabled`)
+                || dialogo.querySelector('[data-mart-acao="concluir"]');
+            foco?.focus();
+        }
+    });
+    renderizar();
+    appElement.appendChild(dialogo);
+    dialogo.showModal();
 }
 
 async function abrirBatalha() {
@@ -350,7 +433,7 @@ async function recarregarEstadoBatalha() {
     }
 }
 
-async function enviarTurnoBatalha(idGolpe) {
+async function enviarTurnoBatalha(acao) {
     if (state.battleBusy || !state.battle) return;
     state.battleBusy = true;
     state.battleMessage = null;
@@ -359,14 +442,13 @@ async function enviarTurnoBatalha(idGolpe) {
         const dados = await requisitarApi('/api/battle/turn', {
             method: 'POST',
             body: {
-                acao: 'golpe',
-                id_golpe: idGolpe,
+                ...acao,
                 turno: state.battle.turno
             }
         });
         state.battle = dados.batalha;
         state.battleSummary = dados.resumo || null;
-        state.battleMenu = 'fight';
+        state.battleMenu = acao.acao === 'item' ? 'item' : 'fight';
         state.battleLogVisible = state.battleLogVisible || [];
         renderizarBatalha();
         await animarEventosBatalha(dados.eventos || []);
@@ -471,7 +553,7 @@ function renderizarPokemonAtivo(pokemon, ehJogador) {
                 <span>HP ${escaparHtml(hpAtual)} / ${escaparHtml(hpMax)}</span>
                 <div class="battle-hp-bar"><i style="width:${hpPercentual}%"></i></div>
             </div>
-            ${renderizarAtributosBatalha(atributos)}
+            ${renderizarAtributosBatalha(atributos, pokemon.ataques_efetivos)}
             ${state.battle.finalizada
                 ? '<p class="battle-finished-note">Batalha concluída.</p>'
                 : ehJogador ? renderizarMenuAcoesBatalha() : renderizarGolpesAtivos(pokemon.golpes)}
@@ -479,12 +561,12 @@ function renderizarPokemonAtivo(pokemon, ehJogador) {
     `;
 }
 
-function renderizarAtributosBatalha(atributos) {
+function renderizarAtributosBatalha(atributos, ataquesEfetivos = {}) {
     const linhas = [
         ['HP', atributos.hp_max],
-        ['ATQ', atributos.ataque],
+        ['ATQ', ataquesEfetivos.ataque ?? atributos.ataque],
         ['DEF', atributos.defesa],
-        ['ATQ. ESP', atributos.ataque_especial],
+        ['ATQ. ESP', ataquesEfetivos.ataque_especial ?? atributos.ataque_especial],
         ['DEF. ESP', atributos.defesa_especial],
         ['VEL', atributos.velocidade]
     ];
@@ -500,13 +582,15 @@ function renderizarAtributosBatalha(atributos) {
 
 function renderizarGolpesAtivos(golpes, selecionavel = false) {
     const movimentos = (golpes.dano || []).map(golpe => ({ ...golpe, tipo_golpe: 'Dano' }));
-    if (!selecionavel && golpes.status) movimentos.push({ ...golpes.status, tipo_golpe: 'Status' });
+    if ([14, 417].includes(golpes.status?.api_id)) {
+        movimentos.push({ ...golpes.status, tipo_golpe: 'Status' });
+    }
 
     return `
         <section class="battle-moves">
             <h3>GOLPES DO POKÉMON ATIVO</h3>
             ${movimentos.length ? movimentos.map(golpe => `
-                ${selecionavel && golpe.tipo_golpe === 'Dano' ? `
+                ${selecionavel ? `
                     <button
                         type="button"
                         class="battle-move battle-move-button"
@@ -514,7 +598,9 @@ function renderizarGolpesAtivos(golpes, selecionavel = false) {
                         ${state.battleBusy ? 'disabled' : ''}
                     >
                         <strong>${escaparHtml(formatarNomeFrontend(golpe.nome))}</strong>
-                        <span>${escaparHtml(golpe.tipo)} · Poder ${escaparHtml(golpe.poder ?? '—')}</span>
+                        <span>${golpe.tipo_golpe === 'Status'
+                            ? 'Status'
+                            : `${escaparHtml(golpe.tipo)} · Poder ${escaparHtml(golpe.poder ?? '—')}`}</span>
                     </button>
                 ` : `
                     <article class="battle-move">
@@ -542,6 +628,24 @@ function renderizarMenuAcoesBatalha() {
         const pokemon = jogador.time[Number(jogador.indice_ativo)];
         conteudo = pokemon ? renderizarGolpesAtivos(pokemon.golpes, true) : '';
     }
+    if (menu === 'item') {
+        const jogador = state.battle.jogador;
+        const pokemon = jogador.time[Number(jogador.indice_ativo)];
+        const itens = (jogador.itens || []).filter(item => Array.isArray(item.cura_status));
+        conteudo = itens.length ? `<section class="battle-moves" aria-label="Itens de cura">
+            ${itens.map(item => {
+                const podeUsar = item.cura_status.includes(pokemon.status)
+                    || (item.categoria === 'HP_STATUS'
+                        && Number(pokemon.atributos.hp_atual) < Number(pokemon.atributos.hp_max));
+                return `
+                    <button type="button" class="battle-move battle-move-button"
+                        data-battle-item="${Number(item.id_item)}" ${!podeUsar || state.battleBusy ? 'disabled' : ''}>
+                        <strong>${escaparHtml(item.nome)} × ${Number(item.quantidade)}</strong>
+                        <span>${escaparHtml(item.descricao)}</span>
+                    </button>`;
+            }).join('')}
+        </section>` : '<p class="battle-empty">Nenhum item de cura de status no inventário.</p>';
+    }
 
     return `
         <section class="battle-actions">
@@ -553,7 +657,7 @@ function renderizarMenuAcoesBatalha() {
                         class="battle-action-option ${menu === valor ? 'selecionada' : ''}"
                         data-battle-menu="${valor}"
                         aria-pressed="${menu === valor}"
-                        ${valor !== 'fight' || state.battleBusy ? 'disabled' : ''}
+                        ${valor === 'switch' || state.battleBusy ? 'disabled' : ''}
                     >${rotulo}</button>
                 `).join('')}
             </div>
@@ -585,7 +689,67 @@ function renderizarReservaBatalha(pokemon) {
     `;
 }
 
-function renderizarMapa() {
+
+// Histórico consultado do banco: não altera a batalha atual nem navega para /battle.
+let historicoCarregando = false;
+
+function formatarDataHistorico(data) {
+    const valor = String(data || '');
+    const partes = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/.exec(valor);
+    return partes ? `${partes[3]}/${partes[2]}/${partes[1]} às ${partes[4]}:${partes[5]}` : 'Data indisponível';
+}
+
+async function abrirHistoricoBatalhas() {
+    if (historicoCarregando || document.querySelector('.historico-sobreposicao')) return;
+    historicoCarregando = true;
+    try {
+        const dados = await requisitarApi('/api/battle/history');
+        if (rotaAtual() !== '/map') return;
+
+        const batalhas = Array.isArray(dados.batalhas) ? dados.batalhas : [];
+        const conteudo = batalhas.length ? batalhas.map((batalha, indice) => {
+            const eventos = Array.isArray(batalha.eventos) ? batalha.eventos : [];
+            const resultado = batalha.resultado === 'VITORIA' ? 'Vitória' : 'Derrota';
+            const classe = batalha.resultado === 'VITORIA' ? 'vitoria' : 'derrota';
+            const recompensa = Number(batalha.dinheiro_ganho || 0);
+            return `
+                <details class="historico-batalha" ${indice === 0 ? 'open' : ''}>
+                    <summary>
+                        <span class="historico-resumo-texto">
+                            <strong>${escaparHtml(batalha.titulo)}</strong>
+                            <small>${escaparHtml(formatarDataHistorico(batalha.finalizada_em || batalha.iniciada_em))} · ${Number(batalha.turnos) || 0} turnos</small>
+                        </span>
+                        <span class="historico-resultado historico-${classe}">${resultado}</span>
+                        <span class="historico-recompensa">+₽ ${recompensa.toLocaleString('pt-BR')}</span>
+                    </summary>
+                    <div class="historico-detalhes">
+                        <h3>Registro dos acontecimentos</h3>
+                        ${eventos.length ? `<ol class="historico-eventos">${eventos.map(evento => `
+                            <li class="historico-evento ${evento.tipo === 'fim' ? 'historico-evento-fim' : evento.tipo === 'recompensa' ? 'historico-evento-premio' : ''}">${escaparHtml(evento.texto)}</li>
+                        `).join('')}</ol>` : '<p>Esta batalha não possui eventos detalhados no registro.</p>'}
+                    </div>
+                </details>`;
+        }).join('') : '<p class="historico-vazio">Nenhuma batalha concluída nesta jornada.</p>';
+
+        const sobreposicao = document.createElement('div');
+        sobreposicao.className = 'historico-sobreposicao';
+        sobreposicao.innerHTML = `
+            <section class="historico-janela" role="dialog" aria-modal="true" aria-labelledby="historico-titulo" tabindex="-1">
+                <div class="historico-cabecalho">
+                    <div><p class="historico-subtitulo">MONSTROBOLSO · JORNADA ATUAL</p><h2 id="historico-titulo">Ver batalhas</h2></div>
+                    <button type="button" class="historico-fechar" data-acao="fechar-historico" aria-label="Fechar histórico de batalhas">Fechar ✕</button>
+                </div>
+                <p class="historico-contagem">${batalhas.length} ${batalhas.length === 1 ? 'batalha registrada' : 'batalhas registradas'}</p>
+                <div class="historico-lista">${conteudo}</div>
+            </section>`;
+        appElement.appendChild(sobreposicao);
+        sobreposicao.querySelector('.historico-fechar')?.focus();
+    } finally {
+        historicoCarregando = false;
+    }
+}
+
+function renderizarMapa(aviso = '') {
     document.body.className = 'tela-mapa';
     const jogo = state.jogo;
     const team = jogo.time || [];
@@ -647,7 +811,9 @@ function renderizarMapa() {
     </div>`).join('');
 
     const etapaAtual = Number(jogo.etapa_atual || 1);
-    const textoEtapa = etapaAtual >= 6 ? 'Desafio de Unova' : `Etapa ${etapaAtual} de 5`;
+    const textoEtapa = jogo.jornada_concluida
+        ? 'Jornada concluída'
+        : etapaAtual >= 6 ? 'Desafio de Unova' : `Etapa ${etapaAtual} de 5`;
     const locaisConcluidos = Number(jogo.progresso?.concluidos || 0);
     const totalTreinadores = (jogo.npc || []).length;
     const treinadoresDerrotados = (jogo.npc || []).filter(n => Number(n.derrotado) === 1).length;
@@ -670,7 +836,8 @@ function renderizarMapa() {
                     ${teamHtml || '<p>Seu time está vazio.</p>'}
                 </aside>
                 <section class="mapa-area">
-                    <div class="mapa-titulo"><span>UNOVA</span><strong>${textoEtapa}</strong></div>
+                    ${mensagem(aviso, 'sucesso')}
+                    <div class="mapa-titulo"><span>UNOVA · ÁREA ${Number(jogo.area_atual)}</span><strong>${textoEtapa}</strong></div>
                     <div class="mapa-tabuleiro">
                         <svg class="mapa-conexoes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                             ${linhasInicio}${linhas}
@@ -682,11 +849,14 @@ function renderizarMapa() {
                 </section>
                 <aside class="painel-lateral painel-itens">
                     <h2>ITENS</h2>
-                    <p>Bolsa vazia</p>
+                    ${jogo.inventario?.length ? `<ul>${jogo.inventario.map(item =>
+                        `<li>${escaparHtml(item.nome)} × ${Number(item.quantidade)}</li>`
+                    ).join('')}</ul>` : '<p>Bolsa vazia</p>'}
                     <h2>PROGRESSO</h2>
                     <p>${locaisConcluidos} locais concluídos</p>
                     <p>Treinadores derrotados: ${treinadoresDerrotados}/${totalTreinadores}</p>
                     <p>${desafioAtual ? `Próximo objetivo: ${escaparHtml(desafioAtual.nome)}` : 'Todos os desafios concluídos.'}</p>
+                    <button type="button" class="botao-ver-batalhas" data-acao="ver-batalhas">Ver batalhas</button>
                 </aside>
             </div>
         </main>
@@ -754,9 +924,16 @@ document.addEventListener('click', async ev => {
         }
         const golpeBatalha = ev.target.closest('[data-battle-move]');
         if (golpeBatalha && state.battle) {
-            await enviarTurnoBatalha(Number(golpeBatalha.dataset.battleMove));
+            await enviarTurnoBatalha({ acao: 'golpe', id_golpe: Number(golpeBatalha.dataset.battleMove) });
             return;
         }
+        const itemBatalha = ev.target.closest('[data-battle-item]');
+        if (itemBatalha && state.battle) {
+            await enviarTurnoBatalha({ acao: 'item', id_item: Number(itemBatalha.dataset.battleItem) });
+            return;
+        }
+        if (acao === 'ver-batalhas') { await abrirHistoricoBatalhas(); return; }
+        if (acao === 'fechar-historico') { ev.target.closest('.historico-sobreposicao')?.remove(); return; }
         if (acao === 'tentar-salvar-batalha') {
             await tentarSalvarBatalha();
             return;
@@ -797,20 +974,27 @@ document.addEventListener('click', async ev => {
             const no = (state.jogo?.nos || []).find(item => Number(item.id_mapa_no) === Number(noBotao.dataset.no));
             if (!no || no.status !== 'DISPONIVEL') return;
 
-            // Pontos de treinador seguem para o handler de batalha logo abaixo.
-            // Os outros locais permanecem como marcadores até suas ações serem implementadas.
+            if (no.tipo_local === 'CENTRO_POKEMON' || no.tipo_local === 'POKEMART') {
+                noBotao.disabled = true;
+                try {
+                    if (no.tipo_local === 'CENTRO_POKEMON') {
+                        await visitarLocalMapa(Number(no.id_mapa_no), 'curar');
+                        await carregarMapa('Toda a equipe foi curada.');
+                    } else {
+                        await abrirPokemart(Number(no.id_mapa_no));
+                    }
+                } finally {
+                    noBotao.disabled = false;
+                }
+                return;
+            }
             if (no.tipo_local === 'SELVAGEM') {
                 state.encounterSelection = { id_mapa_no: Number(no.id_mapa_no) };
                 await navegar('/battle');
                 return;
             }
             if (no.tipo_local !== 'TREINADOR') {
-                const mensagens = {
-                    POKEBOLA: 'Pokébola: este local concederá um Pokémon aleatório.',
-                    CENTRO_POKEMON: 'Centro Pokémon: recupera todo o time antes do desafio.',
-                    POKEMART: 'Poké Mart: permite comprar itens antes do desafio.'
-                };
-                alert(`${mensagens[no.tipo_local] || 'Local da rota.'}\n\nA ação deste local ainda será integrada. O sistema de batalhas existente foi mantido sem alterações.`);
+                alert('A ação deste local ainda será integrada.');
                 return;
             }
         }
@@ -831,6 +1015,11 @@ document.addEventListener('click', async ev => {
     } catch (e) { alert(e.message); }
 });
 document.addEventListener('keydown', ev => {
+    if (ev.key === 'Escape') {
+        const historico = document.querySelector('.historico-sobreposicao');
+        if (historico) { historico.remove(); ev.preventDefault(); }
+        return;
+    }
     if (ev.key !== 'Enter' && ev.key !== ' ') return;
     const desafio = ev.target.closest('[data-desafio]');
     if (!desafio) return;

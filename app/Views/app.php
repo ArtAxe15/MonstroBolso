@@ -1,7 +1,7 @@
 <?php
 
-$cssUrl = $baseUrl . '/css/monstrobolso.css';
-$jsUrl = $baseUrl . '/js/main.js';
+$cssUrl = $baseUrl . '/css/monstrobolso.css?v=' . filemtime(__DIR__ . '/../../public/css/monstrobolso.css');
+$jsUrl = $baseUrl . '/js/main.js?v=' . filemtime(__DIR__ . '/../../public/js/main.js');
 
 ?>
 <!DOCTYPE html>

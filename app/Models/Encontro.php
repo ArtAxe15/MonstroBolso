@@ -33,7 +33,7 @@ final class Encontro
         $desafio = $this->consultar(
             'SELECT d.id_desafio, d.ordem, d.nome, d.tipo
              FROM desafio d
-             WHERE NOT EXISTS (
+             WHERE d.ordem BETWEEN 1 AND 6 AND NOT EXISTS (
                  SELECT 1
                  FROM progresso_desafio pd
                  WHERE pd.id_perfil = :perfil
@@ -46,6 +46,30 @@ final class Encontro
         )->fetch();
 
         return $desafio === false ? null : $desafio;
+    }
+
+    public function encontrarRotaGerada(int $idPerfil): ?array
+    {
+        $detalhes = $this->consultar(
+            "SELECT detalhes FROM perfil_log
+             WHERE id_perfil = :perfil AND acao = 'ROTA_GERADA'
+             ORDER BY id_perfil_log DESC LIMIT 1",
+            ['perfil' => $idPerfil]
+        )->fetchColumn();
+
+        return $detalhes === false ? null : json_decode($detalhes, true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    public function registrarRotaGerada(int $idPerfil, int $idDesafio, int $area): void
+    {
+        $this->consultar(
+            "INSERT INTO perfil_log (id_perfil, acao, detalhes)
+             VALUES (:perfil, 'ROTA_GERADA', :detalhes)",
+            [
+                'perfil' => $idPerfil,
+                'detalhes' => json_encode(['id_desafio' => $idDesafio, 'area' => $area], JSON_THROW_ON_ERROR),
+            ]
+        );
     }
 
     public function encontrarPorId(int $idDesafio): ?array
@@ -148,6 +172,67 @@ final class Encontro
              ORDER BY i.nome',
             ['perfil' => $idPerfil]
         )->fetchAll();
+    }
+
+    public function encontrarCurasDeStatus(): array
+    {
+        $curas = [];
+        foreach ($this->consultar(
+            'SELECT cura.id_item, status.nome
+             FROM item_status_cura cura
+             JOIN status_pokemon status ON status.id_status = cura.id_status'
+        )->fetchAll() as $cura) {
+            $curas[(int) $cura['id_item']][] = $cura['nome'];
+        }
+        return $curas;
+    }
+
+    public function consumirItem(int $idPerfil, int $idItem): bool
+    {
+        return $this->consultar(
+            'UPDATE inventario SET quantidade = quantidade - 1
+             WHERE id_perfil = :perfil AND id_item = :item AND quantidade > 0',
+            ['perfil' => $idPerfil, 'item' => $idItem]
+        )->rowCount() === 1;
+    }
+
+    public function encontrarOpcoesDeGolpeStatus(array $idsEspecie): array
+    {
+        [$idsEspecie, $marcadores] = $this->prepararListaIds($idsEspecie);
+        if ($idsEspecie === []) {
+            return [];
+        }
+
+        $opcoes = [];
+        foreach ($this->consultar(
+            "SELECT opcao.id_pokemon_especie, golpe.id_golpe
+             FROM pokemon_especie_status_opcao opcao
+             JOIN golpe ON golpe.id_golpe = opcao.id_golpe
+             WHERE golpe.api_id IN (14, 417) AND golpe.categoria = 'STATUS'
+               AND opcao.id_pokemon_especie IN ({$marcadores})
+             ORDER BY opcao.id_pokemon_especie, golpe.api_id",
+            $idsEspecie
+        )->fetchAll() as $opcao) {
+            $opcoes[(int) $opcao['id_pokemon_especie']][] = (int) $opcao['id_golpe'];
+        }
+        return $opcoes;
+    }
+
+    public function encontrarEvolucaoPorNivel(int $idEspecie, int $nivel): ?array
+    {
+        $evolucao = $this->consultar(
+            "SELECT id_pokemon_destino, nivel_requisito
+             FROM evolucao
+             WHERE id_pokemon_origem = :especie
+               AND metodo_evolucao = 'NIVEL'
+               AND (api_trigger = 'level-up' OR api_trigger IS NULL)
+               AND nivel_requisito <= :nivel
+             ORDER BY nivel_requisito, id_evolucao
+             LIMIT 1",
+            ['especie' => $idEspecie, 'nivel' => $nivel]
+        )->fetch();
+
+        return $evolucao === false ? null : $evolucao;
     }
 
     public function encontrarDadosDasEspecies(array $idsEspecie): array
@@ -267,6 +352,7 @@ final class Encontro
         $golpes = $this->consultar(
             "SELECT
                  g.id_golpe,
+                 g.api_id,
                  g.nome,
                  t.nome AS tipo,
                  g.categoria,

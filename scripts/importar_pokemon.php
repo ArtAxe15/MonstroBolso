@@ -612,38 +612,9 @@ try {
         $slot++;
     }
 
-    /*
-     * Opções genéricas:
-     * - físico (incluindo empate): Dança das Espadas, exceto tipo Lutador;
-     * - especial: Maquinação Maliciosa, exceto tipo Psíquico.
-     * As opções específicas por tipo continuam independentes.
-     */
-    $opcoesStatus = [];
-    if ($classeEscolhida === 'PHYSICAL' && !in_array('fighting', $tiposApi, true)) {
-        $opcoesStatus['Dança das Espadas'] = 'TEM_FISICO';
-    }
-    if ($classeEscolhida === 'SPECIAL' && !in_array('psychic', $tiposApi, true)) {
-        $opcoesStatus['Maquinação Maliciosa'] = 'TEM_ESPECIAL';
-    }
-
-    if (in_array('electric', $tiposApi, true)) {
-        $opcoesStatus['Onda Trovão'] = 'TIPO_ELETRICO';
-    }
-    if (in_array('poison', $tiposApi, true)) {
-        $opcoesStatus['Tóxico'] = 'TIPO_POISON';
-    }
-    if (in_array('psychic', $tiposApi, true)) {
-        $opcoesStatus['Paz Mental'] = 'TIPO_PSYCHIC';
-    }
-    if (in_array('fighting', $tiposApi, true)) {
-        $opcoesStatus['Corpulência'] = 'TIPO_FIGHTING';
-    }
-    if (in_array('grass', $tiposApi, true)) {
-        $opcoesStatus['Esporo'] = 'TIPO_GRASS';
-    }
-    if (in_array('fire', $tiposApi, true) || in_array('ghost', $tiposApi, true)) {
-        $opcoesStatus['Fogo Fátuo'] = 'TIPO_FIRE_GHOST';
-    }
+    $opcoesStatus = $classeEscolhida === 'PHYSICAL'
+        ? ['Dança das Espadas' => 'TEM_FISICO']
+        : ['Maquinação Maliciosa' => 'TEM_ESPECIAL'];
 
     $stmtBuscarGolpeStatus = $pdo->prepare(
         "SELECT id_golpe FROM golpe WHERE nome = ? AND categoria = 'STATUS' LIMIT 1"

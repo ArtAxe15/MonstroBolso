@@ -15,6 +15,14 @@ final class CalculadoraDano
     private const FATOR_ALEATORIO_MINIMO = 85;
     private const FATOR_ALEATORIO_MAXIMO = 100;
 
+    public function ataqueEfetivo(array $pokemon, string $atributo): int
+    {
+        $base = (int) $pokemon['atributos'][$atributo];
+        $estagio = (int) ($pokemon['estagios'][strtoupper($atributo)] ?? 0);
+
+        return intdiv($base * (2 + max(0, $estagio)), 2);
+    }
+
     public function calcular(
         array $atacante,
         array $defensor,
@@ -37,14 +45,13 @@ final class CalculadoraDano
             return ['dano' => 0, 'efetividade' => $efetividade, 'critico' => false];
         }
 
-        $atributosAtacante = $atacante['atributos'];
         $atributosDefensor = $defensor['atributos'];
         $classeDano = $golpe['classe_dano'] ?? null;
         if ($classeDano === 'PHYSICAL') {
-            $ataque = (int) $atributosAtacante['ataque'];
+            $ataque = $this->ataqueEfetivo($atacante, 'ataque');
             $defesa = (int) $atributosDefensor['defesa'];
         } elseif ($classeDano === 'SPECIAL') {
-            $ataque = (int) $atributosAtacante['ataque_especial'];
+            $ataque = $this->ataqueEfetivo($atacante, 'ataque_especial');
             $defesa = (int) $atributosDefensor['defesa_especial'];
         } else {
             throw new InvalidArgumentException('A classe de dano do golpe é inválida.');

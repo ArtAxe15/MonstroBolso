@@ -18,11 +18,7 @@
 --
 -- Table structure for table `batalha_log`
 --
-CREATE DATABASE IF NOT EXISTS `monstrobouso`
-CHARACTER SET utf8mb4
-COLLATE utf8mb4_general_ci;
 
-USE `monstrobouso`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `batalha_log` (
@@ -41,7 +37,7 @@ CREATE TABLE `batalha_log` (
   CONSTRAINT `fk_batalha_log_perfil` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id_perfil`) ON UPDATE CASCADE,
   CONSTRAINT `chk_batalha_resultado` CHECK (`resultado` in ('VITORIA','DERROTA')),
   CONSTRAINT `chk_batalha_dinheiro` CHECK (`dinheiro_ganho` >= 0)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -50,6 +46,7 @@ CREATE TABLE `batalha_log` (
 
 LOCK TABLES `batalha_log` WRITE;
 /*!40000 ALTER TABLE `batalha_log` DISABLE KEYS */;
+INSERT INTO `batalha_log` VALUES (61,33,NULL,'VITORIA',100,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":427,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Dwebble!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Snivy!\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Dwebble perdeu 56 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Dwebble desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Snivy subiu para o Nv. 51!\"},{\"tipo\":\"evolucao\",\"texto\":\"Snivy evoluiu para Servine!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 100!\"}]}','2026-11-18 15:53:48','2026-11-18 11:53:50'),(62,33,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":142,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Normal quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Lillipup!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Servine!\"},{\"tipo\":\"golpe\",\"texto\":\"Servine usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Lillipup perdeu 60 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Lillipup desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Patrat!\"},{\"tipo\":\"golpe\",\"texto\":\"Servine usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Patrat perdeu 60 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Patrat desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Servine subiu para o Nv. 53!\"},{\"tipo\":\"evolucao\",\"texto\":\"Servine evoluiu para Serperior!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-18 15:53:56','2026-11-18 11:54:00'),(63,33,NULL,'VITORIA',100,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":435,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Patrat!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Patrat perdeu 72 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Patrat desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 54!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 100!\"}]}','2026-11-18 15:54:04','2026-11-18 11:54:08');
 /*!40000 ALTER TABLE `batalha_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -87,7 +84,7 @@ CREATE TABLE `batalha_pokemon` (
   CONSTRAINT `chk_batalha_nivel` CHECK (`nivel` between 1 and 100),
   CONSTRAINT `chk_batalha_hp_inicial` CHECK (`hp_inicial` >= 0),
   CONSTRAINT `chk_batalha_hp_final` CHECK (`hp_final` >= 0)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=145 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,6 +93,7 @@ CREATE TABLE `batalha_pokemon` (
 
 LOCK TABLES `batalha_pokemon` WRITE;
 /*!40000 ALTER TABLE `batalha_pokemon` DISABLE KEYS */;
+INSERT INTO `batalha_pokemon` VALUES (138,61,39,16,'JOGADOR',1,50,192,192,NULL,NULL),(139,61,NULL,82,'INIMIGO',1,3,56,0,NULL,NULL),(140,62,39,17,'JOGADOR',1,51,210,210,NULL,NULL),(141,62,NULL,27,'INIMIGO',1,6,60,0,NULL,NULL),(142,62,NULL,25,'INIMIGO',2,6,60,0,NULL,NULL),(143,63,39,18,'JOGADOR',1,53,231,231,NULL,NULL),(144,63,NULL,25,'INIMIGO',1,10,72,0,NULL,NULL);
 /*!40000 ALTER TABLE `batalha_pokemon` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -221,7 +219,7 @@ CREATE TABLE `evolucao` (
   CONSTRAINT `fk_evolucao_origem` FOREIGN KEY (`id_pokemon_origem`) REFERENCES `pokemon_especie` (`id_pokemon_especie`) ON UPDATE CASCADE,
   CONSTRAINT `chk_evolucao_metodo` CHECK (`metodo_evolucao` in ('NIVEL','ITEM')),
   CONSTRAINT `chk_evolucao_requisito` CHECK (`metodo_evolucao` = 'NIVEL' and `nivel_requisito` between 1 and 100 and `id_item` is null or `metodo_evolucao` = 'ITEM' and `nivel_requisito` is null and `id_item` is not null)
-) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -257,7 +255,7 @@ CREATE TABLE `golpe` (
   UNIQUE KEY `nome` (`nome`),
   KEY `fk_golpe_tipo` (`id_tipo`),
   CONSTRAINT `fk_golpe_tipo` FOREIGN KEY (`id_tipo`) REFERENCES `tipo` (`id_tipo`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -431,6 +429,80 @@ INSERT INTO `item_status_cura` VALUES (5,1),(5,2),(5,3),(5,4),(5,5),(6,1),(7,2),
 UNLOCK TABLES;
 
 --
+-- Table structure for table `mapa_conexao`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `mapa_conexao` (
+  `id_mapa_conexao` int(11) NOT NULL AUTO_INCREMENT,
+  `id_mapa_no_origem` int(11) NOT NULL,
+  `id_mapa_no_destino` int(11) NOT NULL,
+  PRIMARY KEY (`id_mapa_conexao`),
+  UNIQUE KEY `uq_mapa_conexao` (`id_mapa_no_origem`,`id_mapa_no_destino`),
+  KEY `idx_mapa_conexao_destino` (`id_mapa_no_destino`),
+  CONSTRAINT `fk_mapa_conexao_destino` FOREIGN KEY (`id_mapa_no_destino`) REFERENCES `mapa_no` (`id_mapa_no`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_mapa_conexao_origem` FOREIGN KEY (`id_mapa_no_origem`) REFERENCES `mapa_no` (`id_mapa_no`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `chk_mapa_conexao_direcao` CHECK (`id_mapa_no_origem` <> `id_mapa_no_destino`)
+) ENGINE=InnoDB AUTO_INCREMENT=585 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `mapa_conexao`
+--
+
+LOCK TABLES `mapa_conexao` WRITE;
+/*!40000 ALTER TABLE `mapa_conexao` DISABLE KEYS */;
+INSERT INTO `mapa_conexao` VALUES (565,427,430),(566,427,431),(567,428,431),(568,428,432),(569,429,432),(570,429,433),(571,430,434),(572,431,434),(573,431,435),(574,432,435),(575,432,436),(576,433,436),(577,434,437),(578,435,437),(579,435,438),(580,436,438),(581,437,439),(582,438,440),(583,439,441),(584,440,441);
+/*!40000 ALTER TABLE `mapa_conexao` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `mapa_no`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `mapa_no` (
+  `id_mapa_no` int(11) NOT NULL AUTO_INCREMENT,
+  `id_perfil` int(11) NOT NULL,
+  `tipo_local` varchar(25) NOT NULL,
+  `id_npc_tipo` int(11) DEFAULT NULL,
+  `id_npc_mapa` int(11) DEFAULT NULL,
+  `posicao_x` tinyint(3) unsigned NOT NULL,
+  `posicao_y` tinyint(3) unsigned NOT NULL,
+  `etapa` tinyint(3) unsigned NOT NULL,
+  `ordem_no` tinyint(3) unsigned NOT NULL,
+  `status` varchar(15) NOT NULL DEFAULT 'BLOQUEADO',
+  `criado_em` datetime NOT NULL DEFAULT current_timestamp(),
+  `concluido_em` datetime DEFAULT NULL,
+  PRIMARY KEY (`id_mapa_no`),
+  UNIQUE KEY `uq_mapa_no_etapa` (`id_perfil`,`etapa`,`ordem_no`),
+  UNIQUE KEY `uq_mapa_no_posicao` (`id_perfil`,`posicao_x`,`posicao_y`),
+  UNIQUE KEY `uq_mapa_no_npc_mapa` (`id_npc_mapa`),
+  KEY `idx_mapa_no_npc_tipo` (`id_npc_tipo`),
+  CONSTRAINT `fk_mapa_no_npc_mapa` FOREIGN KEY (`id_npc_mapa`) REFERENCES `npc_mapa` (`id_npc_mapa`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_mapa_no_npc_tipo` FOREIGN KEY (`id_npc_tipo`) REFERENCES `npc_tipo` (`id_npc_tipo`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_mapa_no_perfil` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id_perfil`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `chk_mapa_no_tipo` CHECK (`tipo_local` in ('TREINADOR','SELVAGEM','POKEBOLA','CENTRO_POKEMON','POKEMART','DESAFIO')),
+  CONSTRAINT `chk_mapa_no_status` CHECK (`status` in ('BLOQUEADO','DISPONIVEL','CONCLUIDO','IGNORADO')),
+  CONSTRAINT `chk_mapa_no_coordenadas` CHECK (`posicao_x` <= 100 and `posicao_y` <= 100),
+  CONSTRAINT `chk_mapa_no_treinador` CHECK (`tipo_local` = 'TREINADOR' and `id_npc_tipo` is not null and `id_npc_mapa` is not null or `tipo_local` <> 'TREINADOR' and `id_npc_tipo` is null and `id_npc_mapa` is null),
+  CONSTRAINT `chk_mapa_no_etapa` CHECK (`etapa` between 1 and 6)
+) ENGINE=InnoDB AUTO_INCREMENT=442 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `mapa_no`
+--
+
+LOCK TABLES `mapa_no` WRITE;
+/*!40000 ALTER TABLE `mapa_no` DISABLE KEYS */;
+INSERT INTO `mapa_no` VALUES (427,33,'SELVAGEM',NULL,NULL,14,79,1,1,'CONCLUIDO','2026-11-18 11:53:46','2026-11-18 11:53:50'),(428,33,'TREINADOR',3,141,50,79,1,2,'IGNORADO','2026-11-18 11:53:46',NULL),(429,33,'POKEBOLA',NULL,NULL,86,79,1,3,'IGNORADO','2026-11-18 11:53:46',NULL),(430,33,'POKEBOLA',NULL,NULL,10,61,2,1,'IGNORADO','2026-11-18 11:53:46',NULL),(431,33,'TREINADOR',4,142,36,61,2,2,'CONCLUIDO','2026-11-18 11:53:46','2026-11-18 11:54:04'),(432,33,'TREINADOR',3,143,64,61,2,3,'BLOQUEADO','2026-11-18 11:53:46',NULL),(433,33,'SELVAGEM',NULL,NULL,90,61,2,4,'BLOQUEADO','2026-11-18 11:53:46',NULL),(434,33,'TREINADOR',1,144,25,43,3,1,'IGNORADO','2026-11-18 11:53:46',NULL),(435,33,'SELVAGEM',NULL,NULL,50,43,3,2,'CONCLUIDO','2026-11-18 11:53:46','2026-11-18 11:54:08'),(436,33,'POKEBOLA',NULL,NULL,75,43,3,3,'BLOQUEADO','2026-11-18 11:53:46',NULL),(437,33,'TREINADOR',6,145,36,30,4,1,'DISPONIVEL','2026-11-18 11:53:46',NULL),(438,33,'SELVAGEM',NULL,NULL,64,30,4,2,'DISPONIVEL','2026-11-18 11:53:46',NULL),(439,33,'POKEMART',NULL,NULL,36,17,5,1,'BLOQUEADO','2026-11-18 11:53:46',NULL),(440,33,'CENTRO_POKEMON',NULL,NULL,64,17,5,2,'BLOQUEADO','2026-11-18 11:53:46',NULL),(441,33,'DESAFIO',NULL,NULL,50,7,6,1,'BLOQUEADO','2026-11-18 11:53:46',NULL);
+/*!40000 ALTER TABLE `mapa_no` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `npc_mapa`
 --
 
@@ -453,7 +525,7 @@ CREATE TABLE `npc_mapa` (
   CONSTRAINT `fk_npc_mapa_perfil` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id_perfil`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_npc_mapa_tipo` FOREIGN KEY (`id_npc_tipo`) REFERENCES `npc_tipo` (`id_npc_tipo`) ON UPDATE CASCADE,
   CONSTRAINT `chk_npc_mapa_derrotado` CHECK (`derrotado` in (0,1))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=146 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -462,6 +534,7 @@ CREATE TABLE `npc_mapa` (
 
 LOCK TABLES `npc_mapa` WRITE;
 /*!40000 ALTER TABLE `npc_mapa` DISABLE KEYS */;
+INSERT INTO `npc_mapa` VALUES (141,33,3,500,790,1,0,'2026-11-18 11:53:46',NULL),(142,33,4,360,610,2,1,'2026-11-18 11:53:46','2026-11-18 11:54:00'),(143,33,3,640,610,3,0,'2026-11-18 11:53:46',NULL),(144,33,1,250,430,4,0,'2026-11-18 11:53:46',NULL),(145,33,6,360,300,5,0,'2026-11-18 11:53:46',NULL);
 /*!40000 ALTER TABLE `npc_mapa` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -543,7 +616,7 @@ CREATE TABLE `perfil` (
   UNIQUE KEY `uq_usuario_nome_perfil` (`id_usuario`,`nome`),
   CONSTRAINT `fk_perfil_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `chk_perfil_dinheiro` CHECK (`dinheiro` >= 0)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -552,6 +625,7 @@ CREATE TABLE `perfil` (
 
 LOCK TABLES `perfil` WRITE;
 /*!40000 ALTER TABLE `perfil` DISABLE KEYS */;
+INSERT INTO `perfil` VALUES (33,1,'red',500,'2026-11-18 11:53:44');
 /*!40000 ALTER TABLE `perfil` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -571,7 +645,7 @@ CREATE TABLE `perfil_log` (
   PRIMARY KEY (`id_perfil_log`),
   KEY `fk_perfil_log_perfil` (`id_perfil`),
   CONSTRAINT `fk_perfil_log_perfil` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id_perfil`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -580,6 +654,7 @@ CREATE TABLE `perfil_log` (
 
 LOCK TABLES `perfil_log` WRITE;
 /*!40000 ALTER TABLE `perfil_log` DISABLE KEYS */;
+INSERT INTO `perfil_log` VALUES (51,33,'CRIACAO','Nova jornada criada.',NULL,'2026-11-18 11:53:44'),(52,33,'INICIAL_ESCOLHIDO','Pokémon inicial escolhido.','{\"pokemon\":\"snivy\"}','2026-11-18 11:53:46');
 /*!40000 ALTER TABLE `perfil_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -656,49 +731,79 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_golpe_dano_insert
 
 
+
+
 BEFORE INSERT ON pokemon_especie_golpe
 
 
+
+
 FOR EACH ROW
 
 
+
+
 BEGIN
 
 
+
+
     DECLARE v_categoria VARCHAR(20);
 
 
 
 
+
+
+
     SELECT categoria
 
 
+
+
     INTO v_categoria
 
 
+
+
     FROM golpe
 
 
+
+
     WHERE id_golpe = NEW.id_golpe;
 
 
 
 
+
+
+
     IF v_categoria <> 'DANO' THEN
 
 
+
+
         SIGNAL SQLSTATE '45000'
 
 
+
+
         SET MESSAGE_TEXT =
 
 
+
+
             'Os slots do Pokemon devem conter apenas golpes de dano.';
 
 
+
+
     END IF;
 
 
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -717,49 +822,79 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_golpe_dano_update
 
 
+
+
 BEFORE UPDATE ON pokemon_especie_golpe
 
 
+
+
 FOR EACH ROW
 
 
+
+
 BEGIN
 
 
+
+
     DECLARE v_categoria VARCHAR(20);
 
 
 
 
+
+
+
     SELECT categoria
 
 
+
+
     INTO v_categoria
 
 
+
+
     FROM golpe
 
 
+
+
     WHERE id_golpe = NEW.id_golpe;
 
 
 
 
+
+
+
     IF v_categoria <> 'DANO' THEN
 
 
+
+
         SIGNAL SQLSTATE '45000'
 
 
+
+
         SET MESSAGE_TEXT =
 
 
+
+
             'Os slots do Pokemon devem conter apenas golpes de dano.';
 
 
+
+
     END IF;
 
 
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -790,7 +925,7 @@ CREATE TABLE `pokemon_especie_status_opcao` (
 
 LOCK TABLES `pokemon_especie_status_opcao` WRITE;
 /*!40000 ALTER TABLE `pokemon_especie_status_opcao` DISABLE KEYS */;
-INSERT INTO `pokemon_especie_status_opcao` VALUES (16,28,'TEM_FISICO'),(16,34,'TIPO_GRASS'),(17,28,'TEM_FISICO'),(17,34,'TIPO_GRASS'),(18,28,'TEM_FISICO'),(18,34,'TIPO_GRASS'),(19,28,'TEM_FISICO'),(19,35,'TIPO_FIRE_GHOST'),(20,33,'TIPO_FIGHTING'),(20,35,'TIPO_FIRE_GHOST'),(21,33,'TIPO_FIGHTING'),(21,35,'TIPO_FIRE_GHOST'),(22,29,'TEM_ESPECIAL'),(23,29,'TEM_ESPECIAL'),(24,29,'TEM_ESPECIAL'),(25,28,'TEM_FISICO'),(26,28,'TEM_FISICO'),(27,28,'TEM_FISICO'),(28,28,'TEM_FISICO'),(29,28,'TEM_FISICO'),(30,28,'TEM_FISICO'),(31,28,'TEM_FISICO'),(32,28,'TEM_FISICO'),(32,34,'TIPO_GRASS'),(33,28,'TEM_FISICO'),(33,34,'TIPO_GRASS'),(34,28,'TEM_FISICO'),(34,35,'TIPO_FIRE_GHOST'),(35,28,'TEM_FISICO'),(35,35,'TIPO_FIRE_GHOST'),(36,28,'TEM_FISICO'),(37,28,'TEM_FISICO'),(38,32,'TIPO_PSYCHIC'),(39,32,'TIPO_PSYCHIC'),(40,28,'TEM_FISICO'),(41,28,'TEM_FISICO'),(42,28,'TEM_FISICO'),(43,28,'TEM_FISICO'),(43,30,'TIPO_ELETRICO'),(44,28,'TEM_FISICO'),(44,30,'TIPO_ELETRICO'),(45,28,'TEM_FISICO'),(46,28,'TEM_FISICO'),(47,28,'TEM_FISICO'),(48,32,'TIPO_PSYCHIC'),(49,32,'TIPO_PSYCHIC'),(50,28,'TEM_FISICO'),(51,28,'TEM_FISICO'),(52,28,'TEM_FISICO'),(53,33,'TIPO_FIGHTING'),(54,33,'TIPO_FIGHTING'),(55,33,'TIPO_FIGHTING'),(56,28,'TEM_FISICO'),(57,28,'TEM_FISICO'),(58,28,'TEM_FISICO'),(59,33,'TIPO_FIGHTING'),(60,33,'TIPO_FIGHTING'),(61,28,'TEM_FISICO'),(61,34,'TIPO_GRASS'),(62,28,'TEM_FISICO'),(62,34,'TIPO_GRASS'),(63,28,'TEM_FISICO'),(63,34,'TIPO_GRASS'),(64,28,'TEM_FISICO'),(64,31,'TIPO_POISON'),(65,28,'TEM_FISICO'),(65,31,'TIPO_POISON'),(66,28,'TEM_FISICO'),(66,31,'TIPO_POISON'),(67,29,'TEM_ESPECIAL'),(67,34,'TIPO_GRASS'),(68,29,'TEM_ESPECIAL'),(68,34,'TIPO_GRASS'),(69,29,'TEM_ESPECIAL'),(69,34,'TIPO_GRASS'),(70,29,'TEM_ESPECIAL'),(70,34,'TIPO_GRASS'),(71,33,'TIPO_FIGHTING'),(71,34,'TIPO_GRASS'),(72,28,'TEM_FISICO'),(73,28,'TEM_FISICO'),(73,35,'TIPO_FIRE_GHOST'),(74,28,'TEM_FISICO'),(75,28,'TEM_FISICO'),(76,28,'TEM_FISICO'),(77,28,'TEM_FISICO'),(77,35,'TIPO_FIRE_GHOST'),(78,28,'TEM_FISICO'),(79,28,'TEM_FISICO'),(79,35,'TIPO_FIRE_GHOST'),(80,28,'TEM_FISICO'),(81,29,'TEM_ESPECIAL'),(81,34,'TIPO_GRASS'),(82,28,'TEM_FISICO'),(83,28,'TEM_FISICO'),(84,28,'TEM_FISICO'),(85,33,'TIPO_FIGHTING'),(86,33,'TIPO_FIGHTING'),(87,32,'TIPO_PSYCHIC'),(88,29,'TEM_ESPECIAL'),(88,35,'TIPO_FIRE_GHOST'),(89,29,'TEM_ESPECIAL'),(89,35,'TIPO_FIRE_GHOST'),(90,28,'TEM_FISICO'),(90,35,'TIPO_FIRE_GHOST'),(91,28,'TEM_FISICO'),(91,35,'TIPO_FIRE_GHOST'),(92,28,'TEM_FISICO'),(93,28,'TEM_FISICO'),(94,28,'TEM_FISICO'),(95,28,'TEM_FISICO'),(96,28,'TEM_FISICO'),(97,28,'TEM_FISICO'),(97,30,'TIPO_ELETRICO'),(98,28,'TEM_FISICO'),(99,28,'TEM_FISICO'),(100,28,'TEM_FISICO'),(100,31,'TIPO_POISON'),(101,28,'TEM_FISICO'),(101,31,'TIPO_POISON'),(102,29,'TEM_ESPECIAL'),(103,29,'TEM_ESPECIAL'),(104,29,'TEM_ESPECIAL'),(104,35,'TIPO_FIRE_GHOST'),(105,29,'TEM_ESPECIAL'),(105,35,'TIPO_FIRE_GHOST'),(106,28,'TEM_FISICO'),(107,28,'TEM_FISICO'),(108,32,'TIPO_PSYCHIC'),(109,32,'TIPO_PSYCHIC'),(110,32,'TIPO_PSYCHIC'),(111,32,'TIPO_PSYCHIC'),(112,32,'TIPO_PSYCHIC'),(113,32,'TIPO_PSYCHIC'),(114,28,'TEM_FISICO'),(115,28,'TEM_FISICO'),(116,29,'TEM_ESPECIAL'),(117,29,'TEM_ESPECIAL'),(118,29,'TEM_ESPECIAL'),(119,28,'TEM_FISICO'),(119,34,'TIPO_GRASS'),(120,28,'TEM_FISICO'),(120,34,'TIPO_GRASS'),(121,28,'TEM_FISICO'),(122,28,'TEM_FISICO'),(123,28,'TEM_FISICO'),(123,31,'TIPO_POISON'),(123,34,'TIPO_GRASS'),(124,28,'TEM_FISICO'),(124,31,'TIPO_POISON'),(124,34,'TIPO_GRASS'),(125,29,'TEM_ESPECIAL'),(125,35,'TIPO_FIRE_GHOST'),(126,29,'TEM_ESPECIAL'),(126,35,'TIPO_FIRE_GHOST'),(127,28,'TEM_FISICO'),(128,29,'TEM_ESPECIAL'),(128,30,'TIPO_ELETRICO'),(129,29,'TEM_ESPECIAL'),(129,30,'TIPO_ELETRICO'),(130,28,'TEM_FISICO'),(130,34,'TIPO_GRASS'),(131,28,'TEM_FISICO'),(131,34,'TIPO_GRASS'),(132,28,'TEM_FISICO'),(133,28,'TEM_FISICO'),(134,28,'TEM_FISICO'),(135,28,'TEM_FISICO'),(135,30,'TIPO_ELETRICO'),(136,28,'TEM_FISICO'),(136,30,'TIPO_ELETRICO'),(137,28,'TEM_FISICO'),(137,30,'TIPO_ELETRICO'),(138,32,'TIPO_PSYCHIC'),(139,32,'TIPO_PSYCHIC'),(140,29,'TEM_ESPECIAL'),(140,35,'TIPO_FIRE_GHOST'),(141,29,'TEM_ESPECIAL'),(141,35,'TIPO_FIRE_GHOST'),(142,29,'TEM_ESPECIAL'),(142,35,'TIPO_FIRE_GHOST'),(143,28,'TEM_FISICO'),(144,28,'TEM_FISICO'),(145,28,'TEM_FISICO'),(146,28,'TEM_FISICO'),(147,28,'TEM_FISICO'),(148,29,'TEM_ESPECIAL'),(149,28,'TEM_FISICO'),(150,29,'TEM_ESPECIAL'),(151,29,'TEM_ESPECIAL'),(151,30,'TIPO_ELETRICO'),(152,33,'TIPO_FIGHTING'),(153,33,'TIPO_FIGHTING'),(154,28,'TEM_FISICO'),(155,28,'TEM_FISICO'),(155,35,'TIPO_FIRE_GHOST'),(156,28,'TEM_FISICO'),(156,35,'TIPO_FIRE_GHOST'),(157,28,'TEM_FISICO'),(158,28,'TEM_FISICO'),(159,28,'TEM_FISICO'),(160,32,'TIPO_PSYCHIC'),(161,28,'TEM_FISICO'),(162,28,'TEM_FISICO'),(163,29,'TEM_ESPECIAL'),(163,35,'TIPO_FIRE_GHOST'),(164,28,'TEM_FISICO'),(165,28,'TEM_FISICO'),(166,28,'TEM_FISICO'),(167,29,'TEM_ESPECIAL'),(168,28,'TEM_FISICO'),(168,35,'TIPO_FIRE_GHOST'),(169,29,'TEM_ESPECIAL'),(169,35,'TIPO_FIRE_GHOST');
+INSERT INTO `pokemon_especie_status_opcao` VALUES (16,28,'TEM_FISICO'),(16,34,'TIPO_GRASS'),(17,28,'TEM_FISICO'),(17,34,'TIPO_GRASS'),(18,28,'TEM_FISICO'),(18,34,'TIPO_GRASS'),(19,28,'TEM_FISICO'),(19,35,'TIPO_FIRE_GHOST'),(20,28,'TEM_FISICO'),(20,33,'TIPO_FIGHTING'),(20,35,'TIPO_FIRE_GHOST'),(21,28,'TEM_FISICO'),(21,33,'TIPO_FIGHTING'),(21,35,'TIPO_FIRE_GHOST'),(22,29,'TEM_ESPECIAL'),(23,29,'TEM_ESPECIAL'),(24,29,'TEM_ESPECIAL'),(25,28,'TEM_FISICO'),(26,28,'TEM_FISICO'),(27,28,'TEM_FISICO'),(28,28,'TEM_FISICO'),(29,28,'TEM_FISICO'),(30,28,'TEM_FISICO'),(31,28,'TEM_FISICO'),(32,28,'TEM_FISICO'),(32,34,'TIPO_GRASS'),(33,28,'TEM_FISICO'),(33,34,'TIPO_GRASS'),(34,28,'TEM_FISICO'),(34,35,'TIPO_FIRE_GHOST'),(35,28,'TEM_FISICO'),(35,35,'TIPO_FIRE_GHOST'),(36,28,'TEM_FISICO'),(37,28,'TEM_FISICO'),(38,29,'TEM_ESPECIAL'),(38,32,'TIPO_PSYCHIC'),(39,29,'TEM_ESPECIAL'),(39,32,'TIPO_PSYCHIC'),(40,28,'TEM_FISICO'),(41,28,'TEM_FISICO'),(42,28,'TEM_FISICO'),(43,28,'TEM_FISICO'),(43,30,'TIPO_ELETRICO'),(44,28,'TEM_FISICO'),(44,30,'TIPO_ELETRICO'),(45,28,'TEM_FISICO'),(46,28,'TEM_FISICO'),(47,28,'TEM_FISICO'),(48,29,'TEM_ESPECIAL'),(48,32,'TIPO_PSYCHIC'),(49,29,'TEM_ESPECIAL'),(49,32,'TIPO_PSYCHIC'),(50,28,'TEM_FISICO'),(51,28,'TEM_FISICO'),(52,28,'TEM_FISICO'),(53,28,'TEM_FISICO'),(53,33,'TIPO_FIGHTING'),(54,28,'TEM_FISICO'),(54,33,'TIPO_FIGHTING'),(55,28,'TEM_FISICO'),(55,33,'TIPO_FIGHTING'),(56,28,'TEM_FISICO'),(57,28,'TEM_FISICO'),(58,28,'TEM_FISICO'),(59,28,'TEM_FISICO'),(59,33,'TIPO_FIGHTING'),(60,28,'TEM_FISICO'),(60,33,'TIPO_FIGHTING'),(61,28,'TEM_FISICO'),(61,34,'TIPO_GRASS'),(62,28,'TEM_FISICO'),(62,34,'TIPO_GRASS'),(63,28,'TEM_FISICO'),(63,34,'TIPO_GRASS'),(64,28,'TEM_FISICO'),(64,31,'TIPO_POISON'),(65,28,'TEM_FISICO'),(65,31,'TIPO_POISON'),(66,28,'TEM_FISICO'),(66,31,'TIPO_POISON'),(67,29,'TEM_ESPECIAL'),(67,34,'TIPO_GRASS'),(68,29,'TEM_ESPECIAL'),(68,34,'TIPO_GRASS'),(69,29,'TEM_ESPECIAL'),(69,34,'TIPO_GRASS'),(70,29,'TEM_ESPECIAL'),(70,34,'TIPO_GRASS'),(71,28,'TEM_FISICO'),(71,33,'TIPO_FIGHTING'),(71,34,'TIPO_GRASS'),(72,28,'TEM_FISICO'),(73,28,'TEM_FISICO'),(73,35,'TIPO_FIRE_GHOST'),(74,28,'TEM_FISICO'),(75,28,'TEM_FISICO'),(76,28,'TEM_FISICO'),(77,28,'TEM_FISICO'),(77,35,'TIPO_FIRE_GHOST'),(78,28,'TEM_FISICO'),(79,28,'TEM_FISICO'),(79,35,'TIPO_FIRE_GHOST'),(80,28,'TEM_FISICO'),(81,29,'TEM_ESPECIAL'),(81,34,'TIPO_GRASS'),(82,28,'TEM_FISICO'),(83,28,'TEM_FISICO'),(84,28,'TEM_FISICO'),(85,28,'TEM_FISICO'),(85,33,'TIPO_FIGHTING'),(86,28,'TEM_FISICO'),(86,33,'TIPO_FIGHTING'),(87,29,'TEM_ESPECIAL'),(87,32,'TIPO_PSYCHIC'),(88,29,'TEM_ESPECIAL'),(88,35,'TIPO_FIRE_GHOST'),(89,29,'TEM_ESPECIAL'),(89,35,'TIPO_FIRE_GHOST'),(90,28,'TEM_FISICO'),(90,35,'TIPO_FIRE_GHOST'),(91,28,'TEM_FISICO'),(91,35,'TIPO_FIRE_GHOST'),(92,28,'TEM_FISICO'),(93,28,'TEM_FISICO'),(94,28,'TEM_FISICO'),(95,28,'TEM_FISICO'),(96,28,'TEM_FISICO'),(97,28,'TEM_FISICO'),(97,30,'TIPO_ELETRICO'),(98,28,'TEM_FISICO'),(99,28,'TEM_FISICO'),(100,28,'TEM_FISICO'),(100,31,'TIPO_POISON'),(101,28,'TEM_FISICO'),(101,31,'TIPO_POISON'),(102,29,'TEM_ESPECIAL'),(103,29,'TEM_ESPECIAL'),(104,29,'TEM_ESPECIAL'),(104,35,'TIPO_FIRE_GHOST'),(105,29,'TEM_ESPECIAL'),(105,35,'TIPO_FIRE_GHOST'),(106,28,'TEM_FISICO'),(107,28,'TEM_FISICO'),(108,29,'TEM_ESPECIAL'),(108,32,'TIPO_PSYCHIC'),(109,29,'TEM_ESPECIAL'),(109,32,'TIPO_PSYCHIC'),(110,29,'TEM_ESPECIAL'),(110,32,'TIPO_PSYCHIC'),(111,29,'TEM_ESPECIAL'),(111,32,'TIPO_PSYCHIC'),(112,29,'TEM_ESPECIAL'),(112,32,'TIPO_PSYCHIC'),(113,29,'TEM_ESPECIAL'),(113,32,'TIPO_PSYCHIC'),(114,28,'TEM_FISICO'),(115,28,'TEM_FISICO'),(116,29,'TEM_ESPECIAL'),(117,29,'TEM_ESPECIAL'),(118,29,'TEM_ESPECIAL'),(119,28,'TEM_FISICO'),(119,34,'TIPO_GRASS'),(120,28,'TEM_FISICO'),(120,34,'TIPO_GRASS'),(121,28,'TEM_FISICO'),(122,28,'TEM_FISICO'),(123,28,'TEM_FISICO'),(123,31,'TIPO_POISON'),(123,34,'TIPO_GRASS'),(124,28,'TEM_FISICO'),(124,31,'TIPO_POISON'),(124,34,'TIPO_GRASS'),(125,29,'TEM_ESPECIAL'),(125,35,'TIPO_FIRE_GHOST'),(126,29,'TEM_ESPECIAL'),(126,35,'TIPO_FIRE_GHOST'),(127,28,'TEM_FISICO'),(128,29,'TEM_ESPECIAL'),(128,30,'TIPO_ELETRICO'),(129,29,'TEM_ESPECIAL'),(129,30,'TIPO_ELETRICO'),(130,28,'TEM_FISICO'),(130,34,'TIPO_GRASS'),(131,28,'TEM_FISICO'),(131,34,'TIPO_GRASS'),(132,28,'TEM_FISICO'),(133,28,'TEM_FISICO'),(134,28,'TEM_FISICO'),(135,28,'TEM_FISICO'),(135,30,'TIPO_ELETRICO'),(136,28,'TEM_FISICO'),(136,30,'TIPO_ELETRICO'),(137,28,'TEM_FISICO'),(137,30,'TIPO_ELETRICO'),(138,29,'TEM_ESPECIAL'),(138,32,'TIPO_PSYCHIC'),(139,29,'TEM_ESPECIAL'),(139,32,'TIPO_PSYCHIC'),(140,29,'TEM_ESPECIAL'),(140,35,'TIPO_FIRE_GHOST'),(141,29,'TEM_ESPECIAL'),(141,35,'TIPO_FIRE_GHOST'),(142,29,'TEM_ESPECIAL'),(142,35,'TIPO_FIRE_GHOST'),(143,28,'TEM_FISICO'),(144,28,'TEM_FISICO'),(145,28,'TEM_FISICO'),(146,28,'TEM_FISICO'),(147,28,'TEM_FISICO'),(148,29,'TEM_ESPECIAL'),(149,28,'TEM_FISICO'),(150,29,'TEM_ESPECIAL'),(151,29,'TEM_ESPECIAL'),(151,30,'TIPO_ELETRICO'),(152,28,'TEM_FISICO'),(152,33,'TIPO_FIGHTING'),(153,28,'TEM_FISICO'),(153,33,'TIPO_FIGHTING'),(154,28,'TEM_FISICO'),(155,28,'TEM_FISICO'),(155,35,'TIPO_FIRE_GHOST'),(156,28,'TEM_FISICO'),(156,35,'TIPO_FIRE_GHOST'),(157,28,'TEM_FISICO'),(158,28,'TEM_FISICO'),(159,28,'TEM_FISICO'),(160,29,'TEM_ESPECIAL'),(160,32,'TIPO_PSYCHIC'),(161,28,'TEM_FISICO'),(162,28,'TEM_FISICO'),(163,29,'TEM_ESPECIAL'),(163,35,'TIPO_FIRE_GHOST'),(164,28,'TEM_FISICO'),(165,28,'TEM_FISICO'),(166,28,'TEM_FISICO'),(167,29,'TEM_ESPECIAL'),(168,28,'TEM_FISICO'),(168,35,'TIPO_FIRE_GHOST'),(169,29,'TEM_ESPECIAL'),(169,35,'TIPO_FIRE_GHOST');
 /*!40000 ALTER TABLE `pokemon_especie_status_opcao` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -861,7 +996,7 @@ CREATE TABLE `pokemon_time` (
   CONSTRAINT `chk_pokemon_ataque_especial` CHECK (`ataque_especial` >= 0),
   CONSTRAINT `chk_pokemon_defesa_especial` CHECK (`defesa_especial` >= 0),
   CONSTRAINT `chk_pokemon_velocidade` CHECK (`velocidade` >= 0)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -870,6 +1005,7 @@ CREATE TABLE `pokemon_time` (
 
 LOCK TABLES `pokemon_time` WRITE;
 /*!40000 ALTER TABLE `pokemon_time` DISABLE KEYS */;
+INSERT INTO `pokemon_time` VALUES (39,33,18,NULL,NULL,54,234,234,234,254,234,254,272,'normal',1,28);
 /*!40000 ALTER TABLE `pokemon_time` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -884,62 +1020,100 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_status_pokemon_time_insert
 
 
+
+
 BEFORE INSERT ON pokemon_time
 
 
+
+
 FOR EACH ROW
 
 
+
+
 BEGIN
 
 
+
+
     DECLARE v_existe INT DEFAULT 0;
 
 
 
 
+
+
+
     IF NEW.id_golpe_status IS NOT NULL THEN
 
 
 
 
+
+
+
         SELECT COUNT(*)
 
 
+
+
         INTO v_existe
 
 
+
+
         FROM pokemon_especie_status_opcao
 
 
+
+
         WHERE id_pokemon_especie = NEW.id_pokemon_especie
 
 
+
+
           AND id_golpe = NEW.id_golpe_status;
 
 
 
 
+
+
+
         IF v_existe = 0 THEN
 
 
+
+
             SIGNAL SQLSTATE '45000'
 
 
+
+
             SET MESSAGE_TEXT =
 
 
+
+
                 'O golpe de status escolhido nao e uma opcao valida para este Pokemon.';
 
 
+
+
         END IF;
 
 
 
 
+
+
+
     END IF;
 
 
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -958,62 +1132,100 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_status_pokemon_time_update
 
 
+
+
 BEFORE UPDATE ON pokemon_time
 
 
+
+
 FOR EACH ROW
 
 
+
+
 BEGIN
 
 
+
+
     DECLARE v_existe INT DEFAULT 0;
 
 
 
 
+
+
+
     IF NEW.id_golpe_status IS NOT NULL THEN
 
 
 
 
+
+
+
         SELECT COUNT(*)
 
 
+
+
         INTO v_existe
 
 
+
+
         FROM pokemon_especie_status_opcao
 
 
+
+
         WHERE id_pokemon_especie = NEW.id_pokemon_especie
 
 
+
+
           AND id_golpe = NEW.id_golpe_status;
 
 
 
 
+
+
+
         IF v_existe = 0 THEN
 
 
+
+
             SIGNAL SQLSTATE '45000'
 
 
+
+
             SET MESSAGE_TEXT =
 
 
+
+
                 'O golpe de status escolhido nao e uma opcao valida para este Pokemon.';
 
 
+
+
         END IF;
 
 
 
 
+
+
+
     END IF;
 
 
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1139,7 +1351,7 @@ CREATE TABLE `usuario` (
   `criado_em` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_usuario`),
   UNIQUE KEY `nome_usuario` (`nome_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1148,6 +1360,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
+INSERT INTO `usuario` VALUES (1,'artur','$2y$10$OvRXma7ZZdNq9DgWkpESb.FoMk.fb/4KyZW37jjPzFP6fW//qZNRe','2026-11-18 08:24:15');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1279,4 +1492,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-06 14:23:42
+-- Dump completed on 2026-11-18 11:56:54

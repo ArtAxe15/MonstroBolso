@@ -6,6 +6,7 @@ use App\Controllers\AuthController;
 use App\Controllers\ProfileController;
 use App\Controllers\GameController;
 use App\Controllers\BattleController;
+use App\Controllers\BattleHistoryController;
 
 /*
  * Rotas da API.
@@ -27,8 +28,11 @@ return [
     'GET /api/game/starters' => [GameController::class, 'starters'],
     'POST /api/game/starter' => [GameController::class, 'chooseStarter'],
     'GET /api/game/map' => [GameController::class, 'map'],
+    'GET /api/game/pokemart' => [GameController::class, 'pokemart'],
+    'POST /api/game/map/service' => [GameController::class, 'visitarServicoMapa'],
     'GET /api/game/encounter' => [GameController::class, 'encounter'],
 
+    'GET /api/battle/history' => [BattleHistoryController::class, 'index'],
     'POST /api/battle/start' => [BattleController::class, 'start'],
     'POST /api/battle/turn' => [BattleController::class, 'turn'],
     'GET /api/battle/state' => [BattleController::class, 'state'],

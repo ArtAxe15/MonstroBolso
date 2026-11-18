@@ -8,10 +8,7 @@ use InvalidArgumentException;
 
 final class CalculadoraAtributos
 {
-    private const MULTIPLICADOR_BASE = 2;
-    private const DIVISOR_NIVEL = 100;
-    private const BONUS_HP = 10;
-    private const BONUS_OUTROS_ATRIBUTOS = 5;
+    private const BONUS_POR_NIVEL = 3;
     private const NIVEL_MINIMO = 1;
     private const NIVEL_MAXIMO = 100;
 
@@ -44,18 +41,15 @@ final class CalculadoraAtributos
             }
         }
 
-        $calcularBase = static fn(int $base): int => intdiv(
-            self::MULTIPLICADOR_BASE * $base * $nivel,
-            self::DIVISOR_NIVEL
-        );
+        $bonusNivel = self::BONUS_POR_NIVEL * ($nivel - 1);
 
         return [
-            'hp_max' => $calcularBase($hpBase) + $nivel + self::BONUS_HP,
-            'ataque' => $calcularBase($ataqueBase) + self::BONUS_OUTROS_ATRIBUTOS,
-            'defesa' => $calcularBase($defesaBase) + self::BONUS_OUTROS_ATRIBUTOS,
-            'ataque_especial' => $calcularBase($ataqueEspecialBase) + self::BONUS_OUTROS_ATRIBUTOS,
-            'defesa_especial' => $calcularBase($defesaEspecialBase) + self::BONUS_OUTROS_ATRIBUTOS,
-            'velocidade' => $calcularBase($velocidadeBase) + self::BONUS_OUTROS_ATRIBUTOS,
+            'hp_max' => $hpBase + $bonusNivel,
+            'ataque' => $ataqueBase + $bonusNivel,
+            'defesa' => $defesaBase + $bonusNivel,
+            'ataque_especial' => $ataqueEspecialBase + $bonusNivel,
+            'defesa_especial' => $defesaEspecialBase + $bonusNivel,
+            'velocidade' => $velocidadeBase + $bonusNivel,
         ];
     }
 }

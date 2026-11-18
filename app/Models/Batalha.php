@@ -30,7 +30,17 @@ final class Batalha
     {
         $stmt = $this->conn->prepare(
             'UPDATE pokemon_time
-             SET hp_atual = :hp_atual,
+             SET id_golpe_status = CASE
+                     WHEN id_pokemon_especie <> :especie_anterior_comparacao
+                          AND id_golpe_status IS NOT NULL AND NOT EXISTS (
+                         SELECT 1 FROM pokemon_especie_status_opcao AS opcao
+                         WHERE opcao.id_pokemon_especie = :especie_golpe
+                           AND opcao.id_golpe = pokemon_time.id_golpe_status
+                     ) THEN NULL
+                     ELSE id_golpe_status
+                 END,
+                 id_pokemon_especie = :especie,
+                 hp_atual = :hp_atual,
                  status = :status,
                  nivel = :nivel,
                  hp_max = :hp_max,
@@ -43,6 +53,9 @@ final class Batalha
                AND id_perfil = :perfil'
         );
         $stmt->execute([
+            'especie_anterior_comparacao' => (int) $pokemon['id_pokemon_especie'],
+            'especie_golpe' => (int) $pokemon['id_pokemon_especie'],
+            'especie' => (int) $pokemon['id_pokemon_especie'],
             'hp_atual' => (int) $pokemon['atributos']['hp_atual'],
             'status' => (string) $pokemon['status'],
             'nivel' => (int) $pokemon['nivel'],
