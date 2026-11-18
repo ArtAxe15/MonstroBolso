@@ -22,10 +22,12 @@ final class MontadorTimeAdversario
     private const ORDEM_DESAFIO_FINAL = 6;
 
     private Encontro $encontro;
+    private FonteAleatoriedade $aleatoriedade;
 
-    public function __construct(PDO $conn)
+    public function __construct(PDO $conn, ?FonteAleatoriedade $aleatoriedade = null)
     {
         $this->encontro = new Encontro($conn);
+        $this->aleatoriedade = $aleatoriedade ?? new FonteAleatoriedadeNativa();
     }
 
     public function obterEstadoDoPerfil(int $idPerfil): array
@@ -53,45 +55,7 @@ final class MontadorTimeAdversario
             throw new RuntimeException('Não há regras configuradas para a área atual.');
         }
 
-        $ordemDesafio = $desafioAtual === null
-            ? self::ORDEM_DESAFIO_FINAL
-            : (int) $desafioAtual['ordem'];
-        if ($ordemDesafio < 1 || $ordemDesafio > self::ORDEM_DESAFIO_FINAL) {
-            throw new RuntimeException('A ordem do desafio atual é inválida.');
-        }
-
-        $limitesDesafioAtual = $this->encontro->encontrarLimitesDeNivel(
-            $ordemDesafio,
-            $ordemDesafio
-        );
-        if ($limitesDesafioAtual === null) {
-            throw new RuntimeException('Não há níveis cadastrados para o desafio atual.');
-        }
-
-        if ($ordemDesafio === 1) {
-            $nivelMinimo = self::NIVEL_INICIAL_TREINADOR;
-        } else {
-            $limitesDesafioAnterior = $this->encontro->encontrarLimitesDeNivel(
-                $ordemDesafio - 1,
-                $ordemDesafio - 1
-            );
-            if ($limitesDesafioAnterior === null) {
-                throw new RuntimeException('Não há níveis cadastrados para o desafio anterior.');
-            }
-            $nivelMinimo = $limitesDesafioAnterior['nivel_minimo'];
-        }
-
-        $nivelMinimo = max(self::NIVEL_MINIMO, min(self::NIVEL_MAXIMO, $nivelMinimo));
-        $nivelMaximo = max(
-            self::NIVEL_MINIMO,
-            min(
-                self::NIVEL_MAXIMO,
-                $limitesDesafioAtual['nivel_maximo'] - self::REDUCAO_NIVEL_MAXIMO
-            )
-        );
-        if ($nivelMaximo < $nivelMinimo) {
-            throw new RuntimeException('A faixa de nível configurada para esta área é inválida.');
-        }
+        $faixaNivel = $this->faixaDeNivel($desafioAtual);
 
         if (
             !isset($limitesVerticais['posicao_superior'], $limitesVerticais['posicao_inferior'])
@@ -103,8 +67,8 @@ final class MontadorTimeAdversario
             $posicaoY,
             (int) $limitesVerticais['posicao_superior'],
             (int) $limitesVerticais['posicao_inferior'],
-            $nivelMinimo,
-            $nivelMaximo
+            $faixaNivel['nivel_minimo'],
+            $faixaNivel['nivel_maximo']
         );
 
         $slots = $this->encontro->encontrarEspeciesPorArea($idNpcTipo, $area);
@@ -162,6 +126,102 @@ final class MontadorTimeAdversario
         }
 
         return $time;
+    }
+
+    public function montarPokemonSelvagem(
+        int $area,
+        int $posicaoY,
+        ?array $desafioAtual,
+        array $limitesVerticais
+    ): array {
+        if (
+            !isset($limitesVerticais['posicao_superior'], $limitesVerticais['posicao_inferior'])
+            || $limitesVerticais['posicao_inferior'] < $limitesVerticais['posicao_superior']
+        ) {
+            throw new RuntimeException('As posições dos treinadores desta jornada são inválidas.');
+        }
+
+        $faixaNivel = $this->faixaDeNivel($desafioAtual);
+        $nivel = $this->nivelPorPosicao(
+            $posicaoY,
+            (int) $limitesVerticais['posicao_superior'],
+            (int) $limitesVerticais['posicao_inferior'],
+            $faixaNivel['nivel_minimo'],
+            $faixaNivel['nivel_maximo']
+        );
+        $idsEspecie = $this->encontro->encontrarEspeciesSelvagensPorArea($area);
+        if ($idsEspecie === []) {
+            throw new RuntimeException('Não há Pokémon selvagens cadastrados para esta área.');
+        }
+
+        $idEspecie = $idsEspecie[
+            $this->aleatoriedade->inteiro(0, count($idsEspecie) - 1)
+        ];
+        $especie = $this->encontro->encontrarComTipos([$idEspecie])[$idEspecie] ?? null;
+        if ($especie === null) {
+            throw new RuntimeException('A espécie escolhida para o encontro selvagem não foi encontrada.');
+        }
+
+        return [
+            [
+                'id_pokemon_especie' => $idEspecie,
+                'id_held_item' => null,
+                'id_golpe_status' => null,
+                'nome' => $especie['nome'],
+                'imagem_url' => $especie['imagem_url'],
+                'tipos' => $especie['tipos'],
+                'nivel' => $nivel,
+                'ordem' => 1,
+            ],
+        ];
+    }
+
+    private function faixaDeNivel(?array $desafioAtual): array
+    {
+        $ordemDesafio = $desafioAtual === null
+            ? self::ORDEM_DESAFIO_FINAL
+            : (int) $desafioAtual['ordem'];
+        if ($ordemDesafio < 1 || $ordemDesafio > self::ORDEM_DESAFIO_FINAL) {
+            throw new RuntimeException('A ordem do desafio atual é inválida.');
+        }
+
+        $limitesDesafioAtual = $this->encontro->encontrarLimitesDeNivel(
+            $ordemDesafio,
+            $ordemDesafio
+        );
+        if ($limitesDesafioAtual === null) {
+            throw new RuntimeException('Não há níveis cadastrados para o desafio atual.');
+        }
+
+        if ($ordemDesafio === 1) {
+            $nivelMinimo = self::NIVEL_INICIAL_TREINADOR;
+        } else {
+            $limitesDesafioAnterior = $this->encontro->encontrarLimitesDeNivel(
+                $ordemDesafio - 1,
+                $ordemDesafio - 1
+            );
+            if ($limitesDesafioAnterior === null) {
+                throw new RuntimeException('Não há níveis cadastrados para o desafio anterior.');
+            }
+            $nivelMinimo = $limitesDesafioAnterior['nivel_minimo'];
+        }
+
+        $nivelMinimo = max(self::NIVEL_MINIMO, min(self::NIVEL_MAXIMO, $nivelMinimo));
+        $nivelMaximo = max(
+            self::NIVEL_MINIMO,
+            min(
+                self::NIVEL_MAXIMO,
+                $limitesDesafioAtual['nivel_maximo'] - self::REDUCAO_NIVEL_MAXIMO
+            )
+        );
+        if ($nivelMaximo < $nivelMinimo) {
+            throw new RuntimeException('A faixa de nível configurada para esta área é inválida.');
+        }
+
+        return [
+            'nivel_minimo' => $nivelMinimo,
+            'nivel_maximo' => $nivelMaximo,
+        ];
     }
 
     private function nivelPorPosicao(

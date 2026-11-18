@@ -30,5 +30,6 @@ return [
     'GET /api/game/encounter' => [GameController::class, 'encounter'],
 
     'POST /api/battle/start' => [BattleController::class, 'start'],
+    'POST /api/battle/turn' => [BattleController::class, 'turn'],
     'GET /api/battle/state' => [BattleController::class, 'state'],
 ];

@@ -47,7 +47,7 @@ final class BattleController
 
     public function state(): void
     {
-        $idPerfil = PerfilAtivo::validar($this->conn);
+        $idPerfil = $this->perfilDaSessao();
         $batalha = $this->battleService->obterEstado($idPerfil);
         if ($batalha === null) {
             JsonResponse::send([
@@ -60,5 +60,42 @@ final class BattleController
             'ok' => true,
             'batalha' => $batalha,
         ]);
+    }
+
+    public function turn(): void
+    {
+        $idPerfil = $this->perfilDaSessao();
+        $dados = json_decode(file_get_contents('php://input') ?: '', true);
+        if (!is_array($dados)) {
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'JSON inválido.',
+            ], 400);
+        }
+
+        try {
+            $resultado = $this->battleService->executarTurno($idPerfil, $dados);
+        } catch (ApiException $e) {
+            JsonResponse::send([
+                'ok' => false,
+                'message' => $e->getMessage(),
+            ], $e->statusCode());
+        }
+
+        JsonResponse::send(['ok' => true] + $resultado);
+    }
+
+    private function perfilDaSessao(): int
+    {
+        $idUsuario = (int) ($_SESSION['usuario']['id_usuario'] ?? 0);
+        $idPerfil = (int) ($_SESSION['perfil']['id_perfil'] ?? 0);
+        if ($idUsuario <= 0 || $idPerfil <= 0) {
+            JsonResponse::send([
+                'ok' => false,
+                'message' => 'Selecione uma jornada antes de continuar.',
+            ], 401);
+        }
+
+        return $idPerfil;
     }
 }

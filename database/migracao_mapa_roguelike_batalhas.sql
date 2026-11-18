@@ -26,11 +26,7 @@ CREATE TABLE IF NOT EXISTS `mapa_no` (
   CONSTRAINT `chk_mapa_no_tipo` CHECK (`tipo_local` IN ('TREINADOR','SELVAGEM','POKEBOLA','CENTRO_POKEMON','POKEMART','DESAFIO')),
   CONSTRAINT `chk_mapa_no_status` CHECK (`status` IN ('BLOQUEADO','DISPONIVEL','CONCLUIDO','IGNORADO')),
   CONSTRAINT `chk_mapa_no_coordenadas` CHECK (`posicao_x` <= 100 AND `posicao_y` <= 100),
-  CONSTRAINT `chk_mapa_no_etapa` CHECK (`etapa` BETWEEN 1 AND 6),
-  CONSTRAINT `chk_mapa_no_treinador` CHECK (
-    (`tipo_local` = 'TREINADOR' AND `id_npc_tipo` IS NOT NULL AND `id_npc_mapa` IS NOT NULL)
-    OR (`tipo_local` <> 'TREINADOR' AND `id_npc_tipo` IS NULL AND `id_npc_mapa` IS NULL)
-  )
+  CONSTRAINT `chk_mapa_no_etapa` CHECK (`etapa` BETWEEN 1 AND 6)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Corrige também bancos que já possuíam mapa_no da migração anterior (etapas 1 a 5).
@@ -105,6 +101,5 @@ CREATE TABLE IF NOT EXISTS `mapa_conexao` (
   UNIQUE KEY `uq_mapa_conexao` (`id_mapa_no_origem`,`id_mapa_no_destino`),
   KEY `idx_mapa_conexao_destino` (`id_mapa_no_destino`),
   CONSTRAINT `fk_mapa_conexao_origem` FOREIGN KEY (`id_mapa_no_origem`) REFERENCES `mapa_no` (`id_mapa_no`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_mapa_conexao_destino` FOREIGN KEY (`id_mapa_no_destino`) REFERENCES `mapa_no` (`id_mapa_no`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `chk_mapa_conexao_direcao` CHECK (`id_mapa_no_origem` <> `id_mapa_no_destino`)
+  CONSTRAINT `fk_mapa_conexao_destino` FOREIGN KEY (`id_mapa_no_destino`) REFERENCES `mapa_no` (`id_mapa_no`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

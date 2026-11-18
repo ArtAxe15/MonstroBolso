@@ -205,6 +205,20 @@ final class Encontro
         return $resultado;
     }
 
+    public function encontrarEfetividadesPorNome(): array
+    {
+        return $this->consultar(
+            'SELECT tipo_atacante.nome AS tipo_atacante,
+                    tipo_defensor.nome AS tipo_defensor,
+                    te.multiplicador
+             FROM tipo_efetividade te
+             INNER JOIN tipo tipo_atacante
+                 ON tipo_atacante.id_tipo = te.id_tipo_atacante
+             INNER JOIN tipo tipo_defensor
+                 ON tipo_defensor.id_tipo = te.id_tipo_defensor'
+        )->fetchAll();
+    }
+
     public function encontrarGolpesDeDanoDasEspecies(array $idsEspecie): array
     {
         [$idsEspecie, $marcadores] = $this->prepararListaIds($idsEspecie);
@@ -394,6 +408,41 @@ final class Encontro
              ORDER BY posicao",
             ['tipo' => $idNpcTipo]
         )->fetchAll();
+    }
+
+    public function encontrarEspeciesSelvagensPorArea(int $area): array
+    {
+        $colunaEspecie = self::COLUNAS_ESPECIE_POR_AREA[$area] ?? null;
+        if ($colunaEspecie === null) {
+            throw new \InvalidArgumentException('Área de encontro selvagem inválida.');
+        }
+
+        return array_map(
+            'intval',
+            $this->consultar(
+                "SELECT DISTINCT {$colunaEspecie}
+                 FROM npc_tipo_pokemon
+                 ORDER BY {$colunaEspecie}"
+            )->fetchAll(PDO::FETCH_COLUMN)
+        );
+    }
+
+    public function encontrarNoSelvagemDoPerfil(int $idMapaNo, int $idPerfil): ?array
+    {
+        $no = $this->consultar(
+            "SELECT id_mapa_no, posicao_y, status
+             FROM mapa_no
+             WHERE id_mapa_no = :no
+               AND id_perfil = :perfil
+               AND tipo_local = 'SELVAGEM'
+             LIMIT 1",
+            [
+                'no' => $idMapaNo,
+                'perfil' => $idPerfil,
+            ]
+        )->fetch();
+
+        return $no === false ? null : $no;
     }
 
     public function encontrarComTipos(array $idsEspecie): array
