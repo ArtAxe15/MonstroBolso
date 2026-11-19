@@ -943,3 +943,58 @@ body.tela-mapa {
     width: 100%;
     padding: 0.35rem;
 }
+
+/* Pokébola: oferta única de um Pokémon, sem modificar a tela de batalha. */
+.pokebola-dialogo {
+    width: min(440px, calc(100vw - 28px));
+    max-height: min(90vh, 90dvh);
+    padding: 18px 18px 16px;
+    border: 3px solid #253b49;
+    border-radius: 10px;
+    background: #f5f0e4;
+    color: #273b4a;
+    text-align: center;
+    box-shadow: 6px 7px 0 rgba(10, 30, 39, .35);
+    overflow-y: auto;
+}
+.pokebola-dialogo::backdrop { background: rgba(7, 24, 40, .72); }
+.pokebola-cabecalho p { margin: 0 0 6px; color: #b9800e; font-size: 11px; font-weight: 900; letter-spacing: .08em; }
+.pokebola-cabecalho h2 { margin: 0 0 12px; font-size: 19px; }
+.pokebola-cartao {
+    position: relative;
+    width: min(100%, 290px);
+    margin: 0 auto;
+    padding: 10px 18px 15px;
+    border: 3px solid #37464d;
+    background: #e9e4d8;
+    box-shadow: 4px 4px 0 #3c4c55;
+}
+.pokebola-desenho { position: absolute; top: 10px; left: 12px; font-size: 18px; }
+.pokebola-sprite { display: block; width: 108px; height: 108px; margin: 2px auto; object-fit: contain; image-rendering: pixelated; }
+.pokebola-cartao h3 { margin: 4px 0 2px; text-transform: capitalize; font-size: 20px; }
+.pokebola-nivel { margin: 0 0 5px; font-weight: 800; font-size: 12px; }
+.pokebola-tipos { display: inline-block; max-width: 100%; margin: 0 0 10px; padding: 3px 9px; background: #2c7054; color: white; border-radius: 4px; font-size: 11px; font-weight: 800; text-transform: capitalize; }
+.pokebola-atributos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; margin: 0; }
+.pokebola-atributos div { display: flex; align-items: center; justify-content: space-between; gap: 5px; padding: 6px; background: #f8f5ee; border: 1px solid #d3d4c9; font-size: 11px; }
+.pokebola-atributos dt { color: #606c72; }
+.pokebola-atributos dd { margin: 0; font-weight: 900; }
+.pokebola-aviso { margin: 16px 0 10px; font-size: 13px; font-weight: 600; line-height: 1.45; }
+.pokebola-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.pokebola-acoes button { flex: 1; min-width: 140px; padding: 10px 13px; border: 2px solid #254f40; border-radius: 6px; background: #2c7054; color: white; cursor: pointer; font-weight: 800; }
+.pokebola-acoes button:last-child { background: #e8e6df; color: #324654; border-color: #aab7b6; }
+.pokebola-acoes button:disabled { opacity: .45; cursor: not-allowed; }
+.pokebola-fechar { display: block; margin: 12px auto 0; padding: 5px; border: 0; background: transparent; color: #536b7c; text-decoration: underline; cursor: pointer; font-size: 12px; }
+.pokebola-feedback { margin-top: 8px; }
+
+/* A ordem é salva em pokemon_time.posicao e também usada pelas batalhas. */
+.painel-time .mini-pokemon { gap: 4px; margin: 8px 0; }
+.painel-time .mini-pokemon-posicao { min-width: 12px; color: #667a76; font-size: 10px; font-weight: 900; }
+.painel-time .mini-pokemon img { width: 36px; height: 40px; flex-shrink: 0; }
+.painel-time .mini-pokemon-info { min-width: 0; flex: 1; }
+.painel-time .mini-pokemon-info strong { overflow-wrap: anywhere; }
+.painel-time .mini-pokemon-info .barra-hp { width: 100%; }
+.painel-time .mini-pokemon-ordenar { display: grid; gap: 3px; }
+.painel-time .mini-pokemon-ordenar button { width: 23px; height: 23px; padding: 0; border: 1px solid #a5b8ac; border-radius: 3px; background: #dfebd9; color: #315642; font-size: 10px; cursor: pointer; }
+.painel-time .mini-pokemon-ordenar button:disabled { opacity: .24; cursor: default; }
+.painel-time .mini-pokemon-ordenar button:not(:disabled):hover { background: #b8dbb8; }
+.painel-time .equipe-ajuda { margin: 12px 0 0; font-size: 10px; line-height: 1.4; }

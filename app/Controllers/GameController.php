@@ -9,6 +9,7 @@ use App\Http\ApiException;
 use App\Http\PerfilAtivo;
 use App\Models\Encontro;
 use App\Models\ServicosMapa;
+use App\Models\PokebolaMapa;
 use PDO;
 use App\Services\BattleService;
 use App\Services\CalculadoraAtributos;
@@ -472,6 +473,51 @@ final class GameController
             'desafio_atual' => $estadoDesafios['desafio_atual'],
             'jornada_concluida' => $estadoDesafios['desafio_atual'] === null,
         ]);
+    }
+
+    /** Sorteia uma única oferta por Pokébola; reabrir não muda o Pokémon. */
+    public function oferecerPokebola(): void
+    {
+        $idPerfil = $this->perfilAtivo();
+        try {
+            $no = $this->idServicoMapa($_GET['id_mapa_no'] ?? null);
+            $resultado = (new PokebolaMapa($this->conn))->oferecer($idPerfil, $no);
+            JsonResponse::send(['ok' => true] + $resultado);
+        } catch (ApiException $e) {
+            JsonResponse::send(['ok' => false, 'message' => $e->getMessage()], $e->statusCode());
+        }
+    }
+
+    /** Aceita ou recusa a oferta e libera o próximo trecho da rota. */
+    public function resolverPokebola(): void
+    {
+        $idPerfil = $this->perfilAtivo();
+        $dados = $this->dados();
+        try {
+            $no = $this->idServicoMapa($dados['id_mapa_no'] ?? null);
+            if (!isset($dados['aceitar']) || !is_bool($dados['aceitar'])) {
+                throw new ApiException('Informe se deseja aceitar ou recusar o Pokémon.', 422);
+            }
+            $resultado = (new PokebolaMapa($this->conn))->resolver($idPerfil, $no, $dados['aceitar']);
+            JsonResponse::send(['ok' => true] + $resultado);
+        } catch (ApiException $e) {
+            JsonResponse::send(['ok' => false, 'message' => $e->getMessage()], $e->statusCode());
+        }
+    }
+
+    /** Troca dois integrantes do time sem alterar a batalha. */
+    public function trocarPosicoesTime(): void
+    {
+        $idPerfil = $this->perfilAtivo();
+        $dados = $this->dados();
+        try {
+            $primeiro = $this->idServicoMapa($dados['primeiro'] ?? null);
+            $segundo = $this->idServicoMapa($dados['segundo'] ?? null);
+            $resultado = (new PokebolaMapa($this->conn))->trocarPosicoes($idPerfil, $primeiro, $segundo);
+            JsonResponse::send(['ok' => true] + $resultado);
+        } catch (ApiException $e) {
+            JsonResponse::send(['ok' => false, 'message' => $e->getMessage()], $e->statusCode());
+        }
     }
 
     public function pokemart(): void

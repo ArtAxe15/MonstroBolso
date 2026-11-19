@@ -186,6 +186,87 @@ function visitarLocalMapa(idMapaNo, acao, item = {}) {
     });
 }
 
+// Um único Pokémon por ponto POKEBOLA. A oferta fica salva no servidor.
+async function abrirPokebola(idMapaNo) {
+    const oferta = await requisitarApi(`/api/game/map/pokebola?id_mapa_no=${idMapaNo}`);
+    const pokemon = oferta.pokemon;
+    const stats = pokemon.atributos || {};
+    const nome = formatarNomeFrontend(pokemon.nome);
+    const dialogo = document.createElement('dialog');
+    dialogo.className = 'pokebola-dialogo';
+    dialogo.setAttribute('aria-labelledby', 'pokebola-titulo');
+    let ocupado = false;
+    const atributos = [
+        ['HP', stats.hp_max],
+        ['Ataque', stats.ataque],
+        ['Defesa', stats.defesa],
+        ['At. Especial', stats.ataque_especial],
+        ['Def. Especial', stats.defesa_especial],
+        ['Velocidade', stats.velocidade]
+    ];
+    dialogo.innerHTML = `
+        <div class="pokebola-cabecalho">
+            <p>VOCÊ ENCONTROU UMA POKÉBOLA!</p>
+            <h2 id="pokebola-titulo">Um Pokémon apareceu!</h2>
+        </div>
+        <div class="pokebola-cartao">
+            <span class="pokebola-desenho" aria-hidden="true">🔴</span>
+            <img src="${escaparHtml(pokemon.imagem_url || '')}" alt="${escaparHtml(nome)}" class="pokebola-sprite">
+            <h3>${escaparHtml(nome)}</h3>
+            <p class="pokebola-nivel">Nv. ${Number(pokemon.nivel)}</p>
+            <p class="pokebola-tipos">${escaparHtml(pokemon.tipos || 'Tipo desconhecido')}</p>
+            <dl class="pokebola-atributos">${atributos.map(([titulo, valor]) => `
+                <div><dt>${escaparHtml(titulo)}</dt><dd>${Number(valor)}</dd></div>`).join('')}
+            </dl>
+        </div>
+        <p class="pokebola-aviso">${oferta.time_cheio
+            ? 'Seu time já está completo (6/6). Não é possível aceitar outro Pokémon.'
+            : `Você tem ${Number(oferta.quantidade_time)}/6 Pokémon. Deseja levar este para a equipe?`}</p>
+        <div class="pokebola-feedback" role="status" aria-live="polite"></div>
+        <div class="pokebola-acoes">
+            <button type="button" data-pokebola-escolha="true" ${oferta.time_cheio ? 'disabled' : ''}>Adicionar ao time</button>
+            <button type="button" data-pokebola-escolha="false">Deixar para trás</button>
+        </div>
+        <button type="button" class="pokebola-fechar" data-pokebola-fechar>Voltar ao mapa sem decidir</button>
+    `;
+    dialogo.addEventListener('cancel', ev => { if (ocupado) ev.preventDefault(); });
+    dialogo.addEventListener('close', () => dialogo.remove());
+    dialogo.addEventListener('click', async ev => {
+        const botaoFechar = ev.target.closest('[data-pokebola-fechar]');
+        if (botaoFechar && !ocupado) { dialogo.close(); return; }
+        const botao = ev.target.closest('[data-pokebola-escolha]');
+        if (!botao || ocupado) return;
+        ocupado = true;
+        dialogo.querySelectorAll('button').forEach(item => item.disabled = true);
+        try {
+            const resposta = await requisitarApi('/api/game/map/pokebola', {
+                method: 'POST',
+                body: { id_mapa_no: idMapaNo, aceitar: botao.dataset.pokebolaEscolha === 'true' }
+            });
+            dialogo.close();
+            await carregarMapa(resposta.message);
+        } catch (erro) {
+            const feedback = dialogo.querySelector('.pokebola-feedback');
+            if (feedback) feedback.innerHTML = mensagem(erro.message);
+            dialogo.querySelectorAll('button').forEach(item => {
+                item.disabled = oferta.time_cheio && item.dataset.pokebolaEscolha === 'true';
+            });
+        } finally {
+            ocupado = false;
+        }
+    });
+    document.body.appendChild(dialogo);
+    dialogo.showModal();
+}
+
+async function trocarPosicoesDoTime(primeiro, segundo) {
+    const resultado = await requisitarApi('/api/game/team/swap', {
+        method: 'POST',
+        body: { primeiro, segundo }
+    });
+    await carregarMapa(resultado.message);
+}
+
 async function abrirPokemart(idMapaNo) {
     const catalogo = await requisitarApi(`/api/game/pokemart?id_mapa_no=${idMapaNo}`);
     const dialogo = document.createElement('dialog');
@@ -822,10 +903,20 @@ function renderizarMapa(aviso = '') {
         </button>`;
     }).join('');
 
-    const teamHtml = team.map(p => `<div class="mini-pokemon">
+    const teamHtml = team.map((p, indice) => `<div class="mini-pokemon">
+        <span class="mini-pokemon-posicao">${indice + 1}</span>
         <img src="${escaparHtml(p.imagem_url || '')}" alt="">
-        <div><strong>${escaparHtml(p.nome_exibicao)}</strong><small>Nv. ${Number(p.nivel)}</small>
-        <div class="barra-hp"><i style="width:${Math.max(0, Math.min(100, Number(p.hp_percentual)))}%"></i></div></div>
+        <div class="mini-pokemon-info"><strong>${escaparHtml(p.nome_exibicao || p.nome_especie)}</strong><small>Nv. ${Number(p.nivel)}</small>
+            <div class="barra-hp"><i style="width:${Math.max(0, Math.min(100, Number(p.hp_percentual)))}%"></i></div>
+        </div>
+        <div class="mini-pokemon-ordenar" aria-label="Mudar posição de ${escaparHtml(p.nome_exibicao || p.nome_especie)}">
+            <button type="button" data-time-primeiro="${Number(p.id_pokemon_time)}"
+                data-time-segundo="${indice > 0 ? Number(team[indice - 1].id_pokemon_time) : 0}"
+                aria-label="Subir ${escaparHtml(p.nome_exibicao || p.nome_especie)}" title="Subir no time" ${indice === 0 ? 'disabled' : ''}>▲</button>
+            <button type="button" data-time-primeiro="${Number(p.id_pokemon_time)}"
+                data-time-segundo="${indice + 1 < team.length ? Number(team[indice + 1].id_pokemon_time) : 0}"
+                aria-label="Descer ${escaparHtml(p.nome_exibicao || p.nome_especie)}" title="Descer no time" ${indice === team.length - 1 ? 'disabled' : ''}>▼</button>
+        </div>
     </div>`).join('');
 
     const etapaAtual = Number(jogo.etapa_atual || 1);
@@ -852,6 +943,7 @@ function renderizarMapa(aviso = '') {
                 <aside class="painel-lateral painel-time">
                     <h2>TIME</h2>
                     ${teamHtml || '<p>Seu time está vazio.</p>'}
+                    ${team.length > 1 ? '<p class="equipe-ajuda">Use ▲ e ▼ para trocar a ordem dos Pokémon.</p>' : ''}
                 </aside>
                 <section class="mapa-area">
                     ${mensagem(aviso, 'sucesso')}
@@ -988,6 +1080,12 @@ document.addEventListener('click', async ev => {
             await enviarTurnoBatalha({ acao: 'golpe', id_golpe: Number(golpeBatalha.dataset.battleMove) });
             return;
         }
+        const comandoTime = ev.target.closest('[data-time-primeiro]');
+        if (comandoTime && !comandoTime.disabled) {
+            comandoTime.disabled = true;
+            await trocarPosicoesDoTime(Number(comandoTime.dataset.timePrimeiro), Number(comandoTime.dataset.timeSegundo));
+            return;
+        }
         if (acao === 'ver-batalhas') { await abrirHistoricoBatalhas(); return; }
         if (acao === 'fechar-historico') { ev.target.closest('.historico-sobreposicao')?.remove(); return; }
         if (acao === 'tentar-salvar-batalha') {
@@ -1042,6 +1140,12 @@ document.addEventListener('click', async ev => {
                 } finally {
                     noBotao.disabled = false;
                 }
+                return;
+            }
+            if (no.tipo_local === 'POKEBOLA') {
+                noBotao.disabled = true;
+                try { await abrirPokebola(Number(no.id_mapa_no)); }
+                finally { noBotao.disabled = false; }
                 return;
             }
             if (no.tipo_local === 'SELVAGEM') {
