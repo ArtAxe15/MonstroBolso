@@ -19,8 +19,6 @@
 -- Table structure for table `batalha_log`
 --
 
-use monstrobouso;
-
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `batalha_log` (
@@ -391,7 +389,7 @@ CREATE TABLE `item` (
   CONSTRAINT `chk_item_preco` CHECK (`preco` >= 0),
   CONSTRAINT `chk_item_tipo_efeito` CHECK (`tipo_efeito` in ('ABSOLUTO','PERCENTUAL','STATUS','EVOLUCAO')),
   CONSTRAINT `chk_item_categoria` CHECK (`categoria` in ('HP','HP_STATUS','STATUS','REVIVE','EVOLUCAO'))
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -400,7 +398,7 @@ CREATE TABLE `item` (
 
 LOCK TABLES `item` WRITE;
 /*!40000 ALTER TABLE `item` DISABLE KEYS */;
-INSERT INTO `item` VALUES (1,'Potion','HP',300,20,'Recupera 20 HP.','ABSOLUTO'),(2,'Super Potion','HP',700,50,'Recupera 50 HP.','ABSOLUTO'),(3,'Hyper Potion','HP',1200,200,'Recupera 200 HP.','ABSOLUTO'),(4,'Max Potion','HP',2500,100,'Recupera 100% do HP.','PERCENTUAL'),(5,'Full Restore','HP_STATUS',3000,100,'Recupera 100% do HP e cura todas as condições de status.','PERCENTUAL'),(6,'Antidote','STATUS',100,NULL,'Cura envenenamento.','STATUS'),(7,'Burn Heal','STATUS',100,NULL,'Cura queimadura.','STATUS'),(8,'Ice Heal','STATUS',100,NULL,'Cura congelamento.','STATUS'),(9,'Awakening','STATUS',100,NULL,'Cura sono.','STATUS'),(10,'Paralyze Heal','STATUS',100,NULL,'Cura paralisia.','STATUS'),(11,'Full Heal','STATUS',300,NULL,'Cura todas as condições de status.','STATUS'),(12,'Revive','REVIVE',2000,50,'Revive um Pokémon desmaiado com 50% do HP máximo.','PERCENTUAL'),(13,'Moon Stone','EVOLUCAO',1500,NULL,'Permite evoluir um Pokémon que possua uma evolução cadastrada, independentemente do nível.','EVOLUCAO');
+INSERT INTO `item` VALUES (1,'Potion','HP',300,20,'Recupera 20 HP.','ABSOLUTO'),(2,'Super Potion','HP',700,50,'Recupera 50 HP.','ABSOLUTO'),(3,'Hyper Potion','HP',1200,200,'Recupera 200 HP.','ABSOLUTO'),(4,'Max Potion','HP',2500,100,'Recupera 100% do HP.','PERCENTUAL'),(5,'Full Restore','HP_STATUS',3000,100,'Recupera 100% do HP e cura todas as condições de status.','PERCENTUAL'),(6,'Antidote','STATUS',100,NULL,'Cura envenenamento.','STATUS'),(7,'Burn Heal','STATUS',100,NULL,'Cura queimadura.','STATUS'),(8,'Ice Heal','STATUS',100,NULL,'Cura congelamento.','STATUS'),(9,'Awakening','STATUS',100,NULL,'Cura sono.','STATUS'),(10,'Paralyze Heal','STATUS',100,NULL,'Cura paralisia.','STATUS'),(11,'Full Heal','STATUS',300,NULL,'Cura todas as condições de status.','STATUS'),(12,'Revive','REVIVE',2000,50,'Revive um Pokémon desmaiado com 50% do HP máximo.','PERCENTUAL'),(13,'Moon Stone','EVOLUCAO',1500,NULL,'Permite evoluir um Pokémon que possua uma evolução cadastrada, independentemente do nível.','EVOLUCAO'),(16,'Max Revive','REVIVE',4000,100,'Revive um Pokémon desmaiado com 100% do HP máximo.','PERCENTUAL');
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -735,21 +733,33 @@ DELIMITER ;;
 
 
 
+
+
+
 BEFORE INSERT ON pokemon_especie_golpe
 
 
 
 
+
+
+
 FOR EACH ROW
 
 
 
 
+
+
+
 BEGIN
 
 
 
 
+
+
+
     DECLARE v_categoria VARCHAR(20);
 
 
@@ -758,21 +768,35 @@ BEGIN
 
 
 
+
+
+
+
+
     SELECT categoria
 
 
 
 
+
+
+
     INTO v_categoria
 
 
 
 
+
+
+
     FROM golpe
 
 
 
 
+
+
+
     WHERE id_golpe = NEW.id_golpe;
 
 
@@ -781,31 +805,51 @@ BEGIN
 
 
 
+
+
+
+
+
     IF v_categoria <> 'DANO' THEN
 
 
 
 
+
+
+
         SIGNAL SQLSTATE '45000'
 
 
 
 
+
+
+
         SET MESSAGE_TEXT =
 
 
 
 
+
+
+
             'Os slots do Pokemon devem conter apenas golpes de dano.';
 
 
 
 
+
+
+
     END IF;
 
 
 
 
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -826,21 +870,33 @@ DELIMITER ;;
 
 
 
+
+
+
 BEFORE UPDATE ON pokemon_especie_golpe
 
 
 
 
+
+
+
 FOR EACH ROW
 
 
 
 
+
+
+
 BEGIN
 
 
 
 
+
+
+
     DECLARE v_categoria VARCHAR(20);
 
 
@@ -849,21 +905,35 @@ BEGIN
 
 
 
+
+
+
+
+
     SELECT categoria
 
 
 
 
+
+
+
     INTO v_categoria
 
 
 
 
+
+
+
     FROM golpe
 
 
 
 
+
+
+
     WHERE id_golpe = NEW.id_golpe;
 
 
@@ -872,31 +942,51 @@ BEGIN
 
 
 
+
+
+
+
+
     IF v_categoria <> 'DANO' THEN
 
 
 
 
+
+
+
         SIGNAL SQLSTATE '45000'
 
 
 
 
+
+
+
         SET MESSAGE_TEXT =
 
 
 
 
+
+
+
             'Os slots do Pokemon devem conter apenas golpes de dano.';
 
 
 
 
+
+
+
     END IF;
 
 
 
 
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1007,7 +1097,7 @@ CREATE TABLE `pokemon_time` (
 
 LOCK TABLES `pokemon_time` WRITE;
 /*!40000 ALTER TABLE `pokemon_time` DISABLE KEYS */;
-INSERT INTO `pokemon_time` VALUES (39,33,18,NULL,NULL,54,234,234,234,254,234,254,272,'normal',1,28);
+INSERT INTO `pokemon_time` VALUES (39,33,18,NULL,NULL,54,145,145,86,107,86,107,127,'normal',1,28);
 /*!40000 ALTER TABLE `pokemon_time` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -1024,21 +1114,33 @@ DELIMITER ;;
 
 
 
+
+
+
 BEFORE INSERT ON pokemon_time
 
 
 
 
+
+
+
 FOR EACH ROW
 
 
 
 
+
+
+
 BEGIN
 
 
 
 
+
+
+
     DECLARE v_existe INT DEFAULT 0;
 
 
@@ -1047,6 +1149,11 @@ BEGIN
 
 
 
+
+
+
+
+
     IF NEW.id_golpe_status IS NOT NULL THEN
 
 
@@ -1055,26 +1162,43 @@ BEGIN
 
 
 
+
+
+
+
+
         SELECT COUNT(*)
 
 
 
 
+
+
+
         INTO v_existe
 
 
 
 
+
+
+
         FROM pokemon_especie_status_opcao
 
 
 
 
+
+
+
         WHERE id_pokemon_especie = NEW.id_pokemon_especie
 
 
 
 
+
+
+
           AND id_golpe = NEW.id_golpe_status;
 
 
@@ -1083,26 +1207,43 @@ BEGIN
 
 
 
+
+
+
+
+
         IF v_existe = 0 THEN
 
 
 
 
+
+
+
             SIGNAL SQLSTATE '45000'
 
 
 
 
+
+
+
             SET MESSAGE_TEXT =
 
 
 
 
+
+
+
                 'O golpe de status escolhido nao e uma opcao valida para este Pokemon.';
 
 
 
 
+
+
+
         END IF;
 
 
@@ -1111,11 +1252,19 @@ BEGIN
 
 
 
+
+
+
+
+
     END IF;
 
 
 
 
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1136,21 +1285,33 @@ DELIMITER ;;
 
 
 
+
+
+
 BEFORE UPDATE ON pokemon_time
 
 
 
 
+
+
+
 FOR EACH ROW
 
 
 
 
+
+
+
 BEGIN
 
 
 
 
+
+
+
     DECLARE v_existe INT DEFAULT 0;
 
 
@@ -1159,6 +1320,11 @@ BEGIN
 
 
 
+
+
+
+
+
     IF NEW.id_golpe_status IS NOT NULL THEN
 
 
@@ -1167,26 +1333,43 @@ BEGIN
 
 
 
+
+
+
+
+
         SELECT COUNT(*)
 
 
 
 
+
+
+
         INTO v_existe
 
 
 
 
+
+
+
         FROM pokemon_especie_status_opcao
 
 
 
 
+
+
+
         WHERE id_pokemon_especie = NEW.id_pokemon_especie
 
 
 
 
+
+
+
           AND id_golpe = NEW.id_golpe_status;
 
 
@@ -1195,26 +1378,43 @@ BEGIN
 
 
 
+
+
+
+
+
         IF v_existe = 0 THEN
 
 
 
 
+
+
+
             SIGNAL SQLSTATE '45000'
 
 
 
 
+
+
+
             SET MESSAGE_TEXT =
 
 
 
 
+
+
+
                 'O golpe de status escolhido nao e uma opcao valida para este Pokemon.';
 
 
 
 
+
+
+
         END IF;
 
 
@@ -1223,11 +1423,19 @@ BEGIN
 
 
 
+
+
+
+
+
     END IF;
 
 
 
 
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1494,4 +1702,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-18 11:56:54
+-- Dump completed on 2026-11-19 17:06:56
