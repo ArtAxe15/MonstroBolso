@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Http\ApiException;
 use App\Models\Batalha;
 use App\Models\Encontro;
+use App\Services\EncerramentoJornada;
 use PDO;
 use RuntimeException;
 use Throwable;
@@ -15,8 +16,9 @@ final class BattleService
 {
     private const CHANCE_CRITICO_DENOMINADOR = 16;
     private const NIVEL_MAXIMO = 100;
-    private const RECOMPENSA_SELVA = 100;
-    private const RECOMPENSA_TREINADOR = 300;
+    private const RECOMPENSA_SELVA = 400;
+    private const RECOMPENSA_TREINADOR = 600;
+    private const RECOMPENSA_DESAFIO = 900;
     private const CONDICAO_POR_TIPO = [
         'Fogo' => 'Queimadura',
         'Eletrico' => 'Paralisia',
@@ -329,10 +331,16 @@ final class BattleService
             ? match ($batalha['tipo_encontro']) {
                 'selvagem' => self::RECOMPENSA_SELVA,
                 'treinador' => self::RECOMPENSA_TREINADOR,
+                'desafio' => self::RECOMPENSA_DESAFIO,
                 default => 0,
             }
             : 0;
+        $campeao = $batalha['resultado'] === 'VITORIA'
+            && $batalha['tipo_encontro'] === 'desafio'
+            && ($batalha['alvo']['tipo_desafio'] ?? '') === 'rival';
+        $nomeJornadaDerrotada = null;
         $resumo = [
+            'campeao' => $campeao,
             'resultado' => $batalha['resultado'],
             'pokemons' => [],
             'dinheiro_ganho' => $dinheiroGanho,
@@ -442,6 +450,12 @@ final class BattleService
                 }
             }
 
+            // A derrota encerra a jornada somente se os logs e o restante da
+            // batalha foram persistidos com sucesso. Tudo é atômico.
+            if ($batalha['resultado'] === 'DERROTA') {
+                $nomeJornadaDerrotada = (new EncerramentoJornada($this->conn))
+                    ->encerrarPorDerrota((int) $batalha['id_perfil']);
+            }
             $this->conn->commit();
         } catch (Throwable $e) {
             if ($this->conn->inTransaction()) {
@@ -455,6 +469,24 @@ final class BattleService
         $batalhaFinal['_interno']['eventos_turno_pendente'] = [];
         $batalhaFinal['persistencia_pendente'] = false;
         unset($_SESSION['batalha']);
+        if ($batalha['resultado'] === 'DERROTA') {
+            $_SESSION['ultima_derrota'] = [
+                'nome_jornada' => $nomeJornadaDerrotada,
+                'equipe' => array_map(static function (array $pokemon): array {
+                    return [
+                        'nome' => $pokemon['nome_exibicao'] ?? $pokemon['nome_especie'],
+                        'imagem_url' => $pokemon['imagem_url'],
+                        'nivel' => (int) $pokemon['nivel'],
+                        'hp_atual' => (int) $pokemon['atributos']['hp_atual'],
+                        'hp_max' => (int) $pokemon['atributos']['hp_max'],
+                    ];
+                }, $batalhaFinal['jogador']['time']),
+            ];
+            if ((int) ($_SESSION['perfil']['id_perfil'] ?? 0) === (int) $batalha['id_perfil']) {
+                unset($_SESSION['perfil']);
+            }
+            $resumo['jornada_encerrada'] = true;
+        }
 
         return [
             'eventos' => $eventos,
@@ -903,20 +935,11 @@ final class BattleService
                 throw new ApiException('Este treinador já foi derrotado.', 409);
             }
 
-            $limitesVerticais = $this->encontro->encontrarLimitesVerticaisDoPerfil($idPerfil);
-            if ($limitesVerticais === null) {
-                throw new RuntimeException(
-                    'Não há posições de treinador cadastradas nesta jornada.'
-                );
-            }
-
             $timeAdversario = $this->montador->montarTimeTreinador(
+                $idPerfil,
                 (int) $npc['id_npc_mapa'],
                 (int) $npc['id_npc_tipo'],
-                $area,
-                (int) $npc['posicao_y'],
-                $estadoDesafios['desafio_atual'],
-                $limitesVerticais
+                $area
             );
 
             return [
@@ -945,13 +968,6 @@ final class BattleService
                 throw new ApiException('Este encontro selvagem não está mais disponível.', 409);
             }
 
-            $limitesVerticais = $this->encontro->encontrarLimitesVerticaisDoPerfil($idPerfil);
-            if ($limitesVerticais === null) {
-                throw new RuntimeException(
-                    'Não há posições de treinador cadastradas nesta jornada.'
-                );
-            }
-
             return [
                 'area_atual' => $area,
                 'tipo_encontro' => 'selvagem',
@@ -961,10 +977,8 @@ final class BattleService
                     'nome' => 'Encontro selvagem',
                 ],
                 'time_adversario' => $this->montador->montarPokemonSelvagem(
-                    $area,
-                    (int) $no['posicao_y'] * 10,
-                    $estadoDesafios['desafio_atual'],
-                    $limitesVerticais
+                    $idPerfil,
+                    $area
                 ),
             ];
         }
@@ -994,6 +1008,7 @@ final class BattleService
                 'tipo' => 'desafio',
                 'id' => (int) $desafio['id_desafio'],
                 'nome' => $desafio['nome'],
+                'tipo_desafio' => $desafio['tipo'],
             ],
             'desafio' => $desafio,
             'time_adversario' => $timeAdversario,

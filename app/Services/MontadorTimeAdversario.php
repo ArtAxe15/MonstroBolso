@@ -17,9 +17,6 @@ final class MontadorTimeAdversario
 
     private const NIVEL_MAXIMO = 100;
     private const NIVEL_MINIMO = 1;
-    private const NIVEL_INICIAL_TREINADOR = 3;
-    private const REDUCAO_NIVEL_MAXIMO = 2;
-    private const ORDEM_DESAFIO_FINAL = 6;
 
     private Encontro $encontro;
     private FonteAleatoriedade $aleatoriedade;
@@ -44,33 +41,18 @@ final class MontadorTimeAdversario
     }
 
     public function montarTimeTreinador(
+        int $idPerfil,
         int $idNpcMapa,
         int $idNpcTipo,
-        int $area,
-        int $posicaoY,
-        ?array $desafioAtual,
-        array $limitesVerticais
+        int $area
     ): array {
         $quantidade = self::QUANTIDADE_TIME_POR_AREA[$area] ?? null;
         if ($quantidade === null) {
             throw new RuntimeException('Não há regras configuradas para a área atual.');
         }
 
-        $faixaNivel = $this->faixaDeNivel($desafioAtual);
+        $nivelTreinador = $this->nivelDaEquipe($idPerfil);
 
-        if (
-            !isset($limitesVerticais['posicao_superior'], $limitesVerticais['posicao_inferior'])
-            || $limitesVerticais['posicao_inferior'] < $limitesVerticais['posicao_superior']
-        ) {
-            throw new RuntimeException('As posições dos treinadores desta jornada são inválidas.');
-        }
-        $nivelTreinador = $this->nivelPorPosicao(
-            $posicaoY,
-            (int) $limitesVerticais['posicao_superior'],
-            (int) $limitesVerticais['posicao_inferior'],
-            $faixaNivel['nivel_minimo'],
-            $faixaNivel['nivel_maximo']
-        );
 
         $slots = $this->encontro->encontrarEspeciesPorArea($idNpcTipo, $area);
         if (count($slots) < $quantidade[0]) {
@@ -130,26 +112,10 @@ final class MontadorTimeAdversario
     }
 
     public function montarPokemonSelvagem(
-        int $area,
-        int $posicaoY,
-        ?array $desafioAtual,
-        array $limitesVerticais
+        int $idPerfil,
+        int $area
     ): array {
-        if (
-            !isset($limitesVerticais['posicao_superior'], $limitesVerticais['posicao_inferior'])
-            || $limitesVerticais['posicao_inferior'] < $limitesVerticais['posicao_superior']
-        ) {
-            throw new RuntimeException('As posições dos treinadores desta jornada são inválidas.');
-        }
-
-        $faixaNivel = $this->faixaDeNivel($desafioAtual);
-        $nivel = $this->nivelPorPosicao(
-            $posicaoY,
-            (int) $limitesVerticais['posicao_superior'],
-            (int) $limitesVerticais['posicao_inferior'],
-            $faixaNivel['nivel_minimo'],
-            $faixaNivel['nivel_maximo']
-        );
+        $nivel = $this->nivelDaEquipe($idPerfil);
         $idsEspecie = $this->encontro->encontrarEspeciesSelvagensPorArea($area);
         if ($idsEspecie === []) {
             throw new RuntimeException('Não há Pokémon selvagens cadastrados para esta área.');
@@ -177,70 +143,14 @@ final class MontadorTimeAdversario
         ];
     }
 
-    private function faixaDeNivel(?array $desafioAtual): array
+    /** Treinadores comuns e selvagens ficam três níveis abaixo do melhor Pokémon no time. */
+    private function nivelDaEquipe(int $idPerfil): int
     {
-        $ordemDesafio = $desafioAtual === null
-            ? self::ORDEM_DESAFIO_FINAL
-            : (int) $desafioAtual['ordem'];
-        if ($ordemDesafio < 1 || $ordemDesafio > self::ORDEM_DESAFIO_FINAL) {
-            throw new RuntimeException('A ordem do desafio atual é inválida.');
+        $nivelMaisAlto = $this->encontro->encontrarMaiorNivelDoTime($idPerfil);
+        if ($nivelMaisAlto === null) {
+            throw new RuntimeException('Não existe Pokémon no time para calcular o nível adversário.');
         }
-
-        $limitesDesafioAtual = $this->encontro->encontrarLimitesDeNivel(
-            $ordemDesafio,
-            $ordemDesafio
-        );
-        if ($limitesDesafioAtual === null) {
-            throw new RuntimeException('Não há níveis cadastrados para o desafio atual.');
-        }
-
-        if ($ordemDesafio === 1) {
-            $nivelMinimo = self::NIVEL_INICIAL_TREINADOR;
-        } else {
-            $limitesDesafioAnterior = $this->encontro->encontrarLimitesDeNivel(
-                $ordemDesafio - 1,
-                $ordemDesafio - 1
-            );
-            if ($limitesDesafioAnterior === null) {
-                throw new RuntimeException('Não há níveis cadastrados para o desafio anterior.');
-            }
-            $nivelMinimo = $limitesDesafioAnterior['nivel_minimo'];
-        }
-
-        $nivelMinimo = max(self::NIVEL_MINIMO, min(self::NIVEL_MAXIMO, $nivelMinimo));
-        $nivelMaximo = max(
-            self::NIVEL_MINIMO,
-            min(
-                self::NIVEL_MAXIMO,
-                $limitesDesafioAtual['nivel_maximo'] - self::REDUCAO_NIVEL_MAXIMO
-            )
-        );
-        if ($nivelMaximo < $nivelMinimo) {
-            throw new RuntimeException('A faixa de nível configurada para esta área é inválida.');
-        }
-
-        return [
-            'nivel_minimo' => $nivelMinimo,
-            'nivel_maximo' => $nivelMaximo,
-        ];
-    }
-
-    private function nivelPorPosicao(
-        int $posicaoY,
-        int $posicaoSuperior,
-        int $posicaoInferior,
-        int $nivelMinimo,
-        int $nivelMaximo
-    ): int {
-        if ($posicaoInferior === $posicaoSuperior) {
-            return $nivelMinimo;
-        }
-
-        $posicaoY = max($posicaoSuperior, min($posicaoInferior, $posicaoY));
-        $progresso = ($posicaoInferior - $posicaoY)
-            / ($posicaoInferior - $posicaoSuperior);
-
-        return $nivelMinimo + (int) floor($progresso * ($nivelMaximo - $nivelMinimo));
+        return max(self::NIVEL_MINIMO, min(self::NIVEL_MAXIMO, $nivelMaisAlto - 3));
     }
 
     private function areaPorDesafiosConcluidos(int $quantidadeConcluida): int

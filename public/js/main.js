@@ -3,7 +3,7 @@
 const appElement = document.querySelector('#app');
 const entryUrl = document.body.dataset.entryUrl.replace(/\/$/, '');
 const entryPath = new URL(entryUrl, window.location.origin).pathname;
-const state = { usuario: null, autenticado: false, perfil: null, perfis: [], jogo: null, excluindo: false, encounterSelection: null, battle: null, battleMenu: 'menu', battleBusy: false, battleLogVisible: [], battleSummary: null, battleMessage: null };
+const state = { usuario: null, autenticado: false, perfil: null, perfis: [], jogo: null, excluindo: false, encounterSelection: null, battle: null, battleMenu: 'menu', battleBusy: false, battleLogVisible: [], battleSummary: null, battleMessage: null, epilogo: null, campeao: null };
 
 function escaparHtml(valor) {
     return String(valor ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
@@ -441,8 +441,16 @@ async function abrirBatalha() {
             state.battleSummary = null;
             state.battleMessage = null;
         } catch (e) {
-            if (e.status === 404) {
+            if (e.status === 404 || e.status === 401) {
                 state.battle = null;
+                try {
+                    const fim = await requisitarApi('/api/game/ultima-derrota');
+                    state.epilogo = fim.derrota;
+                    renderizarTelaDerrota();
+                    return;
+                } catch (erroFim) {
+                    if (erroFim.status !== 404) throw erroFim;
+                }
                 await navegar('/map', { substituir: true });
                 return;
             }
@@ -456,12 +464,16 @@ async function abrirBatalha() {
 
 function renderizarBatalha() {
     const batalha = state.battle;
-    if (batalha.finalizada && batalha.resultado !== 'VITORIA') {
-        renderizarResultadoBatalha();
+    if (batalha.finalizada && batalha.resultado === 'DERROTA') {
+        if (batalha.persistencia_pendente) {
+            renderizarFalhaEncerramento();
+        } else {
+            renderizarTelaDerrota();
+        }
         return;
     }
 
-    const mostrarVitoria = batalha.finalizada && !state.battleBusy;
+    const mostrarVitoria = batalha.finalizada && !state.battleBusy && batalha.alvo?.tipo_desafio !== 'rival';
     document.body.className = 'tela-batalha';
     appElement.innerHTML = `
         <main class="battle-shell">
@@ -511,37 +523,89 @@ function renderizarCaixaVitoria() {
     `;
 }
 
-function renderizarResultadoBatalha() {
-    const batalha = state.battle;
-    const vitoria = batalha.resultado === 'VITORIA';
-    const pokemons = state.battleSummary?.pokemons || [];
-    document.body.className = 'tela-batalha';
+/** Cards de encerramento usam dados do servidor; nunca usam HTML não escapado. */
+function renderizarEquipeFinal(equipe, derrota = false) {
+    const lista = Array.isArray(equipe) ? equipe : [];
+    return `<div class="final-equipe">${lista.map((p, indice) => {
+        const nome = p.nome || p.nome_exibicao || p.apelido || p.nome_especie || 'Pokémon';
+        const hp = Number(p.atributos?.hp_atual ?? p.hp_atual ?? 0);
+        const max = Number(p.atributos?.hp_max ?? p.hp_max ?? 1);
+        const tipos = Array.isArray(p.tipos) ? p.tipos.join(' · ') : (p.tipos || '');
+        return `<article class="final-pokemon">
+            <span class="final-slot">${indice + 1}</span>
+            <img src="${escaparHtml(p.imagem_url || '')}" alt="${escaparHtml(nome)}" loading="lazy">
+            <strong>${escaparHtml(formatarNomeFrontend(nome))}</strong>
+            <span>Nv. ${Number(p.nivel) || 1}</span>
+            ${tipos ? `<small>${escaparHtml(tipos)}</small>` : ''}
+            ${derrota ? `<small>HP ${Math.max(0, hp)} / ${Math.max(0, max)}</small>` : ''}
+        </article>`;
+    }).join('')}</div>`;
+}
+
+function renderizarFalhaEncerramento() {
+    document.body.className = 'tela-final tela-final-derrota';
     appElement.innerHTML = `
-        <main class="battle-shell">
-            <header class="game-header">
-                <div class="game-brand">MONSTROBOLSO <span>RESULTADO DA BATALHA</span></div>
-                <strong>${escaparHtml(state.perfil?.nome || `Jornada ${batalha.id_perfil}`)}</strong>
-            </header>
-            <section class="battle-result ${vitoria ? 'vitoria' : 'derrota'}">
-                <p class="eyebrow">${vitoria ? 'VITÓRIA' : 'DERROTA'}</p>
-                <h1>${vitoria ? 'Você venceu!' : 'Você perdeu!'}</h1>
-                ${batalha.persistencia_pendente
-                    ? '<p>Não foi possível salvar o resultado. Tente novamente.</p>'
-                    : ''}
-                ${pokemons.length ? `
-                    <ul class="battle-level-summary">
-                        ${pokemons.map(p => `<li><strong>${escaparHtml(p.nome)}</strong><span>Nv. ${Number(p.nivel_antes)} → Nv. ${Number(p.nivel_depois)}</span><span>HP ${Number(p.hp_final)}</span></li>`).join('')}
-                    </ul>
-                ` : ''}
+        <main class="final-pagina">
+            <header class="final-marca">MONSTROBOLSO <span>RESULTADO PENDENTE</span></header>
+            <section class="final-painel">
+                <p class="final-tag">NÃO FOI POSSÍVEL SALVAR A DERROTA</p>
+                <h1>Não feche esta batalha.</h1>
+                <p>O resultado ainda não foi salvo no banco e sua jornada não foi excluída. Confirme que executou a migração SQL e tente novamente.</p>
+                ${state.battleMessage ? mensagem(state.battleMessage, 'erro') : ''}
+                <div class="final-acoes">
+                    <button class="botao botao-principal" data-acao="tentar-salvar-batalha" ${state.battleBusy ? 'disabled' : ''}>Tentar salvar novamente</button>
+                </div>
             </section>
-            ${renderizarLogBatalha()}
-            ${state.battleMessage ? mensagem(state.battleMessage, 'erro') : ''}
-            ${batalha.persistencia_pendente
-                ? `<button class="botao botao-principal" data-acao="tentar-salvar-batalha" ${state.battleBusy ? 'disabled' : ''}>Tentar salvar novamente</button>`
-                : ''}
-            <button class="botao botao-voltar" data-acao="voltar-mapa" ${state.battleBusy ? 'disabled' : ''}>Voltar ao mapa</button>
-        </main>
-    `;
+        </main>`;
+}
+
+function renderizarTelaDerrota() {
+    const equipe = state.battle?.jogador?.time || state.epilogo?.equipe || [];
+    const nome = state.epilogo?.nome_jornada || state.perfil?.nome || 'Sua jornada';
+    document.body.className = 'tela-final tela-final-derrota';
+    appElement.innerHTML = `
+        <main class="final-pagina">
+            <header class="final-marca">MONSTROBOLSO <span>FIM DA JORNADA</span></header>
+            <section class="final-painel">
+                <p class="final-tag">DERROTA</p>
+                <h1>Sua jornada chegou ao fim.</h1>
+                <p>Todos os seus Pokémon foram derrotados. A jornada <strong>${escaparHtml(nome)}</strong> foi excluída, mas seus registros de batalha foram arquivados.</p>
+                <h2>Seu último time</h2>
+                ${renderizarEquipeFinal(equipe, true)}
+                <div class="final-acoes">
+                    <button class="botao botao-principal" data-acao="reiniciar-derrota">Reiniciar jornada</button>
+                    <button class="botao botao-voltar" data-acao="jornadas-derrota">Voltar às jornadas</button>
+                </div>
+            </section>
+        </main>`;
+}
+
+function renderizarTelaCampeao(dados) {
+    const equipe = dados?.equipe || [];
+    const nome = dados?.nome_jornada || state.perfil?.nome || 'Treinador';
+    document.body.className = 'tela-final tela-final-vitoria';
+    appElement.innerHTML = `
+        <main class="final-pagina">
+            <header class="final-marca">MONSTROBOLSO <span>SALÃO DA FAMA</span></header>
+            <section class="final-painel final-campeao">
+                <div class="final-trofeu" aria-hidden="true">🏆</div>
+                <p class="final-tag">VITÓRIA CONTRA O RIVAL</p>
+                <h1>Você se tornou o Campeão!</h1>
+                <p>Parabéns, <strong>${escaparHtml(nome)}</strong>! Você venceu o Rival e conquistou Unova.</p>
+                <h2>Seu time campeão</h2>
+                ${renderizarEquipeFinal(equipe)}
+                <div class="final-acoes">
+                    <button class="botao botao-principal" data-acao="jornadas-campeao">Voltar às jornadas</button>
+                </div>
+            </section>
+        </main>`;
+}
+
+async function abrirCampeao() {
+    loading('Preparando o salão da fama...');
+    const dados = await requisitarApi('/api/game/campeao');
+    state.campeao = dados;
+    renderizarTelaCampeao(dados);
 }
 
 function renderizarLogBatalha() {
@@ -623,7 +687,12 @@ async function enviarTurnoBatalha(acao) {
         }
     } finally {
         state.battleBusy = false;
-        if (state.battle) renderizarBatalha();
+        if (state.battle?.finalizada && !state.battle?.persistencia_pendente
+            && state.battle?.resultado === 'VITORIA' && state.battle?.alvo?.tipo_desafio === 'rival') {
+            await navegar('/champion', { substituir: true });
+        } else if (state.battle) {
+            renderizarBatalha();
+        }
     }
 }
 
@@ -658,7 +727,12 @@ async function tentarSalvarBatalha() {
         }
     } finally {
         state.battleBusy = false;
-        if (state.battle) renderizarBatalha();
+        if (state.battle?.finalizada && !state.battle?.persistencia_pendente
+            && state.battle?.resultado === 'VITORIA' && state.battle?.alvo?.tipo_desafio === 'rival') {
+            await navegar('/champion', { substituir: true });
+        } else if (state.battle) {
+            renderizarBatalha();
+        }
     }
 }
 
@@ -1067,7 +1141,7 @@ function renderizarMapa(aviso = '') {
 }
 
 async function navegar(rota, opcoes = {}) {
-    const permitidas = ['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map', '/pc', '/battle'];
+    const permitidas = ['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map', '/pc', '/battle', '/champion'];
     if (!permitidas.includes(rota)) rota = '/';
     if (!state.autenticado && !['/', '/login', '/register'].includes(rota)) rota = '/login';
     if (state.autenticado && ['/', '/login', '/register'].includes(rota)) rota = '/dashboard';
@@ -1080,6 +1154,7 @@ async function navegar(rota, opcoes = {}) {
         else if (rota === '/map') await carregarMapa();
         else if (rota === '/pc') await carregarPc();
         else if (rota === '/battle') await abrirBatalha();
+        else if (rota === '/champion') await abrirCampeao();
         else renderizarLogin(opcoes.mensagem || null);
     } catch (e) {
         if (e.message.includes('sessão') || e.message.includes('Selecione uma jornada')) {
@@ -1099,7 +1174,7 @@ async function verificarSessaoInicial() {
         const dados = await requisitarApi('/api/session');
         state.autenticado = dados.autenticado === true; state.usuario = dados.usuario || null;
         let rota = rotaAtual();
-        if (!['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map', '/pc', '/battle'].includes(rota)) rota = '/';
+        if (!['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map', '/pc', '/battle', '/champion'].includes(rota)) rota = '/';
         await navegar(rota, { substituir: true });
     } catch (e) { state.autenticado = false; state.usuario = null; await navegar('/login', { substituir: true, mensagem: { texto: e.message, tipo: 'erro' } }); }
 }
@@ -1196,6 +1271,24 @@ document.addEventListener('click', async ev => {
             await tentarSalvarBatalha();
             return;
         }
+        if (acao === 'jornadas-derrota') {
+            state.epilogo = null; state.battle = null; state.perfil = null;
+            await navegar('/profiles', { substituir: true }); return;
+        }
+        if (acao === 'reiniciar-derrota') {
+            const botao = ev.target.closest('[data-acao]');
+            botao.disabled = true;
+            try {
+                const dados = await requisitarApi('/api/game/reiniciar', { method: 'POST' });
+                state.perfil = dados.perfil; state.epilogo = null; state.battle = null;
+                await navegar('/starter', { substituir: true });
+            } catch (erro) { botao.disabled = false; throw erro; }
+            return;
+        }
+        if (acao === 'jornadas-campeao') {
+            state.battle = null; state.campeao = null; state.perfil = null;
+            await navegar('/profiles', { substituir: true }); return;
+        }
         if (acao === 'jogar') { await navegar('/profiles'); return; }
         if (acao === 'dashboard') { await navegar('/dashboard'); return; }
         if (acao === 'perfis') { state.perfil = null; state.encounterSelection = null; state.battle = null; await navegar('/profiles'); return; }
@@ -1220,7 +1313,7 @@ document.addEventListener('click', async ev => {
                 await requisitarApi('/api/profiles/delete', { method: 'POST', body: { id_perfil: id } }); await carregarPerfis(); return;
             }
             const r = await requisitarApi('/api/profiles/select', { method: 'POST', body: { id_perfil: id } });
-            state.perfil = r.perfil || null; state.encounterSelection = null; state.battle = null; await navegar(r.proxima_etapa === 'starter' ? '/starter' : '/map'); return;
+            state.perfil = r.perfil || null; state.encounterSelection = null; state.battle = null; await navegar(r.proxima_etapa === 'champion' ? '/champion' : (r.proxima_etapa === 'starter' ? '/starter' : '/map')); return;
         }
         const starter = ev.target.closest('[data-starter]');
         if (starter) {

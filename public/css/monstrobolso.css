@@ -1054,3 +1054,44 @@ body.tela-pc {
 .pc-ordem button { padding: 5px 8px; background: #e2f0e9; color: #2b6951; }
 @media (max-width: 920px) { .pc-colunas { grid-template-columns: 1fr; } }
 @media (max-width: 540px) { body.tela-pc { padding: 7px; } .pc-pagina { padding: 12px; } .pc-pokemon-card { grid-template-columns: 50px minmax(0, 1fr); } .pc-pokemon-card > img { width: 50px; height: 50px; } .pc-acoes { grid-column: 1 / -1; flex-direction: row; } }
+
+/* Finais da jornada: derrota definitiva e salão da fama. */
+body.tela-final {
+    min-height: 100vh;
+    padding: clamp(12px, 3vw, 30px);
+    background: linear-gradient(#79c8ec 0 40%, #a5def0 40% 47%, #5a9bca 47% 56%, #80b46a 56%);
+}
+.tela-final .app-shell { display: block; }
+.final-pagina { width: min(100%, 1020px); margin: 0 auto; }
+.final-marca {
+    padding: 18px 24px; border: 3px solid #223f57;
+    background: #f2ecdf; box-shadow: 4px 4px 0 #263d4d;
+    font-weight: 900; letter-spacing: .14em; color: #1f3855;
+}
+.final-marca span { display: block; font-size: 10px; color: #7a90a4; margin-top: 3px; }
+.final-painel {
+    margin-top: 20px; padding: clamp(18px, 4vw, 40px); border: 3px solid #253e50;
+    background: #f6f1e7; box-shadow: 5px 6px 0 #344b56;
+    text-align: center;
+}
+.final-painel h1 { color: #193a58; font-size: clamp(27px, 4.5vw, 47px); margin: 7px 0 12px; }
+.final-painel h2 { margin: 25px 0 13px; font-size: 17px; text-transform: uppercase; letter-spacing: .08em; }
+.final-painel > p { max-width: 650px; margin: 0 auto 12px; line-height: 1.6; }
+.final-painel .final-tag { color: #b33342; letter-spacing: .21em; font-size: 12px; font-weight: 900; }
+.final-campeao .final-tag { color: #93640c; }
+.final-trofeu { font-size: 66px; line-height: 1.3; }
+.final-equipe { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+.final-pokemon {
+    position: relative; min-width: 0; padding: 14px 12px; display: flex; flex-direction: column;
+    align-items: center; gap: 4px; border: 2px solid #536b6c; background: #fffdf6;
+    box-shadow: 3px 3px 0 rgba(19, 46, 57, .22);
+}
+.final-pokemon img { display: block; width: 93px; height: 93px; object-fit: contain; image-rendering: pixelated; }
+.final-pokemon strong { color: #193e4e; overflow-wrap: anywhere; }
+.final-pokemon span, .final-pokemon small { color: #526778; font-size: 12px; }
+.final-pokemon .final-slot { position: absolute; top: 7px; left: 9px; font-size: 10px; font-weight: 800; }
+.final-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 30px; }
+.final-acoes .botao { min-width: 195px; }
+.tela-final-vitoria .final-painel { border-color: #aa8332; box-shadow: 5px 6px 0 #b2914e; }
+@media (max-width: 720px) { .final-equipe { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 410px) { .final-equipe { grid-template-columns: 1fr; } }

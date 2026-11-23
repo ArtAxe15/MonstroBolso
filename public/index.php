@@ -7,6 +7,7 @@ require_once __DIR__ . '/../app/Autoload.php';
 
 use App\Config\Database;
 use App\Http\JsonResponse;
+use App\Http\ApiException;
 
 // Identifica o caminho acessado, inclusive quando a URL contém /index.php/dashboard.
 $uriCompleta = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
@@ -33,6 +34,8 @@ if (isset($rotas[$chaveRota])) {
     try {
         $controller = new $controllerClass(Database::getConnection());
         $controller->{$metodoController}();
+    } catch (ApiException $e) {
+        JsonResponse::send(['ok' => false, 'message' => $e->getMessage()], $e->statusCode());
     } catch (Throwable $e) {
         error_log('Erro na API (' . $chaveRota . '): ' . $e->getMessage());
 
@@ -52,7 +55,7 @@ if (str_starts_with($rota, '/api/')) {
 }
 
 // 3. Rotas da interface: todas devolvem o mesmo app shell.
-$rotasFrontend = ['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map', '/pc', '/battle'];
+$rotasFrontend = ['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map', '/pc', '/battle', '/champion'];
 
 if (in_array($rota, $rotasFrontend, true)) {
     $baseUrl = $scriptDir;

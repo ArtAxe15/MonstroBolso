@@ -7,6 +7,7 @@ use App\Controllers\ProfileController;
 use App\Controllers\GameController;
 use App\Controllers\BattleController;
 use App\Controllers\BattleHistoryController;
+use App\Controllers\FinalController;
 
 /*
  * Rotas da API.
@@ -39,6 +40,9 @@ return [
     'GET /api/game/encounter' => [GameController::class, 'encounter'],
 
     'GET /api/battle/history' => [BattleHistoryController::class, 'index'],
+    'GET /api/game/ultima-derrota' => [FinalController::class, 'ultimaDerrota'],
+    'POST /api/game/reiniciar' => [FinalController::class, 'reiniciar'],
+    'GET /api/game/campeao' => [FinalController::class, 'campeao'],
     'POST /api/battle/start' => [BattleController::class, 'start'],
     'POST /api/battle/turn' => [BattleController::class, 'turn'],
     'GET /api/battle/state' => [BattleController::class, 'state'],

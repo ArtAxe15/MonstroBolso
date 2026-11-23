@@ -124,6 +124,16 @@ final class Encontro
         )->fetchAll();
     }
 
+    public function encontrarMaiorNivelDoTime(int $idPerfil): ?int
+    {
+        $stmt = $this->consultar(
+            'SELECT MAX(nivel) FROM pokemon_time WHERE id_perfil = :perfil',
+            ['perfil' => $idPerfil]
+        );
+        $nivel = $stmt->fetchColumn();
+        return $nivel === null || $nivel === false ? null : (int) $nivel;
+    }
+
     public function encontrarTimeDoJogador(int $idPerfil): array
     {
         return $this->consultar(

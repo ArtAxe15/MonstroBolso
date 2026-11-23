@@ -123,6 +123,16 @@ function coletarTransicoesEvolutivas(array $elo, array &$transicoes): void
 function obterRegrasPersonalizadasEvolucao(): array
 {
     return [
+        'frillish-male>jellicent-male' => [
+            'origem' => 'frillish-male',
+            'destino' => 'jellicent-male',
+            'nivel' => 40,
+        ],
+        'frillish-female>jellicent-female' => [
+            'origem' => 'frillish-female',
+            'destino' => 'jellicent-female',
+            'nivel' => 40,
+        ],
         'pansage>simisage' => [
             'origem' => 'pansage',
             'destino' => 'simisage',
@@ -146,7 +156,7 @@ function obterRegrasPersonalizadasEvolucao(): array
         'boldore>gigalith' => [
             'origem' => 'boldore',
             'destino' => 'gigalith',
-            'nivel' => 35,
+            'nivel' => 40,
         ],
         'basculin-white-striped>basculegion-male' => [
             'origem' => 'basculin-white-striped',
@@ -176,7 +186,7 @@ function obterRegrasPersonalizadasEvolucao(): array
         'gurdurr>conkeldurr' => [
             'origem' => 'gurdurr',
             'destino' => 'conkeldurr',
-            'nivel' => 35,
+            'nivel' => 22,
         ],
         'swadloon>leavanny' => [
             'origem' => 'swadloon',
@@ -221,7 +231,7 @@ function obterRegrasPersonalizadasEvolucao(): array
         'shelmet>accelgor' => [
             'origem' => 'shelmet',
             'destino' => 'accelgor',
-            'nivel' => 30,
+            'nivel' => 48,
         ],   
         'bisharp>kingambit' => [
             'origem' => 'bisharp',

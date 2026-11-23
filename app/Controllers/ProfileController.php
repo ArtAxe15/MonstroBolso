@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Http\JsonResponse;
+use App\Services\EncerramentoJornada;
 use PDO;
 use Throwable;
 
@@ -101,14 +102,22 @@ final class ProfileController
         if (!$perfil) JsonResponse::send(['ok' => false, 'message' => 'Jornada não encontrada para esta conta.'], 404);
 
         $_SESSION['perfil'] = ['id_perfil' => (int) $perfil['id_perfil'], 'nome' => $perfil['nome']];
+        unset($_SESSION['ultima_derrota']);
         $team = $this->conn->prepare('SELECT COUNT(*) FROM pokemon_time WHERE id_perfil = :perfil');
         $team->execute(['perfil' => $idPerfil]);
         $temInicial = (int) $team->fetchColumn() > 0;
 
+        $campeao = $this->conn->prepare(
+            "SELECT 1 FROM progresso_desafio pd JOIN desafio d ON d.id_desafio = pd.id_desafio
+             WHERE pd.id_perfil = :perfil AND pd.concluido = 1 AND d.tipo = 'rival' LIMIT 1"
+        );
+        $campeao->execute(['perfil' => $idPerfil]);
+        $concluida = (bool) $campeao->fetchColumn();
+
         JsonResponse::send([
             'ok' => true,
             'message' => 'Jornada selecionada.',
-            'proxima_etapa' => $temInicial ? 'map' : 'starter',
+            'proxima_etapa' => $concluida ? 'champion' : ($temInicial ? 'map' : 'starter'),
             'perfil' => $_SESSION['perfil']
         ]);
     }
@@ -126,18 +135,9 @@ final class ProfileController
 
         try {
             $this->conn->beginTransaction();
-            // Estas duas tabelas não possuem ON DELETE CASCADE para perfil no banco atual.
-            $batalhas = $this->conn->prepare('SELECT id_batalha FROM batalha_log WHERE id_perfil = :perfil');
-            $batalhas->execute(['perfil' => $idPerfil]);
-            $ids = $batalhas->fetchAll(PDO::FETCH_COLUMN);
-            if ($ids) {
-                $marks = implode(',', array_fill(0, count($ids), '?'));
-                $delPokemon = $this->conn->prepare("DELETE FROM batalha_pokemon WHERE id_batalha IN ($marks)");
-                $delPokemon->execute($ids);
-            }
-            $this->conn->prepare('DELETE FROM batalha_log WHERE id_perfil = :perfil')->execute(['perfil' => $idPerfil]);
-            $this->conn->prepare('DELETE FROM compra WHERE id_perfil = :perfil')->execute(['perfil' => $idPerfil]);
-            $this->conn->prepare('DELETE FROM perfil WHERE id_perfil = :perfil AND id_usuario = :usuario')->execute(['perfil' => $idPerfil, 'usuario' => $idUsuario]);
+            // Preserva o histórico de batalhas no próprio batalha_log.
+            (new EncerramentoJornada($this->conn))
+                ->excluirPerfilPreservandoHistorico($idPerfil);
             $this->conn->commit();
 
             if ((int) ($_SESSION['perfil']['id_perfil'] ?? 0) === $idPerfil) unset($_SESSION['perfil']);
