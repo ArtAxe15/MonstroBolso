@@ -179,8 +179,8 @@ async function carregarMapa(aviso = '') {
     renderizarMapa(aviso);
 }
 
-function visitarLocalMapa(idMapaNo, acao, item = {}) {
-    return requisitarApi('/api/game/map/service', {
+async function visitarLocalMapa(idMapaNo, acao, item = {}) {
+    return await requisitarApi('/api/game/map/service', {
         method: 'POST',
         body: { id_mapa_no: idMapaNo, acao, ...item }
     });
@@ -192,6 +192,7 @@ async function abrirPokebola(idMapaNo) {
     const pokemon = oferta.pokemon;
     const stats = pokemon.atributos || {};
     const nome = formatarNomeFrontend(pokemon.nome);
+    const timeCheio = Boolean(oferta.time_cheio);
     const dialogo = document.createElement('dialog');
     dialogo.className = 'pokebola-dialogo';
     dialogo.setAttribute('aria-labelledby', 'pokebola-titulo');
@@ -219,16 +220,21 @@ async function abrirPokebola(idMapaNo) {
                 <div><dt>${escaparHtml(titulo)}</dt><dd>${Number(valor)}</dd></div>`).join('')}
             </dl>
         </div>
-        <p class="pokebola-aviso">${oferta.time_cheio
-            ? 'Seu time já está completo (6/6). Não é possível aceitar outro Pokémon.'
+        <p class="pokebola-aviso">${timeCheio
+            ? 'Seu time está completo (6/6). Se aceitar, este Pokémon será enviado ao PC e poderá ser retirado depois pelo Team Builder.'
             : `Você tem ${Number(oferta.quantidade_time)}/6 Pokémon. Deseja levar este para a equipe?`}</p>
         <div class="pokebola-feedback" role="status" aria-live="polite"></div>
         <div class="pokebola-acoes">
-            <button type="button" data-pokebola-escolha="true" ${oferta.time_cheio ? 'disabled' : ''}>Adicionar ao time</button>
+            <button type="button" data-pokebola-escolha="true">${timeCheio ? 'Guardar no PC' : 'Adicionar ao time'}</button>
             <button type="button" data-pokebola-escolha="false">Deixar para trás</button>
         </div>
         <button type="button" class="pokebola-fechar" data-pokebola-fechar>Voltar ao mapa sem decidir</button>
     `;
+    function atualizarBotoes() {
+        dialogo.querySelectorAll('[data-pokebola-escolha]').forEach(item => {
+            item.disabled = ocupado;
+        });
+    }
     dialogo.addEventListener('cancel', ev => { if (ocupado) ev.preventDefault(); });
     dialogo.addEventListener('close', () => dialogo.remove());
     dialogo.addEventListener('click', async ev => {
@@ -236,23 +242,25 @@ async function abrirPokebola(idMapaNo) {
         if (botaoFechar && !ocupado) { dialogo.close(); return; }
         const botao = ev.target.closest('[data-pokebola-escolha]');
         if (!botao || ocupado) return;
+        const aceitar = botao.dataset.pokebolaEscolha === 'true';
         ocupado = true;
-        dialogo.querySelectorAll('button').forEach(item => item.disabled = true);
+        dialogo.querySelectorAll('button, input').forEach(item => item.disabled = true);
         try {
+            const dados = { id_mapa_no: idMapaNo, aceitar };
             const resposta = await requisitarApi('/api/game/map/pokebola', {
-                method: 'POST',
-                body: { id_mapa_no: idMapaNo, aceitar: botao.dataset.pokebolaEscolha === 'true' }
+                method: 'POST', body: dados
             });
             dialogo.close();
             await carregarMapa(resposta.message);
         } catch (erro) {
             const feedback = dialogo.querySelector('.pokebola-feedback');
             if (feedback) feedback.innerHTML = mensagem(erro.message);
-            dialogo.querySelectorAll('button').forEach(item => {
-                item.disabled = oferta.time_cheio && item.dataset.pokebolaEscolha === 'true';
-            });
         } finally {
             ocupado = false;
+            if (dialogo.isConnected) {
+                dialogo.querySelectorAll('button, input').forEach(item => item.disabled = false);
+                atualizarBotoes();
+            }
         }
     });
     document.body.appendChild(dialogo);
@@ -265,6 +273,75 @@ async function trocarPosicoesDoTime(primeiro, segundo) {
         body: { primeiro, segundo }
     });
     await carregarMapa(resultado.message);
+}
+
+// Team Builder / PC: tela independente do mapa. Nenhum Pokémon é descartado.
+async function carregarPc(aviso = '') {
+    loading('Consultando seu PC Pokémon...');
+    const dados = await requisitarApi('/api/game/pc');
+    renderizarPc(dados, aviso);
+}
+
+function cardPokemonPc(p, armazenamento, indice, listaTime) {
+    const nome = escaparHtml(p.nome_exibicao || p.nome_especie);
+    const img = escaparHtml(p.imagem_url || '');
+    const barra = Math.max(0, Math.min(100, Number(p.hp_percentual) || 0));
+    const id = Number(armazenamento ? p.id_pokemon_pc : p.id_pokemon_time);
+    const ehUltimo = !armazenamento && listaTime.length <= 1;
+    const botao = armazenamento
+        ? `<button type="button" data-pc-retirar="${id}">${listaTime.length >= 6 ? 'Trocar pelo selecionado' : 'Retirar para equipe'}</button>`
+        : `<button type="button" data-pc-guardar="${id}" ${ehUltimo ? 'disabled title="É necessário manter ao menos um Pokémon na equipe"' : ''}>Guardar no PC</button>`;
+    const ordenar = armazenamento ? '' : `<div class="pc-ordem">
+        <button type="button" data-pc-ordem-primeiro="${id}" data-pc-ordem-segundo="${indice > 0 ? Number(listaTime[indice - 1].id_pokemon_time) : 0}" ${indice === 0 ? 'disabled' : ''} aria-label="Subir ${nome}">▲</button>
+        <button type="button" data-pc-ordem-primeiro="${id}" data-pc-ordem-segundo="${indice + 1 < listaTime.length ? Number(listaTime[indice + 1].id_pokemon_time) : 0}" ${indice === listaTime.length - 1 ? 'disabled' : ''} aria-label="Descer ${nome}">▼</button>
+    </div>`;
+    return `<article class="pc-pokemon-card">
+        <img src="${img}" alt="${nome}" loading="lazy">
+        <div class="pc-pokemon-dados">
+            <strong>${nome}</strong>
+            <small>Nv. ${Number(p.nivel)} · ${escaparHtml(p.tipos || 'Tipo desconhecido')}</small>
+            <small>Status: ${escaparHtml(p.status || 'normal')}</small>
+            <div class="barra-hp"><i style="width:${barra}%"></i></div>
+            <small>HP ${Number(p.hp_atual)} / ${Number(p.hp_max)}</small>
+            ${p.item_equipado ? `<small>Item: ${escaparHtml(p.item_equipado)}</small>` : ''}
+        </div>
+        <div class="pc-acoes">${ordenar}${botao}</div>
+    </article>`;
+}
+
+function renderizarPc(dados, aviso = '') {
+    document.body.className = 'tela-pc';
+    const time = Array.isArray(dados.time) ? dados.time : [];
+    const pc = Array.isArray(dados.pc) ? dados.pc : [];
+    const timeCheio = time.length >= 6;
+    appElement.innerHTML = `<main class="pc-pagina">
+        <header class="pc-topo">
+            <div><p class="eyebrow">MONSTROBOLSO · TEAM BUILDER</p><h1>PC Pokémon</h1>
+                <p>Organize sua equipe sem perder nenhum Pokémon.</p></div>
+            <button type="button" class="botao" data-acao="voltar-mapa">Voltar ao mapa</button>
+        </header>
+        ${aviso ? mensagem(aviso, 'sucesso') : ''}
+        <p class="pc-instrucao">Equipe: ${time.length}/6 · Armazenados: ${pc.length}. Você precisa manter pelo menos um Pokémon na equipe.</p>
+        ${timeCheio && pc.length ? `<label class="pc-troca-selecao">Para retirar um Pokémon com equipe cheia, escolha qual será guardado:
+            <select id="pc-time-para-troca">${time.map(p => `<option value="${Number(p.id_pokemon_time)}">${escaparHtml(p.nome_exibicao || p.nome_especie)} · Nv. ${Number(p.nivel)}</option>`).join('')}</select>
+        </label>` : ''}
+        <div class="pc-colunas">
+            <section class="pc-secao"><h2>Equipe <small>${time.length}/6</small></h2>
+                <div class="pc-grid">${time.map((p,i) => cardPokemonPc(p, false, i, time)).join('') || '<p>Nenhum Pokémon na equipe.</p>'}</div>
+            </section>
+            <section class="pc-secao"><h2>Armazenamento <small>${pc.length}</small></h2>
+                <div class="pc-grid">${pc.map(p => cardPokemonPc(p, true, 0, time)).join('') || '<p>Seu PC ainda está vazio. Pokémon encontrados com a equipe cheia aparecerão aqui.</p>'}</div>
+            </section>
+        </div>
+    </main>`;
+}
+
+async function movimentarPc(acao, idTime = null, idPc = null) {
+    const resultado = await requisitarApi('/api/game/pc', {
+        method: 'POST',
+        body: { acao, ...(idTime ? { id_pokemon_time: idTime } : {}), ...(idPc ? { id_pokemon_pc: idPc } : {}) }
+    });
+    await carregarPc(resultado.message);
 }
 
 async function abrirPokemart(idMapaNo) {
@@ -944,6 +1021,7 @@ function renderizarMapa(aviso = '') {
                     <h2>TIME</h2>
                     ${teamHtml || '<p>Seu time está vazio.</p>'}
                     ${team.length > 1 ? '<p class="equipe-ajuda">Use ▲ e ▼ para trocar a ordem dos Pokémon.</p>' : ''}
+                    <button type="button" class="botao-acessar-pc" data-acao="abrir-pc">🖥️ Acessar PC / Team Builder</button>
                 </aside>
                 <section class="mapa-area">
                     ${mensagem(aviso, 'sucesso')}
@@ -989,7 +1067,7 @@ function renderizarMapa(aviso = '') {
 }
 
 async function navegar(rota, opcoes = {}) {
-    const permitidas = ['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map', '/battle'];
+    const permitidas = ['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map', '/pc', '/battle'];
     if (!permitidas.includes(rota)) rota = '/';
     if (!state.autenticado && !['/', '/login', '/register'].includes(rota)) rota = '/login';
     if (state.autenticado && ['/', '/login', '/register'].includes(rota)) rota = '/dashboard';
@@ -1000,6 +1078,7 @@ async function navegar(rota, opcoes = {}) {
         else if (rota === '/profiles') await carregarPerfis();
         else if (rota === '/starter') await abrirStarter();
         else if (rota === '/map') await carregarMapa();
+        else if (rota === '/pc') await carregarPc();
         else if (rota === '/battle') await abrirBatalha();
         else renderizarLogin(opcoes.mensagem || null);
     } catch (e) {
@@ -1020,7 +1099,7 @@ async function verificarSessaoInicial() {
         const dados = await requisitarApi('/api/session');
         state.autenticado = dados.autenticado === true; state.usuario = dados.usuario || null;
         let rota = rotaAtual();
-        if (!['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map', '/battle'].includes(rota)) rota = '/';
+        if (!['/', '/login', '/register', '/dashboard', '/profiles', '/starter', '/map', '/pc', '/battle'].includes(rota)) rota = '/';
         await navegar(rota, { substituir: true });
     } catch (e) { state.autenticado = false; state.usuario = null; await navegar('/login', { substituir: true, mensagem: { texto: e.message, tipo: 'erro' } }); }
 }
@@ -1086,6 +1165,31 @@ document.addEventListener('click', async ev => {
             await trocarPosicoesDoTime(Number(comandoTime.dataset.timePrimeiro), Number(comandoTime.dataset.timeSegundo));
             return;
         }
+        const ordemPc = ev.target.closest('[data-pc-ordem-primeiro]');
+        if (ordemPc && !ordemPc.disabled) {
+            ordemPc.disabled = true;
+            await requisitarApi('/api/game/team/swap', {
+                method: 'POST',
+                body: { primeiro: Number(ordemPc.dataset.pcOrdemPrimeiro), segundo: Number(ordemPc.dataset.pcOrdemSegundo) }
+            });
+            await carregarPc('Ordem da equipe atualizada.');
+            return;
+        }
+        const guardarPc = ev.target.closest('[data-pc-guardar]');
+        if (guardarPc && !guardarPc.disabled) {
+            guardarPc.disabled = true;
+            await movimentarPc('guardar', Number(guardarPc.dataset.pcGuardar));
+            return;
+        }
+        const retirarPc = ev.target.closest('[data-pc-retirar]');
+        if (retirarPc && !retirarPc.disabled) {
+            retirarPc.disabled = true;
+            const selecionar = document.querySelector('#pc-time-para-troca');
+            const alvo = selecionar ? Number(selecionar.value) : null;
+            await movimentarPc(selecionar ? 'trocar' : 'retirar', alvo, Number(retirarPc.dataset.pcRetirar));
+            return;
+        }
+        if (acao === 'abrir-pc') { await navegar('/pc'); return; }
         if (acao === 'ver-batalhas') { await abrirHistoricoBatalhas(); return; }
         if (acao === 'fechar-historico') { ev.target.closest('.historico-sobreposicao')?.remove(); return; }
         if (acao === 'tentar-salvar-batalha') {
@@ -1186,5 +1290,7 @@ document.addEventListener('keydown', ev => {
     ev.preventDefault();
     desafio.click();
 });
-window.addEventListener('popstate', () => navegar(rotaAtual(), { atualizarUrl: false }));
+window.addEventListener('popstate', async () => {
+    await navegar(rotaAtual(), { atualizarUrl: false });
+});
 verificarSessaoInicial();

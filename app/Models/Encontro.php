@@ -218,6 +218,7 @@ final class Encontro
         return $opcoes;
     }
 
+    /** No MONSTROBOLSO, metodo_evolucao=NIVEL prevalece sobre o gatilho original da API. */
     public function encontrarEvolucaoPorNivel(int $idEspecie, int $nivel): ?array
     {
         $evolucao = $this->consultar(
@@ -225,7 +226,6 @@ final class Encontro
              FROM evolucao
              WHERE id_pokemon_origem = :especie
                AND metodo_evolucao = 'NIVEL'
-               AND (api_trigger = 'level-up' OR api_trigger IS NULL)
                AND nivel_requisito <= :nivel
              ORDER BY nivel_requisito, id_evolucao
              LIMIT 1",

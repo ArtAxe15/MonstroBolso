@@ -31,6 +31,8 @@ return [
     'GET /api/game/map/pokebola' => [GameController::class, 'oferecerPokebola'],
     'POST /api/game/map/pokebola' => [GameController::class, 'resolverPokebola'],
     'POST /api/game/team/swap' => [GameController::class, 'trocarPosicoesTime'],
+    'GET /api/game/pc' => [GameController::class, 'pc'],
+    'POST /api/game/pc' => [GameController::class, 'movimentarPc'],
     'GET /api/game/pokemart' => [GameController::class, 'pokemart'],
     'POST /api/game/map/service' => [GameController::class, 'visitarServicoMapa'],
     'POST /api/game/items/use' => [GameController::class, 'usarItem'],

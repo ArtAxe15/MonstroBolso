@@ -51,6 +51,12 @@ final class ServicosMapa
                      ON DUPLICATE KEY UPDATE quantidade = quantidade + 1',
                     [$perfil, $item]
                 );
+                // Histórico da loja obrigatório: registra a compra na MESMA transação.
+                $this->consulta(
+                    'INSERT INTO compra (id_perfil, id_item, quantidade, valor_unitario, valor_total) '
+                    . 'VALUES (?, ?, 1, ?, ?)',
+                    [$perfil, $item, $preco, $preco]
+                );
             } else {
                 if ($acao === 'curar') {
                     $this->consulta(

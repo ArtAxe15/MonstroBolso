@@ -146,7 +146,7 @@ function obterRegrasPersonalizadasEvolucao(): array
         'boldore>gigalith' => [
             'origem' => 'boldore',
             'destino' => 'gigalith',
-            'nivel' => 40,
+            'nivel' => 35,
         ],
         'basculin-white-striped>basculegion-male' => [
             'origem' => 'basculin-white-striped',
@@ -156,6 +156,11 @@ function obterRegrasPersonalizadasEvolucao(): array
         'yamask-galar>runerigus' => [
             'origem' => 'yamask-galar',
             'destino' => 'runerigus',
+            'nivel' => 35,
+        ],
+        'darumaka>darmanitan-standard' => [
+            'origem' => 'darumaka',
+            'destino' => 'darmanitan-standard',
             'nivel' => 35,
         ],
         'darumaka-galar>darmanitan-galar-standard' => [
@@ -171,7 +176,7 @@ function obterRegrasPersonalizadasEvolucao(): array
         'gurdurr>conkeldurr' => [
             'origem' => 'gurdurr',
             'destino' => 'conkeldurr',
-            'nivel' => 22,
+            'nivel' => 35,
         ],
         'swadloon>leavanny' => [
             'origem' => 'swadloon',
@@ -216,7 +221,7 @@ function obterRegrasPersonalizadasEvolucao(): array
         'shelmet>accelgor' => [
             'origem' => 'shelmet',
             'destino' => 'accelgor',
-            'nivel' => 48,
+            'nivel' => 30,
         ],   
         'bisharp>kingambit' => [
             'origem' => 'bisharp',
@@ -274,7 +279,9 @@ function determinarRegraEvolucao(
             'metodo_evolucao' => 'NIVEL',
             'nivel_requisito' => $regrasPersonalizadas[$chave]['nivel'],
             'id_item' => null,
-            'api_trigger' => $gatilhoOriginal,
+            // O método efetivo no jogo é por nível, mesmo que a
+            // PokéAPI exija outro tipo de condição.
+            'api_trigger' => 'level-up',
         ];
     }
 
@@ -331,9 +338,10 @@ function sincronizarCadeiaEvolutiva(PDO $pdo, array $dadosCadeia, int $idMoonSto
     $regrasPersonalizadas = obterRegrasPersonalizadasEvolucao();
 
     foreach ($regrasPersonalizadas as $chave => $regraPersonalizada) {
-        // Só acrescentar uma transição especial quando
-        // o Pokémon importado for a origem dessa evolução.
-        if ($nomeImportado !== $regraPersonalizada['origem']) {
+        // A transição deve ser registrada quando a origem OU o destino
+        // for importado; a outra espécie pode já existir no banco.
+        if ($nomeImportado !== $regraPersonalizada['origem']
+            && $nomeImportado !== $regraPersonalizada['destino']) {
             continue;
         }
 

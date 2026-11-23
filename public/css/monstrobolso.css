@@ -985,6 +985,19 @@ body.tela-mapa {
 .pokebola-acoes button:disabled { opacity: .45; cursor: not-allowed; }
 .pokebola-fechar { display: block; margin: 12px auto 0; padding: 5px; border: 0; background: transparent; color: #536b7c; text-decoration: underline; cursor: pointer; font-size: 12px; }
 .pokebola-feedback { margin-top: 8px; }
+.pokebola-troca-time { margin: 12px 0; padding: 10px; border: 1px solid #b8b8ad; border-radius: 6px; text-align: left; }
+.pokebola-troca-time legend { padding: 0 5px; font-size: 12px; font-weight: 800; }
+.pokebola-troca-opcoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+.pokebola-troca-opcao { display: flex; align-items: center; gap: 5px; padding: 5px; border: 2px solid #bcc5ba; border-radius: 5px; background: #fffdf7; cursor: pointer; min-width: 0; }
+.pokebola-troca-opcao:has(input:checked) { border-color: #2c7054; background: #e0f2e4; }
+.pokebola-troca-opcao:focus-within { outline: 2px solid #277ab4; outline-offset: 1px; }
+.pokebola-troca-opcao input { flex: 0 0 auto; margin: 0 1px; }
+.pokebola-troca-opcao img { width: 40px; height: 40px; object-fit: contain; image-rendering: pixelated; flex: 0 0 auto; }
+.pokebola-troca-opcao span { min-width: 0; }
+.pokebola-troca-opcao strong { display: block; font-size: 11px; overflow-wrap: anywhere; }
+.pokebola-troca-opcao small { color: #566963; font-size: 10px; }
+@media (max-width: 410px) { .pokebola-troca-opcoes { grid-template-columns: 1fr; } }
+
 
 /* A ordem é salva em pokemon_time.posicao e também usada pelas batalhas. */
 .painel-time .mini-pokemon { gap: 4px; margin: 8px 0; }
@@ -998,3 +1011,46 @@ body.tela-mapa {
 .painel-time .mini-pokemon-ordenar button:disabled { opacity: .24; cursor: default; }
 .painel-time .mini-pokemon-ordenar button:not(:disabled):hover { background: #b8dbb8; }
 .painel-time .equipe-ajuda { margin: 12px 0 0; font-size: 10px; line-height: 1.4; }
+
+/* PC Pokémon e Team Builder (tela independente, com rolagem apenas aqui). */
+.tela-mapa .botao-acessar-pc {
+    display: block; width: 100%; margin-top: 12px; padding: 10px 7px;
+    background: #215e78; color: #fff; border: 2px solid #17455a;
+    border-radius: 6px; font-size: 12px; font-weight: 800; cursor: pointer;
+}
+.tela-mapa .botao-acessar-pc:hover, .tela-mapa .botao-acessar-pc:focus-visible { background: #12485f; }
+body.tela-pc {
+    min-height: 100vh; padding: 20px;
+    background: linear-gradient(165deg, #72b3ce, #d3e8d5 80%);
+}
+.tela-pc .app-shell { display: block; }
+.pc-pagina {
+    max-width: 1230px; margin: 0 auto; padding: 24px;
+    border: 3px solid #405f60; border-radius: 12px;
+    background: #f5f6ee; box-shadow: 5px 6px 0 #476c74;
+}
+.pc-topo { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+.pc-topo h1 { margin: 5px 0; color: #23485a; }
+.pc-topo p { margin: 4px 0; }
+.pc-instrucao { padding: 12px; border-radius: 7px; background: #e4efe5; color: #244d39; font-weight: 650; }
+.pc-troca-selecao { display: flex; flex-direction: column; gap: 6px; padding: 12px; border: 1px solid #91af9a; border-radius: 8px; background: #f1faf2; font-weight: 700; }
+.pc-troca-selecao select { width: min(100%, 420px); padding: 9px; border-radius: 5px; border: 1px solid #8da598; }
+.pc-colunas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 18px; }
+.pc-secao { min-width: 0; padding: 16px; background: #fff; border: 2px solid #a7c2b1; border-radius: 9px; }
+.pc-secao h2 { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 19px; color: #275248; }
+.pc-secao h2 small { background: #dcece3; border-radius: 99px; padding: 4px 9px; font-size: 12px; }
+.pc-grid { display: grid; gap: 10px; margin-top: 10px; }
+.pc-pokemon-card { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px; border: 1px solid #bdd1c3; border-radius: 7px; background: #f9faf5; }
+.pc-pokemon-card > img { width: 72px; height: 72px; object-fit: contain; image-rendering: pixelated; }
+.pc-pokemon-dados { min-width: 0; display: grid; gap: 3px; }
+.pc-pokemon-dados strong { text-transform: capitalize; overflow-wrap: anywhere; font-size: 14px; }
+.pc-pokemon-dados small { color: #486357; font-size: 11px; }
+.pc-pokemon-dados .barra-hp { width: 100%; max-width: 230px; }
+.pc-acoes { display: flex; flex-direction: column; gap: 7px; align-items: stretch; }
+.pc-acoes button { padding: 8px 9px; border: 1px solid #286651; border-radius: 5px; background: #2b745b; color: #fff; font-size: 12px; font-weight: 800; cursor: pointer; }
+.pc-acoes button:hover:not(:disabled) { background: #205640; }
+.pc-acoes button:disabled { opacity: .4; cursor: not-allowed; }
+.pc-ordem { display: flex; gap: 5px; justify-content: center; }
+.pc-ordem button { padding: 5px 8px; background: #e2f0e9; color: #2b6951; }
+@media (max-width: 920px) { .pc-colunas { grid-template-columns: 1fr; } }
+@media (max-width: 540px) { body.tela-pc { padding: 7px; } .pc-pagina { padding: 12px; } .pc-pokemon-card { grid-template-columns: 50px minmax(0, 1fr); } .pc-pokemon-card > img { width: 50px; height: 50px; } .pc-acoes { grid-column: 1 / -1; flex-direction: row; } }

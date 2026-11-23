@@ -52,14 +52,20 @@ final class PokebolaMapa
                 $this->registrar($perfil, 'POKEBOLA_OFERTA', $no, $oferta);
             }
             $pokemon = $this->pokemonDaOferta($oferta);
-            $quantidade = (int) $this->consultar(
-                'SELECT COUNT(*) FROM pokemon_time WHERE id_perfil = ?', [$perfil]
-            )->fetchColumn();
+            $time = $this->consultar(
+                'SELECT pt.id_pokemon_time, pt.posicao, pt.nivel, pe.nome, pe.imagem_url '
+                . 'FROM pokemon_time pt '
+                . 'INNER JOIN pokemon_especie pe ON pe.id_pokemon_especie = pt.id_pokemon_especie '
+                . 'WHERE pt.id_perfil = ? ORDER BY pt.posicao',
+                [$perfil]
+            )->fetchAll(PDO::FETCH_ASSOC);
+            $quantidade = count($time);
             $this->conn->commit();
             return [
                 'pokemon' => $pokemon,
                 'quantidade_time' => $quantidade,
                 'time_cheio' => $quantidade >= 6,
+                'time' => $time,
             ];
         } catch (Throwable $e) {
             if ($this->conn->inTransaction()) $this->conn->rollBack();
@@ -67,6 +73,10 @@ final class PokebolaMapa
         }
     }
 
+    /**
+     * Um Pokémon aceito vai para a equipe se houver vaga; caso contrário, para o PC.
+     * Nenhum integrante existente é apagado ou substituído.
+     */
     public function resolver(int $perfil, int $no, bool $aceitar): array
     {
         $this->semBatalhaPendente($perfil);
@@ -79,58 +89,65 @@ final class PokebolaMapa
                 throw new ApiException('Abra a Pokébola antes de escolher.', 409);
             }
             $pokemon = $this->pokemonDaOferta($oferta);
+            $guardadoNoPc = false;
             if ($aceitar) {
-                $posicoes = $this->consultar(
-                    'SELECT posicao FROM pokemon_time WHERE id_perfil = ? FOR UPDATE', [$perfil]
-                )->fetchAll(PDO::FETCH_COLUMN);
-                if (count($posicoes) >= 6) {
-                    throw new ApiException('Seu time já tem seis Pokémon. Recuse a oferta para continuar.', 409);
-                }
-                $posicaoLivre = null;
-                for ($posicao = 1; $posicao <= 6; $posicao++) {
-                    if (!in_array($posicao, array_map('intval', $posicoes), true)) {
-                        $posicaoLivre = $posicao;
-                        break;
-                    }
-                }
-                if ($posicaoLivre === null) {
-                    throw new ApiException('Não há uma posição disponível na equipe.', 409);
-                }
-                // Mantém o mesmo cálculo de atributos e seleção de golpe de
-                // status utilizados na escolha do Pokémon inicial.
-                $atributos = (new CalculadoraAtributos())->calcular(
-                    (int) $pokemon['hp_base'],
-                    (int) $pokemon['ataque_base'],
-                    (int) $pokemon['defesa_base'],
-                    (int) $pokemon['ataque_especial_base'],
-                    (int) $pokemon['defesa_especial_base'],
-                    (int) $pokemon['velocidade_base'],
-                    (int) $oferta['nivel']
-                );
+                $posicoes = array_map('intval', $this->consultar(
+                    'SELECT posicao FROM pokemon_time WHERE id_perfil = ? ORDER BY posicao FOR UPDATE',
+                    [$perfil]
+                )->fetchAll(PDO::FETCH_COLUMN));
+                $guardadoNoPc = count($posicoes) >= 6;
                 $idEspecie = (int) $oferta['id_pokemon_especie'];
-                $status = (new Encontro($this->conn))->encontrarOpcoesDeGolpeStatus([$idEspecie]);
-                $this->consultar(
-                    "INSERT INTO pokemon_time (
-                        id_perfil, id_pokemon_especie, id_golpe_status, nivel,
-                        hp_max, hp_atual, ataque, defesa, ataque_especial,
-                        defesa_especial, velocidade, status, posicao
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'normal', ?)",
-                    [
-                        $perfil, $idEspecie, $status[$idEspecie][0] ?? null,
-                        (int) $oferta['nivel'], $atributos['hp_max'], $atributos['hp_max'],
-                        $atributos['ataque'], $atributos['defesa'],
-                        $atributos['ataque_especial'], $atributos['defesa_especial'],
-                        $atributos['velocidade'], $posicaoLivre,
-                    ]
-                );
+                $atributos = $pokemon['atributos'];
+                $opcoes = (new Encontro($this->conn))->encontrarOpcoesDeGolpeStatus([$idEspecie]);
+                $idStatus = $opcoes[$idEspecie][0] ?? null;
+                if ($guardadoNoPc) {
+                    $this->consultar(
+                        "INSERT INTO pokemon_pc (
+                            id_perfil, id_pokemon_especie, id_golpe_status, nivel,
+                            hp_max, hp_atual, ataque, defesa, ataque_especial,
+                            defesa_especial, velocidade, status
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'normal')",
+                        [
+                            $perfil, $idEspecie, $idStatus, (int) $oferta['nivel'],
+                            $atributos['hp_max'], $atributos['hp_max'],
+                            $atributos['ataque'], $atributos['defesa'],
+                            $atributos['ataque_especial'], $atributos['defesa_especial'],
+                            $atributos['velocidade'],
+                        ]
+                    );
+                } else {
+                    $posicaoLivre = null;
+                    for ($posicao = 1; $posicao <= 6; $posicao++) {
+                        if (!in_array($posicao, $posicoes, true)) {
+                            $posicaoLivre = $posicao;
+                            break;
+                        }
+                    }
+                    if ($posicaoLivre === null) {
+                        throw new ApiException('Não foi possível encontrar espaço na equipe.', 409);
+                    }
+                    $this->consultar(
+                        "INSERT INTO pokemon_time (
+                            id_perfil, id_pokemon_especie, id_golpe_status, nivel,
+                            hp_max, hp_atual, ataque, defesa, ataque_especial,
+                            defesa_especial, velocidade, status, posicao
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'normal', ?)",
+                        [
+                            $perfil, $idEspecie, $idStatus, (int) $oferta['nivel'],
+                            $atributos['hp_max'], $atributos['hp_max'],
+                            $atributos['ataque'], $atributos['defesa'],
+                            $atributos['ataque_especial'], $atributos['defesa_especial'],
+                            $atributos['velocidade'], $posicaoLivre,
+                        ]
+                    );
+                }
             }
             $this->registrar(
                 $perfil,
-                $aceitar ? 'POKEBOLA_CAPTURADA' : 'POKEBOLA_RECUSADA',
+                !$aceitar ? 'POKEBOLA_RECUSADA' : ($guardadoNoPc ? 'POKEBOLA_PC' : 'POKEBOLA_CAPTURADA'),
                 $no,
                 $oferta
             );
-            // Somente o nó realmente visitado pode abrir as próximas escolhas.
             $this->consultar(
                 "UPDATE mapa_no SET status = 'CONCLUIDO', concluido_em = CURRENT_TIMESTAMP() "
                 . "WHERE id_perfil = ? AND id_mapa_no = ? AND status = 'DISPONIVEL'",
@@ -151,11 +168,12 @@ final class PokebolaMapa
             );
             $this->conn->commit();
             $nome = ucfirst(str_replace('-', ' ', (string) $pokemon['nome']));
-            return [
-                'message' => $aceitar
-                    ? "$nome entrou para a sua equipe!"
-                    : "Você deixou $nome para trás e avançou na rota.",
-            ];
+            $mensagem = !$aceitar
+                ? "Você deixou $nome para trás e avançou na rota."
+                : ($guardadoNoPc
+                    ? "$nome foi enviado ao PC, pois sua equipe está cheia!"
+                    : "$nome entrou para a sua equipe!");
+            return ['message' => $mensagem, 'armazenado_pc' => $guardadoNoPc];
         } catch (Throwable $e) {
             if ($this->conn->inTransaction()) $this->conn->rollBack();
             throw $e;

@@ -10,6 +10,7 @@ use App\Http\PerfilAtivo;
 use App\Models\Encontro;
 use App\Models\ServicosMapa;
 use App\Models\PokebolaMapa;
+use App\Models\PokemonPc;
 use PDO;
 use App\Services\BattleService;
 use App\Services\CalculadoraAtributos;
@@ -61,7 +62,7 @@ final class GameController
         $pokemon = $stmt->fetch();
         if (!$pokemon) JsonResponse::send(['ok' => false, 'message' => 'Dados do Pokémon inicial não encontrados.'], 404);
 
-        $nivel = 50;
+        $nivel = 5;
         $idEspecie = (int) $pokemon['id_pokemon_especie'];
         $opcoesStatus = (new Encontro($this->conn))->encontrarOpcoesDeGolpeStatus([$idEspecie]);
         $idGolpeStatus = $opcoesStatus[$idEspecie][0] ?? null;
@@ -514,6 +515,31 @@ final class GameController
             $primeiro = $this->idServicoMapa($dados['primeiro'] ?? null);
             $segundo = $this->idServicoMapa($dados['segundo'] ?? null);
             $resultado = (new PokebolaMapa($this->conn))->trocarPosicoes($idPerfil, $primeiro, $segundo);
+            JsonResponse::send(['ok' => true] + $resultado);
+        } catch (ApiException $e) {
+            JsonResponse::send(['ok' => false, 'message' => $e->getMessage()], $e->statusCode());
+        }
+    }
+
+    /** Team Builder: consultar equipe e PC da jornada ativa. */
+    public function pc(): void
+    {
+        $perfil = $this->perfilAtivo();
+        JsonResponse::send(['ok' => true] + (new PokemonPc($this->conn))->listar($perfil));
+    }
+
+    /** Envia ao PC, retira do PC ou troca dois Pokémon sem perder nenhum. */
+    public function movimentarPc(): void
+    {
+        $perfil = $this->perfilAtivo();
+        $dados = $this->dados();
+        try {
+            $acao = (string) ($dados['acao'] ?? '');
+            $idTime = isset($dados['id_pokemon_time'])
+                ? $this->idServicoMapa($dados['id_pokemon_time']) : null;
+            $idPc = isset($dados['id_pokemon_pc'])
+                ? $this->idServicoMapa($dados['id_pokemon_pc']) : null;
+            $resultado = (new PokemonPc($this->conn))->movimentar($perfil, $acao, $idTime, $idPc);
             JsonResponse::send(['ok' => true] + $resultado);
         } catch (ApiException $e) {
             JsonResponse::send(['ok' => false, 'message' => $e->getMessage()], $e->statusCode());
