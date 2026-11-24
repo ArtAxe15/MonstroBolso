@@ -40,7 +40,7 @@ CREATE TABLE `batalha_log` (
   CONSTRAINT `fk_batalha_log_perfil` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id_perfil`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `chk_batalha_resultado` CHECK (`resultado` in ('VITORIA','DERROTA')),
   CONSTRAINT `chk_batalha_dinheiro` CHECK (`dinheiro_ganho` >= 0)
-) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -49,7 +49,7 @@ CREATE TABLE `batalha_log` (
 
 LOCK TABLES `batalha_log` WRITE;
 /*!40000 ALTER TABLE `batalha_log` DISABLE KEYS */;
-INSERT INTO `batalha_log` VALUES (61,33,NULL,NULL,NULL,'VITORIA',100,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":427,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Dwebble!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Snivy!\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Dwebble perdeu 56 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Dwebble desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Snivy subiu para o Nv. 51!\"},{\"tipo\":\"evolucao\",\"texto\":\"Snivy evoluiu para Servine!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 100!\"}]}','2026-11-18 15:53:48','2026-11-18 11:53:50'),(62,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":142,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Normal quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Lillipup!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Servine!\"},{\"tipo\":\"golpe\",\"texto\":\"Servine usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Lillipup perdeu 60 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Lillipup desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Patrat!\"},{\"tipo\":\"golpe\",\"texto\":\"Servine usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Patrat perdeu 60 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Patrat desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Servine subiu para o Nv. 53!\"},{\"tipo\":\"evolucao\",\"texto\":\"Servine evoluiu para Serperior!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-18 15:53:56','2026-11-18 11:54:00'),(63,33,NULL,NULL,NULL,'VITORIA',100,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":435,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Patrat!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Patrat perdeu 72 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Patrat desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 54!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 100!\"}]}','2026-11-18 15:54:04','2026-11-18 11:54:08'),(78,33,NULL,NULL,NULL,'VITORIA',100,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":438,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Timburr!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Timburr perdeu 42 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Timburr desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 55!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 100!\"}]}','2026-11-23 18:43:24','2026-11-23 14:43:26'),(79,33,NULL,NULL,1,'VITORIA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":1,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 1 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Axew!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Axew perdeu 33 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Axew desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Druddigon!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 48 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Druddigon desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o desafio!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 57!\"}]}','2026-11-23 18:43:32','2026-11-23 14:43:36'),(80,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":170,\"turnos\":3,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Agua quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Alomomola!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Alomomola usou Aqua Jet!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 3 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Alomomola perdeu 96 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Alomomola desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Jellicent Male!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Jellicent Male perdeu 70 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Jellicent Male desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Simipour!\"},{\"tipo\":\"golpe\",\"texto\":\"Simipour usou Aqua Jet!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 4 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Simipour perdeu 60 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Simipour desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 59!\"},{\"tipo\":\"nivel\",\"texto\":\"Zorua subiu para o Nv. 59!\"},{\"tipo\":\"evolucao\",\"texto\":\"Zorua evoluiu para Zoroark!\"},{\"tipo\":\"nivel\",\"texto\":\"Venipede subiu para o Nv. 59!\"},{\"tipo\":\"evolucao\",\"texto\":\"Venipede evoluiu para Whirlipede!\"},{\"tipo\":\"evolucao\",\"texto\":\"Whirlipede evoluiu para Scolipede!\"},{\"tipo\":\"nivel\",\"texto\":\"Sewaddle subiu para o Nv. 59!\"},{\"tipo\":\"evolucao\",\"texto\":\"Sewaddle evoluiu para Swadloon!\"},{\"tipo\":\"evolucao\",\"texto\":\"Swadloon evoluiu para Leavanny!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-23 18:43:54','2026-11-23 14:44:02'),(81,33,NULL,NULL,2,'VITORIA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":2,\"turnos\":3,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 2 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Gothorita!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Gothorita perdeu 49 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Gothorita desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Swoobat!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Swoobat perdeu 56 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Swoobat desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Musharna!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"dano\",\"texto\":\"Musharna perdeu 83 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Musharna desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o desafio!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 61!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 61!\"},{\"tipo\":\"nivel\",\"texto\":\"Scolipede subiu para o Nv. 61!\"},{\"tipo\":\"nivel\",\"texto\":\"Leavanny subiu para o Nv. 61!\"}]}','2026-11-23 18:44:14','2026-11-23 14:44:21'),(82,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":175,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Agua quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Alomomola!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Alomomola usou Aqua Jet!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 4 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Alomomola perdeu 126 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Alomomola desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 63!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 63!\"},{\"tipo\":\"nivel\",\"texto\":\"Scolipede subiu para o Nv. 63!\"},{\"tipo\":\"nivel\",\"texto\":\"Leavanny subiu para o Nv. 63!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculin White Striped subiu para o Nv. 63!\"},{\"tipo\":\"evolucao\",\"texto\":\"Basculin White Striped evoluiu para Basculegion Male!\"},{\"tipo\":\"nivel\",\"texto\":\"Joltik subiu para o Nv. 63!\"},{\"tipo\":\"evolucao\",\"texto\":\"Joltik evoluiu para Galvantula!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-23 18:45:46','2026-11-23 14:45:48'),(83,33,NULL,NULL,3,'VITORIA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":3,\"turnos\":4,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 3 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Emolga!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Emolga perdeu 58 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Emolga desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Tranquill!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Tranquill perdeu 66 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tranquill desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Swanna!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Swanna perdeu 77 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Swanna desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Archeops!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Archeops perdeu 82 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Archeops desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o desafio!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 65!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 65!\"},{\"tipo\":\"nivel\",\"texto\":\"Scolipede subiu para o Nv. 65!\"},{\"tipo\":\"nivel\",\"texto\":\"Leavanny subiu para o Nv. 65!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 65!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 65!\"}]}','2026-11-23 18:46:35','2026-11-23 14:46:45'),(84,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":180,\"turnos\":12,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Grama quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Leavanny!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Leavanny perdeu 23 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Leavanny usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 8 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Leavanny perdeu 23 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Leavanny usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Leavanny aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Leavanny perdeu 20 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Leavanny usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 17 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Leavanny perdeu 22 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Leavanny usou Bug Bite!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 64 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Leavanny perdeu 7 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Leavanny desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Maractus!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Maractus perdeu 50 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Maractus usou Maquinação Maliciosa!\"},{\"tipo\":\"status\",\"texto\":\"Ataque Especial de Maractus aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Maractus perdeu 45 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Maractus desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Ferrothorn!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Ferrothorn perdeu 13 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Ferrothorn usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 7 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Serperior aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Ferrothorn usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 8 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Serperior aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Ferrothorn usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Ferrothorn aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Ferrothorn usou Bullet Punch!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 64 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Ferrothorn perdeu 41 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Ferrothorn perdeu 40 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Ferrothorn desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 67!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 67!\"},{\"tipo\":\"nivel\",\"texto\":\"Scolipede subiu para o Nv. 67!\"},{\"tipo\":\"nivel\",\"texto\":\"Yamask Galar subiu para o Nv. 67!\"},{\"tipo\":\"evolucao\",\"texto\":\"Yamask Galar evoluiu para Runerigus!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 67!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 67!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-23 18:48:09','2026-11-23 14:48:49'),(85,33,NULL,NULL,4,'VITORIA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":4,\"turnos\":9,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 4 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Heatmor!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Serperior aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Heatmor usou Incinerate!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 26 HP.\"},{\"tipo\":\"status\",\"texto\":\"Serperior recebeu Queimadura!\"},{\"tipo\":\"status\",\"texto\":\"Serperior perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Serperior aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Heatmor usou Incinerate!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 27 HP.\"},{\"tipo\":\"status\",\"texto\":\"Serperior perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Serperior aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Heatmor usou Incinerate!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 51 HP.\"},{\"tipo\":\"status\",\"texto\":\"Serperior perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Heatmor perdeu 85 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Heatmor desmaiou!\"},{\"tipo\":\"status\",\"texto\":\"Serperior perdeu HP por Queimadura!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Simisear!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Simisear perdeu 85 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Simisear desmaiou!\"},{\"tipo\":\"status\",\"texto\":\"Serperior perdeu HP por Queimadura!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Darmanitan Standard!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Darmanitan Standard perdeu 109 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Darmanitan Standard desmaiou!\"},{\"tipo\":\"status\",\"texto\":\"Serperior perdeu HP por Queimadura!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Chandelure!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Chandelure perdeu 84 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Chandelure desmaiou!\"},{\"tipo\":\"status\",\"texto\":\"Serperior perdeu HP por Queimadura!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Volcarona!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Volcarona perdeu 103 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Volcarona usou Signal Beam!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 38 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Serperior desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Vai! Zoroark!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Volcarona perdeu 4 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Volcarona desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o desafio!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 69!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 69!\"},{\"tipo\":\"nivel\",\"texto\":\"Scolipede subiu para o Nv. 69!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 69!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 69!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 69!\"}]}','2026-11-23 18:50:16','2026-11-23 14:52:36'),(86,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":183,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Pedra quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Dwebble!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Throh!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Dwebble perdeu 74 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Dwebble desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Tirtouga!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Tirtouga perdeu 76 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tirtouga desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Throh subiu para o Nv. 71!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 71!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 71!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 71!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 71!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-23 18:55:40','2026-11-23 14:55:44'),(87,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":184,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Pedra quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Tirtouga!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Throh!\"},{\"tipo\":\"golpe\",\"texto\":\"Tirtouga usou Aqua Jet!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 17 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Tirtouga perdeu 86 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tirtouga desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Throh subiu para o Nv. 73!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 73!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 73!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 73!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 73!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-23 18:56:14','2026-11-23 14:56:17'),(88,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":185,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Agua quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Alomomola!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Throh!\"},{\"tipo\":\"golpe\",\"texto\":\"Alomomola usou Aqua Jet!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 17 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Alomomola perdeu 112 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Alomomola perdeu 74 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Alomomola desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Throh subiu para o Nv. 75!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 75!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 75!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 75!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 75!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-23 18:56:26','2026-11-23 14:56:29'),(89,33,NULL,NULL,5,'VITORIA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":5,\"turnos\":10,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ex-Campeão quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Scrafty!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Throh!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Scrafty perdeu 85 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Scrafty desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Braviary!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Braviary perdeu 115 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Braviary desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Amoonguss!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Amoonguss perdeu 85 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Amoonguss usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 16 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Amoonguss perdeu 46 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Amoonguss desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Seismitoad!\"},{\"tipo\":\"golpe\",\"texto\":\"Seismitoad usou Aqua Jet!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 19 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Seismitoad perdeu 130 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Seismitoad desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Beartic!\"},{\"tipo\":\"golpe\",\"texto\":\"Beartic usou Ice Shard!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 29 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh recebeu Congelamento!\"},{\"tipo\":\"status\",\"texto\":\"Throh está congelado!\"},{\"tipo\":\"golpe\",\"texto\":\"Beartic usou Ice Shard!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 28 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh está congelado!\"},{\"tipo\":\"golpe\",\"texto\":\"Beartic usou Ice Shard!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 30 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh descongelou!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Beartic perdeu 128 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Beartic desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Eelektross!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Eelektross perdeu 122 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Eelektross usou Spark!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 26 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh recebeu Paralisia!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Eelektross perdeu 4 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Eelektross desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o desafio!\"},{\"tipo\":\"nivel\",\"texto\":\"Throh subiu para o Nv. 77!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 77!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 77!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 77!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 77!\"}]}','2026-11-23 18:56:53','2026-11-23 14:59:41'),(90,33,NULL,NULL,NULL,'VITORIA',100,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":563,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Ferrothorn!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Zoroark!\"},{\"tipo\":\"golpe\",\"texto\":\"Ferrothorn usou Bullet Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Zoroark perdeu 19 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Maquinação Maliciosa!\"},{\"tipo\":\"status\",\"texto\":\"Ataque Especial de Zoroark aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Ferrothorn usou Bullet Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Zoroark perdeu 21 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Ferrothorn perdeu 91 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Ferrothorn desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 78!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 78!\"},{\"tipo\":\"nivel\",\"texto\":\"Throh subiu para o Nv. 78!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 78!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 78!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 100!\"}]}','2026-11-23 19:00:05','2026-11-23 15:00:13'),(91,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":189,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Normal quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Herdier!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Zoroark!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Herdier perdeu 111 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Herdier desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Sawsbuck!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Sawsbuck perdeu 124 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Sawsbuck desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 80!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 80!\"},{\"tipo\":\"nivel\",\"texto\":\"Litwick subiu para o Nv. 80!\"},{\"tipo\":\"evolucao\",\"texto\":\"Litwick evoluiu para Lampent!\"},{\"tipo\":\"evolucao\",\"texto\":\"Lampent evoluiu para Chandelure!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 80!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 80!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-23 19:00:32','2026-11-23 15:00:36'),(92,33,NULL,NULL,NULL,'VITORIA',100,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":573,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Boldore!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Zoroark!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Boldore perdeu 125 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Boldore desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 81!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 81!\"},{\"tipo\":\"nivel\",\"texto\":\"Chandelure subiu para o Nv. 81!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 81!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 81!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 100!\"}]}','2026-11-23 19:00:44','2026-11-23 15:00:47'),(93,33,NULL,NULL,6,'VITORIA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":6,\"turnos\":11,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Rival quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Scolipede!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Zoroark!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Scolipede perdeu 98 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Scolipede desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 115 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Serperior desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Samurott!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Samurott perdeu 137 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Samurott desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Hydreigon!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Hydreigon perdeu 70 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Hydreigon usou Dark Pulse!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Zoroark perdeu 20 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Hydreigon perdeu 70 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Hydreigon desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Emboar!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Emboar perdeu 99 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Emboar usou Drain Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Zoroark perdeu 89 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Emboar perdeu 64 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Emboar desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Kingambit!\"},{\"tipo\":\"golpe\",\"texto\":\"Kingambit usou Bullet Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Zoroark perdeu 51 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Kingambit perdeu 69 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Kingambit usou Sucker Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Zoroark perdeu 27 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Kingambit perdeu 63 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Kingambit usou Sucker Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Zoroark perdeu 1 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Zoroark desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Vai! Runerigus!\"},{\"tipo\":\"golpe\",\"texto\":\"Kingambit usou Sucker Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Runerigus perdeu 46 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Runerigus usou Bulldoze!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Kingambit perdeu 28 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Kingambit desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o desafio!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 83!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 83!\"},{\"tipo\":\"nivel\",\"texto\":\"Chandelure subiu para o Nv. 83!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 83!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 83!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 71!\"}]}','2026-11-23 19:01:11','2026-11-23 15:01:53'),(94,NULL,36,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":593,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Timburr!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Timburr perdeu 13 HP.\"},{\"tipo\":\"status\",\"texto\":\"Timburr recebeu Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Timburr usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 5 HP.\"},{\"tipo\":\"status\",\"texto\":\"Timburr perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Timburr perdeu 1 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Timburr desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 6!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 21:34:59','2026-11-23 17:35:12'),(95,NULL,36,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":597,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Throh!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 10 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh recebeu Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Throh aumentou!\"},{\"tipo\":\"status\",\"texto\":\"Throh perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 9 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Throh desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 7!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 21:35:25','2026-11-23 17:35:34'),(96,NULL,36,'leaf',NULL,'VITORIA',600,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":200,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Grama quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Sewaddle!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Sewaddle perdeu 17 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Sewaddle desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Ferroseed!\"},{\"tipo\":\"golpe\",\"texto\":\"Ferroseed usou Bullet Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 2 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Ferroseed perdeu 17 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Ferroseed desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 9!\"},{\"tipo\":\"nivel\",\"texto\":\"Stunfisk subiu para o Nv. 9!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 600!\"}]}','2026-11-23 21:39:25','2026-11-23 17:39:33'),(97,NULL,36,'leaf',1,'DERROTA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":1,\"turnos\":5,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 1 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Axew!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Stunfisk!\"},{\"tipo\":\"golpe\",\"texto\":\"Axew usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Stunfisk perdeu 14 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Stunfisk usou Maquinação Maliciosa!\"},{\"tipo\":\"status\",\"texto\":\"Ataque Especial de Stunfisk aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Axew usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Stunfisk perdeu 15 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Stunfisk usou Earth Power!\"},{\"tipo\":\"dano\",\"texto\":\"Axew perdeu 24 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Axew usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Stunfisk perdeu 9 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Stunfisk desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Axew usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Axew aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Tepig aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Axew usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 30 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tepig desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Todos os seus Pokémon desmaiaram!\"}]}','2026-11-23 21:39:51','2026-11-23 17:41:35'),(98,NULL,37,'leaf',NULL,'VITORIA',600,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":205,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Lutador quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Timburr!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Emolga!\"},{\"tipo\":\"golpe\",\"texto\":\"Emolga usou Acrobatics!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Timburr perdeu 15 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Timburr desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Sawk!\"},{\"tipo\":\"golpe\",\"texto\":\"Emolga usou Acrobatics!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Sawk perdeu 15 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Sawk desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Emolga subiu para o Nv. 7!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 7!\"},{\"tipo\":\"nivel\",\"texto\":\"Sandile subiu para o Nv. 7!\"},{\"tipo\":\"nivel\",\"texto\":\"Cubchoo subiu para o Nv. 7!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 600!\"}]}','2026-11-23 21:55:01','2026-11-23 17:55:57'),(99,NULL,37,'leaf',1,'DERROTA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":1,\"turnos\":6,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 1 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Druddigon!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Emolga!\"},{\"tipo\":\"golpe\",\"texto\":\"Emolga usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Emolga aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Emolga perdeu 24 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Emolga desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 26 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tepig desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Vai! Sandile!\"},{\"tipo\":\"golpe\",\"texto\":\"Sandile usou Sucker Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 6 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Sandile perdeu 24 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Sandile desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Vai! Cubchoo!\"},{\"tipo\":\"golpe\",\"texto\":\"Cubchoo usou Ice Shard!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 11 HP.\"},{\"tipo\":\"status\",\"texto\":\"Druddigon recebeu Congelamento!\"},{\"tipo\":\"status\",\"texto\":\"Druddigon está congelado!\"},{\"tipo\":\"golpe\",\"texto\":\"Cubchoo usou Ice Shard!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 10 HP.\"},{\"tipo\":\"status\",\"texto\":\"Druddigon está congelado!\"},{\"tipo\":\"golpe\",\"texto\":\"Cubchoo usou Ice Shard!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 11 HP.\"},{\"tipo\":\"status\",\"texto\":\"Druddigon descongelou!\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Cubchoo perdeu 24 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Cubchoo desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Todos os seus Pokémon desmaiaram!\"}]}','2026-11-23 21:56:17','2026-11-23 17:58:45'),(100,NULL,38,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":623,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Panpour!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Snivy!\"},{\"tipo\":\"golpe\",\"texto\":\"Panpour usou Aqua Jet!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Snivy perdeu 1 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Panpour perdeu 14 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Panpour desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Snivy subiu para o Nv. 6!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:00:20','2026-11-23 18:00:24'),(101,NULL,38,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":627,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Roggenrola!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Snivy!\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Roggenrola perdeu 16 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Roggenrola desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Snivy subiu para o Nv. 7!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:00:31','2026-11-23 18:00:35'),(102,NULL,38,'leaf',NULL,'VITORIA',600,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":209,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Pedra quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Tirtouga!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Snivy!\"},{\"tipo\":\"golpe\",\"texto\":\"Tirtouga usou Aqua Jet!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Snivy perdeu 2 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Tirtouga perdeu 18 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tirtouga desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Snivy subiu para o Nv. 9!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 600!\"}]}','2026-11-23 22:01:24','2026-11-23 18:01:29'),(103,NULL,38,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":633,\"turnos\":4,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Deerling!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Snivy!\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Snivy aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Deerling usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Deerling aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Snivy aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Deerling usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Snivy perdeu 6 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Deerling perdeu 16 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Deerling usou Leaf Blade!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Snivy perdeu 13 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Deerling perdeu 7 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Deerling desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Snivy subiu para o Nv. 10!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:01:36','2026-11-23 18:01:50'),(104,NULL,38,'leaf',1,'DERROTA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":1,\"turnos\":3,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 1 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Druddigon!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Snivy!\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 4 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Snivy perdeu 23 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 3 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Druddigon aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 3 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Snivy perdeu 6 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Snivy desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Todos os seus Pokémon desmaiaram!\"}]}','2026-11-23 22:01:56','2026-11-23 18:02:08'),(105,NULL,39,'leaf',NULL,'VITORIA',600,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":211,\"turnos\":3,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Lutador quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Timburr!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Timburr perdeu 14 HP.\"},{\"tipo\":\"status\",\"texto\":\"Timburr recebeu Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Timburr usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Timburr aumentou!\"},{\"tipo\":\"status\",\"texto\":\"Timburr perdeu HP por Queimadura!\"},{\"tipo\":\"desmaio\",\"texto\":\"Timburr desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Sawk!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Sawk perdeu 11 HP.\"},{\"tipo\":\"status\",\"texto\":\"Sawk recebeu Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Sawk usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 5 HP.\"},{\"tipo\":\"status\",\"texto\":\"Sawk perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Sawk perdeu 3 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Sawk desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 7!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 600!\"}]}','2026-11-23 22:05:44','2026-11-23 18:05:58'),(106,NULL,39,'leaf',NULL,'VITORIA',600,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":213,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Inseto quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Durant!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Durant usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Durant aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Durant perdeu 18 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Durant desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 9!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 600!\"}]}','2026-11-23 22:06:07','2026-11-23 18:06:11'),(107,NULL,39,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":646,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Ferroseed!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Ferroseed perdeu 21 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Ferroseed desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 10!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:08:12','2026-11-23 18:08:16'),(108,NULL,39,'leaf',NULL,'VITORIA',600,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":215,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Grama quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Ferroseed!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Ferroseed perdeu 23 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Ferroseed desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 12!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 600!\"}]}','2026-11-23 22:08:21','2026-11-23 18:08:25'),(109,NULL,39,'leaf',1,'DERROTA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":1,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 1 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Druddigon!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Druddigon aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 5 HP.\"},{\"tipo\":\"status\",\"texto\":\"Druddigon recebeu Queimadura!\"},{\"tipo\":\"status\",\"texto\":\"Druddigon perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 37 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tepig desmaiou!\"},{\"tipo\":\"status\",\"texto\":\"Druddigon perdeu HP por Queimadura!\"},{\"tipo\":\"fim\",\"texto\":\"Todos os seus Pokémon desmaiaram!\"}]}','2026-11-23 22:08:36','2026-11-23 18:09:08'),(110,NULL,40,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":653,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Maractus!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Maractus perdeu 15 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Maractus desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 6!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:40:49','2026-11-23 18:40:55'),(111,NULL,40,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":657,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Deerling!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Deerling perdeu 16 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Deerling desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 7!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:41:00','2026-11-23 18:41:04'),(112,NULL,40,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":661,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Sewaddle!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Sewaddle perdeu 17 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Sewaddle desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 8!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:41:09','2026-11-23 18:41:13'),(113,NULL,40,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":663,\"turnos\":3,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Throh!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 11 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh recebeu Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 10 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 11 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 10 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 3 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Throh desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 9!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:41:21','2026-11-23 18:41:29'),(114,NULL,40,'leaf',1,'DERROTA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":1,\"turnos\":3,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 1 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Cubchoo!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Cubchoo usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Cubchoo aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Cubchoo perdeu 22 HP.\"},{\"tipo\":\"status\",\"texto\":\"Cubchoo recebeu Queimadura!\"},{\"tipo\":\"status\",\"texto\":\"Cubchoo perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Cubchoo usou Ice Shard!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 18 HP.\"},{\"tipo\":\"status\",\"texto\":\"Tepig recebeu Congelamento!\"},{\"tipo\":\"status\",\"texto\":\"Tepig descongelou!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Cubchoo perdeu 12 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Cubchoo desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Vanillish!\"},{\"tipo\":\"golpe\",\"texto\":\"Vanillish usou Ice Beam!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 12 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tepig desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Todos os seus Pokémon desmaiaram!\"}]}','2026-11-23 22:41:51','2026-11-23 18:42:05');
+INSERT INTO `batalha_log` VALUES (61,33,NULL,NULL,NULL,'VITORIA',100,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":427,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Dwebble!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Snivy!\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Dwebble perdeu 56 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Dwebble desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Snivy subiu para o Nv. 51!\"},{\"tipo\":\"evolucao\",\"texto\":\"Snivy evoluiu para Servine!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 100!\"}]}','2026-11-18 15:53:48','2026-11-18 11:53:50'),(62,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":142,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Normal quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Lillipup!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Servine!\"},{\"tipo\":\"golpe\",\"texto\":\"Servine usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Lillipup perdeu 60 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Lillipup desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Patrat!\"},{\"tipo\":\"golpe\",\"texto\":\"Servine usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Patrat perdeu 60 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Patrat desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Servine subiu para o Nv. 53!\"},{\"tipo\":\"evolucao\",\"texto\":\"Servine evoluiu para Serperior!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-18 15:53:56','2026-11-18 11:54:00'),(63,33,NULL,NULL,NULL,'VITORIA',100,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":435,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Patrat!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Patrat perdeu 72 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Patrat desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 54!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 100!\"}]}','2026-11-18 15:54:04','2026-11-18 11:54:08'),(78,33,NULL,NULL,NULL,'VITORIA',100,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":438,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Timburr!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Timburr perdeu 42 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Timburr desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 55!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 100!\"}]}','2026-11-23 18:43:24','2026-11-23 14:43:26'),(79,33,NULL,NULL,1,'VITORIA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":1,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 1 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Axew!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Axew perdeu 33 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Axew desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Druddigon!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 48 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Druddigon desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o desafio!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 57!\"}]}','2026-11-23 18:43:32','2026-11-23 14:43:36'),(80,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":170,\"turnos\":3,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Agua quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Alomomola!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Alomomola usou Aqua Jet!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 3 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Alomomola perdeu 96 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Alomomola desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Jellicent Male!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Jellicent Male perdeu 70 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Jellicent Male desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Simipour!\"},{\"tipo\":\"golpe\",\"texto\":\"Simipour usou Aqua Jet!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 4 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Simipour perdeu 60 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Simipour desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 59!\"},{\"tipo\":\"nivel\",\"texto\":\"Zorua subiu para o Nv. 59!\"},{\"tipo\":\"evolucao\",\"texto\":\"Zorua evoluiu para Zoroark!\"},{\"tipo\":\"nivel\",\"texto\":\"Venipede subiu para o Nv. 59!\"},{\"tipo\":\"evolucao\",\"texto\":\"Venipede evoluiu para Whirlipede!\"},{\"tipo\":\"evolucao\",\"texto\":\"Whirlipede evoluiu para Scolipede!\"},{\"tipo\":\"nivel\",\"texto\":\"Sewaddle subiu para o Nv. 59!\"},{\"tipo\":\"evolucao\",\"texto\":\"Sewaddle evoluiu para Swadloon!\"},{\"tipo\":\"evolucao\",\"texto\":\"Swadloon evoluiu para Leavanny!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-23 18:43:54','2026-11-23 14:44:02'),(81,33,NULL,NULL,2,'VITORIA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":2,\"turnos\":3,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 2 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Gothorita!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Gothorita perdeu 49 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Gothorita desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Swoobat!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Swoobat perdeu 56 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Swoobat desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Musharna!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"dano\",\"texto\":\"Musharna perdeu 83 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Musharna desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o desafio!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 61!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 61!\"},{\"tipo\":\"nivel\",\"texto\":\"Scolipede subiu para o Nv. 61!\"},{\"tipo\":\"nivel\",\"texto\":\"Leavanny subiu para o Nv. 61!\"}]}','2026-11-23 18:44:14','2026-11-23 14:44:21'),(82,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":175,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Agua quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Alomomola!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Alomomola usou Aqua Jet!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 4 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Alomomola perdeu 126 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Alomomola desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 63!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 63!\"},{\"tipo\":\"nivel\",\"texto\":\"Scolipede subiu para o Nv. 63!\"},{\"tipo\":\"nivel\",\"texto\":\"Leavanny subiu para o Nv. 63!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculin White Striped subiu para o Nv. 63!\"},{\"tipo\":\"evolucao\",\"texto\":\"Basculin White Striped evoluiu para Basculegion Male!\"},{\"tipo\":\"nivel\",\"texto\":\"Joltik subiu para o Nv. 63!\"},{\"tipo\":\"evolucao\",\"texto\":\"Joltik evoluiu para Galvantula!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-23 18:45:46','2026-11-23 14:45:48'),(83,33,NULL,NULL,3,'VITORIA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":3,\"turnos\":4,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 3 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Emolga!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Emolga perdeu 58 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Emolga desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Tranquill!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Tranquill perdeu 66 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tranquill desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Swanna!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Swanna perdeu 77 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Swanna desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Archeops!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Archeops perdeu 82 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Archeops desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o desafio!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 65!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 65!\"},{\"tipo\":\"nivel\",\"texto\":\"Scolipede subiu para o Nv. 65!\"},{\"tipo\":\"nivel\",\"texto\":\"Leavanny subiu para o Nv. 65!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 65!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 65!\"}]}','2026-11-23 18:46:35','2026-11-23 14:46:45'),(84,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":180,\"turnos\":12,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Grama quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Leavanny!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Leavanny perdeu 23 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Leavanny usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 8 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Leavanny perdeu 23 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Leavanny usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Leavanny aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Leavanny perdeu 20 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Leavanny usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 17 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Leavanny perdeu 22 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Leavanny usou Bug Bite!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 64 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Leavanny perdeu 7 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Leavanny desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Maractus!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Maractus perdeu 50 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Maractus usou Maquinação Maliciosa!\"},{\"tipo\":\"status\",\"texto\":\"Ataque Especial de Maractus aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Maractus perdeu 45 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Maractus desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Ferrothorn!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Ferrothorn perdeu 13 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Ferrothorn usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 7 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Serperior aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Ferrothorn usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 8 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Serperior aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Ferrothorn usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Ferrothorn aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Ferrothorn usou Bullet Punch!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 64 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Ferrothorn perdeu 41 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Ferrothorn perdeu 40 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Ferrothorn desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 67!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 67!\"},{\"tipo\":\"nivel\",\"texto\":\"Scolipede subiu para o Nv. 67!\"},{\"tipo\":\"nivel\",\"texto\":\"Yamask Galar subiu para o Nv. 67!\"},{\"tipo\":\"evolucao\",\"texto\":\"Yamask Galar evoluiu para Runerigus!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 67!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 67!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-23 18:48:09','2026-11-23 14:48:49'),(85,33,NULL,NULL,4,'VITORIA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":4,\"turnos\":9,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 4 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Heatmor!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Serperior aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Heatmor usou Incinerate!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 26 HP.\"},{\"tipo\":\"status\",\"texto\":\"Serperior recebeu Queimadura!\"},{\"tipo\":\"status\",\"texto\":\"Serperior perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Serperior aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Heatmor usou Incinerate!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 27 HP.\"},{\"tipo\":\"status\",\"texto\":\"Serperior perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Serperior aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Heatmor usou Incinerate!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 51 HP.\"},{\"tipo\":\"status\",\"texto\":\"Serperior perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Heatmor perdeu 85 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Heatmor desmaiou!\"},{\"tipo\":\"status\",\"texto\":\"Serperior perdeu HP por Queimadura!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Simisear!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Simisear perdeu 85 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Simisear desmaiou!\"},{\"tipo\":\"status\",\"texto\":\"Serperior perdeu HP por Queimadura!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Darmanitan Standard!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Darmanitan Standard perdeu 109 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Darmanitan Standard desmaiou!\"},{\"tipo\":\"status\",\"texto\":\"Serperior perdeu HP por Queimadura!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Chandelure!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Chandelure perdeu 84 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Chandelure desmaiou!\"},{\"tipo\":\"status\",\"texto\":\"Serperior perdeu HP por Queimadura!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Volcarona!\"},{\"tipo\":\"golpe\",\"texto\":\"Serperior usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Volcarona perdeu 103 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Volcarona usou Signal Beam!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 38 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Serperior desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Vai! Zoroark!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Volcarona perdeu 4 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Volcarona desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o desafio!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 69!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 69!\"},{\"tipo\":\"nivel\",\"texto\":\"Scolipede subiu para o Nv. 69!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 69!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 69!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 69!\"}]}','2026-11-23 18:50:16','2026-11-23 14:52:36'),(86,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":183,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Pedra quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Dwebble!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Throh!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Dwebble perdeu 74 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Dwebble desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Tirtouga!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Tirtouga perdeu 76 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tirtouga desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Throh subiu para o Nv. 71!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 71!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 71!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 71!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 71!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-23 18:55:40','2026-11-23 14:55:44'),(87,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":184,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Pedra quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Tirtouga!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Throh!\"},{\"tipo\":\"golpe\",\"texto\":\"Tirtouga usou Aqua Jet!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 17 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Tirtouga perdeu 86 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tirtouga desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Throh subiu para o Nv. 73!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 73!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 73!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 73!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 73!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-23 18:56:14','2026-11-23 14:56:17'),(88,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":185,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Agua quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Alomomola!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Throh!\"},{\"tipo\":\"golpe\",\"texto\":\"Alomomola usou Aqua Jet!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 17 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Alomomola perdeu 112 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Alomomola perdeu 74 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Alomomola desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Throh subiu para o Nv. 75!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 75!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 75!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 75!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 75!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-23 18:56:26','2026-11-23 14:56:29'),(89,33,NULL,NULL,5,'VITORIA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":5,\"turnos\":10,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ex-Campeão quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Scrafty!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Throh!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Scrafty perdeu 85 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Scrafty desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Braviary!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Braviary perdeu 115 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Braviary desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Amoonguss!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Amoonguss perdeu 85 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Amoonguss usou Leaf Blade!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 16 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Amoonguss perdeu 46 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Amoonguss desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Seismitoad!\"},{\"tipo\":\"golpe\",\"texto\":\"Seismitoad usou Aqua Jet!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 19 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Seismitoad perdeu 130 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Seismitoad desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Beartic!\"},{\"tipo\":\"golpe\",\"texto\":\"Beartic usou Ice Shard!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 29 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh recebeu Congelamento!\"},{\"tipo\":\"status\",\"texto\":\"Throh está congelado!\"},{\"tipo\":\"golpe\",\"texto\":\"Beartic usou Ice Shard!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 28 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh está congelado!\"},{\"tipo\":\"golpe\",\"texto\":\"Beartic usou Ice Shard!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 30 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh descongelou!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Beartic perdeu 128 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Beartic desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Eelektross!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Eelektross perdeu 122 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Eelektross usou Spark!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 26 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh recebeu Paralisia!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Eelektross perdeu 4 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Eelektross desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o desafio!\"},{\"tipo\":\"nivel\",\"texto\":\"Throh subiu para o Nv. 77!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 77!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 77!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 77!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 77!\"}]}','2026-11-23 18:56:53','2026-11-23 14:59:41'),(90,33,NULL,NULL,NULL,'VITORIA',100,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":563,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Ferrothorn!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Zoroark!\"},{\"tipo\":\"golpe\",\"texto\":\"Ferrothorn usou Bullet Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Zoroark perdeu 19 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Maquinação Maliciosa!\"},{\"tipo\":\"status\",\"texto\":\"Ataque Especial de Zoroark aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Ferrothorn usou Bullet Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Zoroark perdeu 21 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Ferrothorn perdeu 91 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Ferrothorn desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 78!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 78!\"},{\"tipo\":\"nivel\",\"texto\":\"Throh subiu para o Nv. 78!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 78!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 78!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 100!\"}]}','2026-11-23 19:00:05','2026-11-23 15:00:13'),(91,33,NULL,NULL,NULL,'VITORIA',300,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":189,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Normal quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Herdier!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Zoroark!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Herdier perdeu 111 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Herdier desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Sawsbuck!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Sawsbuck perdeu 124 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Sawsbuck desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 80!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 80!\"},{\"tipo\":\"nivel\",\"texto\":\"Litwick subiu para o Nv. 80!\"},{\"tipo\":\"evolucao\",\"texto\":\"Litwick evoluiu para Lampent!\"},{\"tipo\":\"evolucao\",\"texto\":\"Lampent evoluiu para Chandelure!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 80!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 80!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 300!\"}]}','2026-11-23 19:00:32','2026-11-23 15:00:36'),(92,33,NULL,NULL,NULL,'VITORIA',100,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":573,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Boldore!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Zoroark!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Boldore perdeu 125 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Boldore desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 81!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 81!\"},{\"tipo\":\"nivel\",\"texto\":\"Chandelure subiu para o Nv. 81!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 81!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 81!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 100!\"}]}','2026-11-23 19:00:44','2026-11-23 15:00:47'),(93,33,NULL,NULL,6,'VITORIA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":6,\"turnos\":11,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Rival quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Scolipede!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Zoroark!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Scolipede perdeu 98 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Scolipede desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Serperior!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Serperior perdeu 115 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Serperior desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Samurott!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"dano\",\"texto\":\"Samurott perdeu 137 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Samurott desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Hydreigon!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Hydreigon perdeu 70 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Hydreigon usou Dark Pulse!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Zoroark perdeu 20 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Hydreigon perdeu 70 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Hydreigon desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Emboar!\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Emboar perdeu 99 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Emboar usou Drain Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Zoroark perdeu 89 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Emboar perdeu 64 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Emboar desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Kingambit!\"},{\"tipo\":\"golpe\",\"texto\":\"Kingambit usou Bullet Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Zoroark perdeu 51 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Kingambit perdeu 69 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Kingambit usou Sucker Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Zoroark perdeu 27 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Zoroark usou Dark Pulse!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Kingambit perdeu 63 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Kingambit usou Sucker Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Zoroark perdeu 1 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Zoroark desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Vai! Runerigus!\"},{\"tipo\":\"golpe\",\"texto\":\"Kingambit usou Sucker Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Runerigus perdeu 46 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Runerigus usou Bulldoze!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Kingambit perdeu 28 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Kingambit desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o desafio!\"},{\"tipo\":\"nivel\",\"texto\":\"Zoroark subiu para o Nv. 83!\"},{\"tipo\":\"nivel\",\"texto\":\"Runerigus subiu para o Nv. 83!\"},{\"tipo\":\"nivel\",\"texto\":\"Chandelure subiu para o Nv. 83!\"},{\"tipo\":\"nivel\",\"texto\":\"Basculegion Male subiu para o Nv. 83!\"},{\"tipo\":\"nivel\",\"texto\":\"Galvantula subiu para o Nv. 83!\"},{\"tipo\":\"nivel\",\"texto\":\"Serperior subiu para o Nv. 71!\"}]}','2026-11-23 19:01:11','2026-11-23 15:01:53'),(94,NULL,36,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":593,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Timburr!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Timburr perdeu 13 HP.\"},{\"tipo\":\"status\",\"texto\":\"Timburr recebeu Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Timburr usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 5 HP.\"},{\"tipo\":\"status\",\"texto\":\"Timburr perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Timburr perdeu 1 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Timburr desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 6!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 21:34:59','2026-11-23 17:35:12'),(95,NULL,36,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":597,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Throh!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 10 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh recebeu Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Throh aumentou!\"},{\"tipo\":\"status\",\"texto\":\"Throh perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 9 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Throh desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 7!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 21:35:25','2026-11-23 17:35:34'),(96,NULL,36,'leaf',NULL,'VITORIA',600,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":200,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Grama quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Sewaddle!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Sewaddle perdeu 17 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Sewaddle desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Ferroseed!\"},{\"tipo\":\"golpe\",\"texto\":\"Ferroseed usou Bullet Punch!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 2 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Ferroseed perdeu 17 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Ferroseed desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 9!\"},{\"tipo\":\"nivel\",\"texto\":\"Stunfisk subiu para o Nv. 9!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 600!\"}]}','2026-11-23 21:39:25','2026-11-23 17:39:33'),(97,NULL,36,'leaf',1,'DERROTA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":1,\"turnos\":5,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 1 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Axew!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Stunfisk!\"},{\"tipo\":\"golpe\",\"texto\":\"Axew usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Stunfisk perdeu 14 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Stunfisk usou Maquinação Maliciosa!\"},{\"tipo\":\"status\",\"texto\":\"Ataque Especial de Stunfisk aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Axew usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Stunfisk perdeu 15 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Stunfisk usou Earth Power!\"},{\"tipo\":\"dano\",\"texto\":\"Axew perdeu 24 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Axew usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Stunfisk perdeu 9 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Stunfisk desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Axew usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Axew aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Tepig aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Axew usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 30 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tepig desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Todos os seus Pokémon desmaiaram!\"}]}','2026-11-23 21:39:51','2026-11-23 17:41:35'),(98,NULL,37,'leaf',NULL,'VITORIA',600,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":205,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Lutador quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Timburr!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Emolga!\"},{\"tipo\":\"golpe\",\"texto\":\"Emolga usou Acrobatics!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Timburr perdeu 15 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Timburr desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Sawk!\"},{\"tipo\":\"golpe\",\"texto\":\"Emolga usou Acrobatics!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Sawk perdeu 15 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Sawk desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Emolga subiu para o Nv. 7!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 7!\"},{\"tipo\":\"nivel\",\"texto\":\"Sandile subiu para o Nv. 7!\"},{\"tipo\":\"nivel\",\"texto\":\"Cubchoo subiu para o Nv. 7!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 600!\"}]}','2026-11-23 21:55:01','2026-11-23 17:55:57'),(99,NULL,37,'leaf',1,'DERROTA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":1,\"turnos\":6,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 1 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Druddigon!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Emolga!\"},{\"tipo\":\"golpe\",\"texto\":\"Emolga usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Emolga aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Emolga perdeu 24 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Emolga desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 26 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tepig desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Vai! Sandile!\"},{\"tipo\":\"golpe\",\"texto\":\"Sandile usou Sucker Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 6 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Sandile perdeu 24 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Sandile desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Vai! Cubchoo!\"},{\"tipo\":\"golpe\",\"texto\":\"Cubchoo usou Ice Shard!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 11 HP.\"},{\"tipo\":\"status\",\"texto\":\"Druddigon recebeu Congelamento!\"},{\"tipo\":\"status\",\"texto\":\"Druddigon está congelado!\"},{\"tipo\":\"golpe\",\"texto\":\"Cubchoo usou Ice Shard!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 10 HP.\"},{\"tipo\":\"status\",\"texto\":\"Druddigon está congelado!\"},{\"tipo\":\"golpe\",\"texto\":\"Cubchoo usou Ice Shard!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 11 HP.\"},{\"tipo\":\"status\",\"texto\":\"Druddigon descongelou!\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Cubchoo perdeu 24 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Cubchoo desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Todos os seus Pokémon desmaiaram!\"}]}','2026-11-23 21:56:17','2026-11-23 17:58:45'),(100,NULL,38,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":623,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Panpour!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Snivy!\"},{\"tipo\":\"golpe\",\"texto\":\"Panpour usou Aqua Jet!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Snivy perdeu 1 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Panpour perdeu 14 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Panpour desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Snivy subiu para o Nv. 6!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:00:20','2026-11-23 18:00:24'),(101,NULL,38,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":627,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Roggenrola!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Snivy!\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Roggenrola perdeu 16 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Roggenrola desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Snivy subiu para o Nv. 7!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:00:31','2026-11-23 18:00:35'),(102,NULL,38,'leaf',NULL,'VITORIA',600,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":209,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Pedra quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Tirtouga!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Snivy!\"},{\"tipo\":\"golpe\",\"texto\":\"Tirtouga usou Aqua Jet!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Snivy perdeu 2 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Tirtouga perdeu 18 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tirtouga desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Snivy subiu para o Nv. 9!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 600!\"}]}','2026-11-23 22:01:24','2026-11-23 18:01:29'),(103,NULL,38,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":633,\"turnos\":4,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Deerling!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Snivy!\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Snivy aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Deerling usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Deerling aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Snivy aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Deerling usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Snivy perdeu 6 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Deerling perdeu 16 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Deerling usou Leaf Blade!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Snivy perdeu 13 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Deerling perdeu 7 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Deerling desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Snivy subiu para o Nv. 10!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:01:36','2026-11-23 18:01:50'),(104,NULL,38,'leaf',1,'DERROTA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":1,\"turnos\":3,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 1 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Druddigon!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Snivy!\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 4 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Snivy perdeu 23 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 3 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Druddigon aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Snivy usou Leaf Blade!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 3 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Snivy perdeu 6 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Snivy desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Todos os seus Pokémon desmaiaram!\"}]}','2026-11-23 22:01:56','2026-11-23 18:02:08'),(105,NULL,39,'leaf',NULL,'VITORIA',600,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":211,\"turnos\":3,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Lutador quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Timburr!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Timburr perdeu 14 HP.\"},{\"tipo\":\"status\",\"texto\":\"Timburr recebeu Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Timburr usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Timburr aumentou!\"},{\"tipo\":\"status\",\"texto\":\"Timburr perdeu HP por Queimadura!\"},{\"tipo\":\"desmaio\",\"texto\":\"Timburr desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Sawk!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Sawk perdeu 11 HP.\"},{\"tipo\":\"status\",\"texto\":\"Sawk recebeu Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Sawk usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 5 HP.\"},{\"tipo\":\"status\",\"texto\":\"Sawk perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Sawk perdeu 3 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Sawk desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 7!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 600!\"}]}','2026-11-23 22:05:44','2026-11-23 18:05:58'),(106,NULL,39,'leaf',NULL,'VITORIA',600,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":213,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Inseto quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Durant!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Durant usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Durant aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Durant perdeu 18 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Durant desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 9!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 600!\"}]}','2026-11-23 22:06:07','2026-11-23 18:06:11'),(107,NULL,39,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":646,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Ferroseed!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Ferroseed perdeu 21 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Ferroseed desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 10!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:08:12','2026-11-23 18:08:16'),(108,NULL,39,'leaf',NULL,'VITORIA',600,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":215,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Grama quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Ferroseed!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Ferroseed perdeu 23 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Ferroseed desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 12!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 600!\"}]}','2026-11-23 22:08:21','2026-11-23 18:08:25'),(109,NULL,39,'leaf',1,'DERROTA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":1,\"turnos\":2,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 1 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Druddigon!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Druddigon aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Druddigon perdeu 5 HP.\"},{\"tipo\":\"status\",\"texto\":\"Druddigon recebeu Queimadura!\"},{\"tipo\":\"status\",\"texto\":\"Druddigon perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Druddigon usou Dragon Claw!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 37 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tepig desmaiou!\"},{\"tipo\":\"status\",\"texto\":\"Druddigon perdeu HP por Queimadura!\"},{\"tipo\":\"fim\",\"texto\":\"Todos os seus Pokémon desmaiaram!\"}]}','2026-11-23 22:08:36','2026-11-23 18:09:08'),(110,NULL,40,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":653,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Maractus!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Maractus perdeu 15 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Maractus desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 6!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:40:49','2026-11-23 18:40:55'),(111,NULL,40,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":657,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Deerling!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Deerling perdeu 16 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Deerling desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 7!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:41:00','2026-11-23 18:41:04'),(112,NULL,40,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":661,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Sewaddle!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Sewaddle perdeu 17 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Sewaddle desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 8!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:41:09','2026-11-23 18:41:13'),(113,NULL,40,'leaf',NULL,'VITORIA',400,'{\"tipo_encontro\":\"selvagem\",\"id_alvo\":663,\"turnos\":3,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um Pokémon selvagem apareceu: Throh!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 11 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh recebeu Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 10 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 11 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Throh usou Drain Punch!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 10 HP.\"},{\"tipo\":\"status\",\"texto\":\"Throh perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"dano\",\"texto\":\"Throh perdeu 3 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Throh desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu a batalha!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 9!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 400!\"}]}','2026-11-23 22:41:21','2026-11-23 18:41:29'),(114,NULL,40,'leaf',1,'DERROTA',0,'{\"tipo_encontro\":\"desafio\",\"id_alvo\":1,\"turnos\":3,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Ginásio 1 quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Cubchoo!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Cubchoo usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Cubchoo aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Cubchoo perdeu 22 HP.\"},{\"tipo\":\"status\",\"texto\":\"Cubchoo recebeu Queimadura!\"},{\"tipo\":\"status\",\"texto\":\"Cubchoo perdeu HP por Queimadura!\"},{\"tipo\":\"golpe\",\"texto\":\"Cubchoo usou Ice Shard!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 18 HP.\"},{\"tipo\":\"status\",\"texto\":\"Tepig recebeu Congelamento!\"},{\"tipo\":\"status\",\"texto\":\"Tepig descongelou!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Cubchoo perdeu 12 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Cubchoo desmaiou!\"},{\"tipo\":\"troca_automatica\",\"texto\":\"Treinador enviou Vanillish!\"},{\"tipo\":\"golpe\",\"texto\":\"Vanillish usou Ice Beam!\"},{\"tipo\":\"efetividade\",\"texto\":\"Não foi muito efetivo...\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 12 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tepig desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Todos os seus Pokémon desmaiaram!\"}]}','2026-11-23 22:41:51','2026-11-23 18:42:05'),(115,NULL,41,'leaf',NULL,'VITORIA',600,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":221,\"turnos\":1,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Normal quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Deerling!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Fire Fang!\"},{\"tipo\":\"efetividade\",\"texto\":\"Foi super efetivo!\"},{\"tipo\":\"dano\",\"texto\":\"Deerling perdeu 14 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Deerling desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Você venceu o treinador!\"},{\"tipo\":\"nivel\",\"texto\":\"Tepig subiu para o Nv. 7!\"},{\"tipo\":\"recompensa\",\"texto\":\"Você recebeu ₽ 600!\"}]}','2026-11-24 17:27:04','2026-11-24 13:27:07'),(116,NULL,41,'leaf',NULL,'DERROTA',0,'{\"tipo_encontro\":\"treinador\",\"id_alvo\":222,\"turnos\":3,\"log\":[{\"tipo\":\"inicio\",\"texto\":\"Um treinador tipo Normal quer batalhar!\"},{\"tipo\":\"envio_adversario\",\"texto\":\"Treinador enviou Lillipup!\"},{\"tipo\":\"envio_jogador\",\"texto\":\"Vai! Tepig!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Tepig aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Lillipup usou Body Slam!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 14 HP.\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Tepig aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Lillipup usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Lillipup aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Tepig usou Dança Das Espadas!\"},{\"tipo\":\"status\",\"texto\":\"Ataque de Tepig aumentou!\"},{\"tipo\":\"golpe\",\"texto\":\"Lillipup usou Body Slam!\"},{\"tipo\":\"critico\",\"texto\":\"Um golpe crítico!\"},{\"tipo\":\"dano\",\"texto\":\"Tepig perdeu 12 HP.\"},{\"tipo\":\"desmaio\",\"texto\":\"Tepig desmaiou!\"},{\"tipo\":\"fim\",\"texto\":\"Todos os seus Pokémon desmaiaram!\"}]}','2026-11-24 17:27:14','2026-11-24 13:27:22');
 /*!40000 ALTER TABLE `batalha_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -87,7 +87,7 @@ CREATE TABLE `batalha_pokemon` (
   CONSTRAINT `chk_batalha_nivel` CHECK (`nivel` between 1 and 100),
   CONSTRAINT `chk_batalha_hp_inicial` CHECK (`hp_inicial` >= 0),
   CONSTRAINT `chk_batalha_hp_final` CHECK (`hp_final` >= 0)
-) ENGINE=InnoDB AUTO_INCREMENT=409 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=414 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,7 +96,7 @@ CREATE TABLE `batalha_pokemon` (
 
 LOCK TABLES `batalha_pokemon` WRITE;
 /*!40000 ALTER TABLE `batalha_pokemon` DISABLE KEYS */;
-INSERT INTO `batalha_pokemon` VALUES (138,61,39,16,'JOGADOR',1,50,192,192,NULL,NULL),(139,61,NULL,82,'INIMIGO',1,3,56,0,NULL,NULL),(140,62,39,17,'JOGADOR',1,51,210,210,NULL,NULL),(141,62,NULL,27,'INIMIGO',1,6,60,0,NULL,NULL),(142,62,NULL,25,'INIMIGO',2,6,60,0,NULL,NULL),(143,63,39,18,'JOGADOR',1,53,231,231,NULL,NULL),(144,63,NULL,25,'INIMIGO',1,10,72,0,NULL,NULL),(230,78,39,18,'JOGADOR',1,54,145,145,NULL,NULL),(231,78,NULL,53,'INIMIGO',1,13,42,0,NULL,NULL),(232,79,39,18,'JOGADOR',1,55,147,147,NULL,NULL),(233,79,NULL,143,'INIMIGO',1,12,33,0,NULL,NULL),(234,79,NULL,154,'INIMIGO',2,15,48,0,NULL,NULL),(235,80,39,18,'JOGADOR',1,57,152,145,NULL,NULL),(236,80,46,102,'JOGADOR',2,57,112,112,NULL,NULL),(237,80,NULL,64,'JOGADOR',3,57,101,101,NULL,NULL),(238,80,NULL,61,'JOGADOR',4,57,118,118,NULL,NULL),(239,80,NULL,127,'INIMIGO',1,20,96,0,NULL,NULL),(240,80,NULL,126,'INIMIGO',2,20,70,0,NULL,NULL),(241,80,NULL,37,'INIMIGO',3,20,60,0,NULL,NULL),(242,81,39,18,'JOGADOR',1,59,150,150,NULL,NULL),(243,81,46,103,'JOGADOR',2,59,139,139,NULL,NULL),(244,81,NULL,66,'JOGADOR',3,59,139,139,NULL,NULL),(245,81,NULL,63,'JOGADOR',4,59,157,157,NULL,NULL),(246,81,NULL,109,'INIMIGO',1,18,49,0,NULL,NULL),(247,81,NULL,49,'INIMIGO',2,20,56,0,NULL,NULL),(248,81,NULL,39,'INIMIGO',3,22,83,0,NULL,NULL),(249,82,39,18,'JOGADOR',1,61,155,151,NULL,NULL),(250,82,46,103,'JOGADOR',2,61,144,144,NULL,NULL),(251,82,NULL,66,'JOGADOR',3,61,144,144,NULL,NULL),(252,82,NULL,63,'JOGADOR',4,61,162,162,NULL,NULL),(253,82,49,84,'JOGADOR',5,61,156,156,NULL,NULL),(254,82,51,128,'JOGADOR',6,61,132,132,NULL,NULL),(255,82,NULL,127,'INIMIGO',1,27,126,0,NULL,NULL),(256,83,39,18,'JOGADOR',1,63,167,167,NULL,NULL),(257,83,46,103,'JOGADOR',2,63,148,148,NULL,NULL),(258,83,NULL,66,'JOGADOR',3,63,148,148,NULL,NULL),(259,83,NULL,63,'JOGADOR',4,63,167,167,NULL,NULL),(260,83,49,73,'JOGADOR',5,63,224,224,NULL,NULL),(261,83,51,129,'JOGADOR',6,63,161,161,NULL,NULL),(262,83,NULL,97,'INIMIGO',1,23,58,0,NULL,NULL),(263,83,NULL,41,'INIMIGO',2,25,66,0,NULL,NULL),(264,83,NULL,115,'INIMIGO',3,27,77,0,NULL,NULL),(265,83,NULL,99,'INIMIGO',4,29,82,0,NULL,NULL),(266,84,39,18,'JOGADOR',1,65,172,4,NULL,NULL),(267,84,46,103,'JOGADOR',2,65,153,153,NULL,NULL),(268,84,NULL,66,'JOGADOR',3,65,153,153,NULL,NULL),(269,84,52,90,'JOGADOR',4,65,124,124,NULL,NULL),(270,84,49,73,'JOGADOR',5,65,231,231,NULL,NULL),(271,84,51,129,'JOGADOR',6,65,166,166,NULL,NULL),(272,84,NULL,63,'INIMIGO',1,34,95,0,NULL,NULL),(273,84,NULL,81,'INIMIGO',2,34,95,0,NULL,NULL),(274,84,NULL,131,'INIMIGO',3,34,94,0,NULL,NULL),(275,85,39,18,'JOGADOR',1,67,177,0,2,NULL),(276,85,46,103,'JOGADOR',2,67,157,157,NULL,NULL),(277,85,NULL,66,'JOGADOR',3,67,157,157,NULL,NULL),(278,85,52,91,'JOGADOR',4,67,154,154,NULL,NULL),(279,85,49,73,'JOGADOR',5,67,237,237,NULL,NULL),(280,85,51,129,'JOGADOR',6,67,170,170,NULL,NULL),(281,85,NULL,163,'INIMIGO',1,28,85,0,NULL,NULL),(282,85,NULL,35,'INIMIGO',2,30,85,0,NULL,NULL),(283,85,NULL,79,'INIMIGO',3,32,109,0,NULL,NULL),(284,85,NULL,142,'INIMIGO',4,34,84,0,NULL,NULL),(285,85,NULL,169,'INIMIGO',5,36,107,0,NULL,NULL),(286,86,39,18,'JOGADOR',1,69,0,0,2,NULL),(287,86,NULL,59,'JOGADOR',2,69,244,244,NULL,NULL),(288,86,46,103,'JOGADOR',3,69,161,161,NULL,NULL),(289,86,52,91,'JOGADOR',4,69,159,159,NULL,NULL),(290,86,49,73,'JOGADOR',5,69,244,244,NULL,NULL),(291,86,51,129,'JOGADOR',6,69,175,175,NULL,NULL),(292,86,NULL,82,'INIMIGO',1,32,74,0,NULL,NULL),(293,86,NULL,92,'INIMIGO',2,32,76,0,NULL,NULL),(294,87,39,18,'JOGADOR',1,69,0,0,2,NULL),(295,87,NULL,59,'JOGADOR',2,71,251,234,NULL,NULL),(296,87,46,103,'JOGADOR',3,71,166,166,NULL,NULL),(297,87,52,91,'JOGADOR',4,71,163,163,NULL,NULL),(298,87,49,73,'JOGADOR',5,71,251,251,NULL,NULL),(299,87,51,129,'JOGADOR',6,71,180,180,NULL,NULL),(300,87,NULL,92,'INIMIGO',1,37,86,0,NULL,NULL),(301,88,39,18,'JOGADOR',1,69,0,0,2,NULL),(302,88,NULL,59,'JOGADOR',2,73,241,224,NULL,NULL),(303,88,46,103,'JOGADOR',3,73,170,170,NULL,NULL),(304,88,52,91,'JOGADOR',4,73,167,167,NULL,NULL),(305,88,49,73,'JOGADOR',5,73,258,258,NULL,NULL),(306,88,51,129,'JOGADOR',6,73,185,185,NULL,NULL),(307,88,NULL,127,'INIMIGO',1,41,186,0,NULL,NULL),(308,89,39,18,'JOGADOR',1,69,0,0,2,NULL),(309,89,NULL,59,'JOGADOR',2,75,231,83,5,NULL),(310,89,46,103,'JOGADOR',3,75,175,175,NULL,NULL),(311,89,52,91,'JOGADOR',4,75,172,172,NULL,NULL),(312,89,49,73,'JOGADOR',5,75,265,265,NULL,NULL),(313,89,51,129,'JOGADOR',6,75,190,190,NULL,NULL),(314,89,NULL,86,'INIMIGO',1,33,85,0,NULL,NULL),(315,89,NULL,159,'INIMIGO',2,35,115,0,NULL,NULL),(316,89,NULL,124,'INIMIGO',3,37,131,0,NULL,NULL),(317,89,NULL,58,'INIMIGO',4,39,130,0,NULL,NULL),(318,89,NULL,147,'INIMIGO',5,41,128,0,NULL,NULL),(319,89,NULL,137,'INIMIGO',6,43,126,0,NULL,NULL),(320,90,39,18,'JOGADOR',1,69,0,0,2,NULL),(321,90,46,103,'JOGADOR',2,77,179,139,NULL,NULL),(322,90,52,91,'JOGADOR',3,77,176,176,NULL,NULL),(323,90,NULL,59,'JOGADOR',4,77,89,89,5,NULL),(324,90,49,73,'JOGADOR',5,77,271,271,NULL,NULL),(325,90,51,129,'JOGADOR',6,77,194,194,NULL,NULL),(326,90,NULL,131,'INIMIGO',1,33,91,0,NULL,NULL),(327,91,39,18,'JOGADOR',1,69,0,0,2,NULL),(328,91,46,103,'JOGADOR',2,78,141,141,NULL,NULL),(329,91,52,91,'JOGADOR',3,78,178,178,NULL,NULL),(330,91,54,140,'JOGADOR',4,78,166,166,NULL,NULL),(331,91,49,73,'JOGADOR',5,78,275,275,NULL,NULL),(332,91,51,129,'JOGADOR',6,78,197,197,NULL,NULL),(333,91,NULL,28,'INIMIGO',1,44,111,0,NULL,NULL),(334,91,NULL,120,'INIMIGO',2,44,124,0,NULL,NULL),(335,92,39,18,'JOGADOR',1,69,0,0,2,NULL),(336,92,46,103,'JOGADOR',2,80,146,146,NULL,NULL),(337,92,52,91,'JOGADOR',3,80,182,182,NULL,NULL),(338,92,54,142,'JOGADOR',4,80,186,186,NULL,NULL),(339,92,49,73,'JOGADOR',5,80,282,282,NULL,NULL),(340,92,51,129,'JOGADOR',6,80,202,202,NULL,NULL),(341,92,NULL,46,'INIMIGO',1,48,125,0,NULL,NULL),(342,93,46,103,'JOGADOR',1,81,188,0,NULL,NULL),(343,93,52,91,'JOGADOR',2,81,184,138,NULL,NULL),(344,93,54,142,'JOGADOR',3,81,188,188,NULL,NULL),(345,93,49,73,'JOGADOR',4,81,285,285,NULL,NULL),(346,93,51,129,'JOGADOR',5,81,204,204,NULL,NULL),(347,93,39,18,'JOGADOR',6,69,182,182,NULL,NULL),(348,93,NULL,66,'INIMIGO',1,40,98,0,NULL,NULL),(349,93,NULL,18,'INIMIGO',2,42,115,0,NULL,NULL),(350,93,NULL,24,'INIMIGO',3,44,137,0,NULL,NULL),(351,93,NULL,167,'INIMIGO',4,46,140,0,NULL,NULL),(352,93,NULL,21,'INIMIGO',5,48,163,0,NULL,NULL),(353,93,NULL,96,'INIMIGO',6,50,160,0,NULL,NULL),(354,94,NULL,19,'JOGADOR',1,5,21,16,NULL,NULL),(355,94,NULL,53,'INIMIGO',1,2,15,0,2,NULL),(356,95,NULL,19,'JOGADOR',1,6,18,18,NULL,NULL),(357,95,NULL,59,'INIMIGO',1,3,20,0,2,NULL),(358,96,NULL,19,'JOGADOR',1,7,21,19,NULL,NULL),(359,96,NULL,151,'JOGADOR',2,7,32,32,NULL,NULL),(360,96,NULL,61,'INIMIGO',1,4,17,0,NULL,NULL),(361,96,NULL,130,'INIMIGO',2,4,17,0,NULL,NULL),(362,97,NULL,151,'JOGADOR',1,9,38,0,NULL,NULL),(363,97,NULL,19,'JOGADOR',2,9,30,0,NULL,NULL),(364,97,NULL,143,'INIMIGO',1,12,33,9,NULL,NULL),(365,97,NULL,154,'INIMIGO',2,15,48,48,NULL,NULL),(366,98,NULL,97,'JOGADOR',1,5,20,20,NULL,NULL),(367,98,NULL,19,'JOGADOR',2,5,21,21,NULL,NULL),(368,98,NULL,74,'JOGADOR',3,5,20,20,NULL,NULL),(369,98,NULL,146,'JOGADOR',4,5,20,20,NULL,NULL),(370,98,NULL,53,'INIMIGO',1,2,15,0,NULL,NULL),(371,98,NULL,60,'INIMIGO',2,2,15,0,NULL,NULL),(372,99,NULL,97,'JOGADOR',1,7,24,0,NULL,NULL),(373,99,NULL,19,'JOGADOR',2,7,26,0,NULL,NULL),(374,99,NULL,74,'JOGADOR',3,7,24,0,NULL,NULL),(375,99,NULL,146,'JOGADOR',4,7,24,0,NULL,NULL),(376,99,NULL,154,'INIMIGO',1,12,40,2,NULL,NULL),(377,100,NULL,16,'JOGADOR',1,5,19,18,NULL,NULL),(378,100,NULL,36,'INIMIGO',1,2,14,0,NULL,NULL),(379,101,NULL,16,'JOGADOR',1,6,20,20,NULL,NULL),(380,101,NULL,45,'INIMIGO',1,3,16,0,NULL,NULL),(381,102,NULL,16,'JOGADOR',1,7,22,20,NULL,NULL),(382,102,NULL,92,'INIMIGO',1,4,18,0,NULL,NULL),(383,103,NULL,16,'JOGADOR',1,9,24,5,NULL,NULL),(384,103,NULL,119,'INIMIGO',1,6,23,0,NULL,NULL),(385,104,NULL,16,'JOGADOR',1,10,29,0,NULL,NULL),(386,104,NULL,154,'INIMIGO',1,12,40,30,NULL,NULL),(387,105,NULL,19,'JOGADOR',1,5,21,16,NULL,NULL),(388,105,NULL,53,'INIMIGO',1,2,15,0,2,NULL),(389,105,NULL,60,'INIMIGO',2,2,15,0,2,NULL),(390,106,NULL,19,'JOGADOR',1,7,21,21,NULL,NULL),(391,106,NULL,164,'INIMIGO',1,4,18,0,NULL,NULL),(392,107,NULL,19,'JOGADOR',1,9,25,25,NULL,NULL),(393,107,NULL,130,'INIMIGO',1,6,21,0,NULL,NULL),(394,108,NULL,19,'JOGADOR',1,10,28,28,NULL,NULL),(395,108,NULL,130,'INIMIGO',1,7,23,0,NULL,NULL),(396,109,NULL,19,'JOGADOR',1,12,37,0,NULL,NULL),(397,109,NULL,154,'INIMIGO',1,12,40,33,2,NULL),(398,110,NULL,19,'JOGADOR',1,5,21,21,NULL,NULL),(399,110,NULL,81,'INIMIGO',1,2,15,0,NULL,NULL),(400,111,NULL,19,'JOGADOR',1,6,23,23,NULL,NULL),(401,111,NULL,119,'INIMIGO',1,3,16,0,NULL,NULL),(402,112,NULL,19,'JOGADOR',1,7,26,26,NULL,NULL),(403,112,NULL,61,'INIMIGO',1,4,17,0,NULL,NULL),(404,113,NULL,19,'JOGADOR',1,8,28,8,NULL,NULL),(405,113,NULL,59,'INIMIGO',1,5,27,0,2,NULL),(406,114,NULL,19,'JOGADOR',1,9,30,0,NULL,NULL),(407,114,NULL,146,'INIMIGO',1,12,35,0,2,NULL),(408,114,NULL,117,'INIMIGO',2,15,40,40,NULL,NULL);
+INSERT INTO `batalha_pokemon` VALUES (138,61,39,16,'JOGADOR',1,50,192,192,NULL,NULL),(139,61,NULL,82,'INIMIGO',1,3,56,0,NULL,NULL),(140,62,39,17,'JOGADOR',1,51,210,210,NULL,NULL),(141,62,NULL,27,'INIMIGO',1,6,60,0,NULL,NULL),(142,62,NULL,25,'INIMIGO',2,6,60,0,NULL,NULL),(143,63,39,18,'JOGADOR',1,53,231,231,NULL,NULL),(144,63,NULL,25,'INIMIGO',1,10,72,0,NULL,NULL),(230,78,39,18,'JOGADOR',1,54,145,145,NULL,NULL),(231,78,NULL,53,'INIMIGO',1,13,42,0,NULL,NULL),(232,79,39,18,'JOGADOR',1,55,147,147,NULL,NULL),(233,79,NULL,143,'INIMIGO',1,12,33,0,NULL,NULL),(234,79,NULL,154,'INIMIGO',2,15,48,0,NULL,NULL),(235,80,39,18,'JOGADOR',1,57,152,145,NULL,NULL),(236,80,46,102,'JOGADOR',2,57,112,112,NULL,NULL),(237,80,NULL,64,'JOGADOR',3,57,101,101,NULL,NULL),(238,80,NULL,61,'JOGADOR',4,57,118,118,NULL,NULL),(239,80,NULL,127,'INIMIGO',1,20,96,0,NULL,NULL),(240,80,NULL,126,'INIMIGO',2,20,70,0,NULL,NULL),(241,80,NULL,37,'INIMIGO',3,20,60,0,NULL,NULL),(242,81,39,18,'JOGADOR',1,59,150,150,NULL,NULL),(243,81,46,103,'JOGADOR',2,59,139,139,NULL,NULL),(244,81,NULL,66,'JOGADOR',3,59,139,139,NULL,NULL),(245,81,NULL,63,'JOGADOR',4,59,157,157,NULL,NULL),(246,81,NULL,109,'INIMIGO',1,18,49,0,NULL,NULL),(247,81,NULL,49,'INIMIGO',2,20,56,0,NULL,NULL),(248,81,NULL,39,'INIMIGO',3,22,83,0,NULL,NULL),(249,82,39,18,'JOGADOR',1,61,155,151,NULL,NULL),(250,82,46,103,'JOGADOR',2,61,144,144,NULL,NULL),(251,82,NULL,66,'JOGADOR',3,61,144,144,NULL,NULL),(252,82,NULL,63,'JOGADOR',4,61,162,162,NULL,NULL),(253,82,49,84,'JOGADOR',5,61,156,156,NULL,NULL),(254,82,51,128,'JOGADOR',6,61,132,132,NULL,NULL),(255,82,NULL,127,'INIMIGO',1,27,126,0,NULL,NULL),(256,83,39,18,'JOGADOR',1,63,167,167,NULL,NULL),(257,83,46,103,'JOGADOR',2,63,148,148,NULL,NULL),(258,83,NULL,66,'JOGADOR',3,63,148,148,NULL,NULL),(259,83,NULL,63,'JOGADOR',4,63,167,167,NULL,NULL),(260,83,49,73,'JOGADOR',5,63,224,224,NULL,NULL),(261,83,51,129,'JOGADOR',6,63,161,161,NULL,NULL),(262,83,NULL,97,'INIMIGO',1,23,58,0,NULL,NULL),(263,83,NULL,41,'INIMIGO',2,25,66,0,NULL,NULL),(264,83,NULL,115,'INIMIGO',3,27,77,0,NULL,NULL),(265,83,NULL,99,'INIMIGO',4,29,82,0,NULL,NULL),(266,84,39,18,'JOGADOR',1,65,172,4,NULL,NULL),(267,84,46,103,'JOGADOR',2,65,153,153,NULL,NULL),(268,84,NULL,66,'JOGADOR',3,65,153,153,NULL,NULL),(269,84,52,90,'JOGADOR',4,65,124,124,NULL,NULL),(270,84,49,73,'JOGADOR',5,65,231,231,NULL,NULL),(271,84,51,129,'JOGADOR',6,65,166,166,NULL,NULL),(272,84,NULL,63,'INIMIGO',1,34,95,0,NULL,NULL),(273,84,NULL,81,'INIMIGO',2,34,95,0,NULL,NULL),(274,84,NULL,131,'INIMIGO',3,34,94,0,NULL,NULL),(275,85,39,18,'JOGADOR',1,67,177,0,2,NULL),(276,85,46,103,'JOGADOR',2,67,157,157,NULL,NULL),(277,85,NULL,66,'JOGADOR',3,67,157,157,NULL,NULL),(278,85,52,91,'JOGADOR',4,67,154,154,NULL,NULL),(279,85,49,73,'JOGADOR',5,67,237,237,NULL,NULL),(280,85,51,129,'JOGADOR',6,67,170,170,NULL,NULL),(281,85,NULL,163,'INIMIGO',1,28,85,0,NULL,NULL),(282,85,NULL,35,'INIMIGO',2,30,85,0,NULL,NULL),(283,85,NULL,79,'INIMIGO',3,32,109,0,NULL,NULL),(284,85,NULL,142,'INIMIGO',4,34,84,0,NULL,NULL),(285,85,NULL,169,'INIMIGO',5,36,107,0,NULL,NULL),(286,86,39,18,'JOGADOR',1,69,0,0,2,NULL),(287,86,NULL,59,'JOGADOR',2,69,244,244,NULL,NULL),(288,86,46,103,'JOGADOR',3,69,161,161,NULL,NULL),(289,86,52,91,'JOGADOR',4,69,159,159,NULL,NULL),(290,86,49,73,'JOGADOR',5,69,244,244,NULL,NULL),(291,86,51,129,'JOGADOR',6,69,175,175,NULL,NULL),(292,86,NULL,82,'INIMIGO',1,32,74,0,NULL,NULL),(293,86,NULL,92,'INIMIGO',2,32,76,0,NULL,NULL),(294,87,39,18,'JOGADOR',1,69,0,0,2,NULL),(295,87,NULL,59,'JOGADOR',2,71,251,234,NULL,NULL),(296,87,46,103,'JOGADOR',3,71,166,166,NULL,NULL),(297,87,52,91,'JOGADOR',4,71,163,163,NULL,NULL),(298,87,49,73,'JOGADOR',5,71,251,251,NULL,NULL),(299,87,51,129,'JOGADOR',6,71,180,180,NULL,NULL),(300,87,NULL,92,'INIMIGO',1,37,86,0,NULL,NULL),(301,88,39,18,'JOGADOR',1,69,0,0,2,NULL),(302,88,NULL,59,'JOGADOR',2,73,241,224,NULL,NULL),(303,88,46,103,'JOGADOR',3,73,170,170,NULL,NULL),(304,88,52,91,'JOGADOR',4,73,167,167,NULL,NULL),(305,88,49,73,'JOGADOR',5,73,258,258,NULL,NULL),(306,88,51,129,'JOGADOR',6,73,185,185,NULL,NULL),(307,88,NULL,127,'INIMIGO',1,41,186,0,NULL,NULL),(308,89,39,18,'JOGADOR',1,69,0,0,2,NULL),(309,89,NULL,59,'JOGADOR',2,75,231,83,5,NULL),(310,89,46,103,'JOGADOR',3,75,175,175,NULL,NULL),(311,89,52,91,'JOGADOR',4,75,172,172,NULL,NULL),(312,89,49,73,'JOGADOR',5,75,265,265,NULL,NULL),(313,89,51,129,'JOGADOR',6,75,190,190,NULL,NULL),(314,89,NULL,86,'INIMIGO',1,33,85,0,NULL,NULL),(315,89,NULL,159,'INIMIGO',2,35,115,0,NULL,NULL),(316,89,NULL,124,'INIMIGO',3,37,131,0,NULL,NULL),(317,89,NULL,58,'INIMIGO',4,39,130,0,NULL,NULL),(318,89,NULL,147,'INIMIGO',5,41,128,0,NULL,NULL),(319,89,NULL,137,'INIMIGO',6,43,126,0,NULL,NULL),(320,90,39,18,'JOGADOR',1,69,0,0,2,NULL),(321,90,46,103,'JOGADOR',2,77,179,139,NULL,NULL),(322,90,52,91,'JOGADOR',3,77,176,176,NULL,NULL),(323,90,NULL,59,'JOGADOR',4,77,89,89,5,NULL),(324,90,49,73,'JOGADOR',5,77,271,271,NULL,NULL),(325,90,51,129,'JOGADOR',6,77,194,194,NULL,NULL),(326,90,NULL,131,'INIMIGO',1,33,91,0,NULL,NULL),(327,91,39,18,'JOGADOR',1,69,0,0,2,NULL),(328,91,46,103,'JOGADOR',2,78,141,141,NULL,NULL),(329,91,52,91,'JOGADOR',3,78,178,178,NULL,NULL),(330,91,54,140,'JOGADOR',4,78,166,166,NULL,NULL),(331,91,49,73,'JOGADOR',5,78,275,275,NULL,NULL),(332,91,51,129,'JOGADOR',6,78,197,197,NULL,NULL),(333,91,NULL,28,'INIMIGO',1,44,111,0,NULL,NULL),(334,91,NULL,120,'INIMIGO',2,44,124,0,NULL,NULL),(335,92,39,18,'JOGADOR',1,69,0,0,2,NULL),(336,92,46,103,'JOGADOR',2,80,146,146,NULL,NULL),(337,92,52,91,'JOGADOR',3,80,182,182,NULL,NULL),(338,92,54,142,'JOGADOR',4,80,186,186,NULL,NULL),(339,92,49,73,'JOGADOR',5,80,282,282,NULL,NULL),(340,92,51,129,'JOGADOR',6,80,202,202,NULL,NULL),(341,92,NULL,46,'INIMIGO',1,48,125,0,NULL,NULL),(342,93,46,103,'JOGADOR',1,81,188,0,NULL,NULL),(343,93,52,91,'JOGADOR',2,81,184,138,NULL,NULL),(344,93,54,142,'JOGADOR',3,81,188,188,NULL,NULL),(345,93,49,73,'JOGADOR',4,81,285,285,NULL,NULL),(346,93,51,129,'JOGADOR',5,81,204,204,NULL,NULL),(347,93,39,18,'JOGADOR',6,69,182,182,NULL,NULL),(348,93,NULL,66,'INIMIGO',1,40,98,0,NULL,NULL),(349,93,NULL,18,'INIMIGO',2,42,115,0,NULL,NULL),(350,93,NULL,24,'INIMIGO',3,44,137,0,NULL,NULL),(351,93,NULL,167,'INIMIGO',4,46,140,0,NULL,NULL),(352,93,NULL,21,'INIMIGO',5,48,163,0,NULL,NULL),(353,93,NULL,96,'INIMIGO',6,50,160,0,NULL,NULL),(354,94,NULL,19,'JOGADOR',1,5,21,16,NULL,NULL),(355,94,NULL,53,'INIMIGO',1,2,15,0,2,NULL),(356,95,NULL,19,'JOGADOR',1,6,18,18,NULL,NULL),(357,95,NULL,59,'INIMIGO',1,3,20,0,2,NULL),(358,96,NULL,19,'JOGADOR',1,7,21,19,NULL,NULL),(359,96,NULL,151,'JOGADOR',2,7,32,32,NULL,NULL),(360,96,NULL,61,'INIMIGO',1,4,17,0,NULL,NULL),(361,96,NULL,130,'INIMIGO',2,4,17,0,NULL,NULL),(362,97,NULL,151,'JOGADOR',1,9,38,0,NULL,NULL),(363,97,NULL,19,'JOGADOR',2,9,30,0,NULL,NULL),(364,97,NULL,143,'INIMIGO',1,12,33,9,NULL,NULL),(365,97,NULL,154,'INIMIGO',2,15,48,48,NULL,NULL),(366,98,NULL,97,'JOGADOR',1,5,20,20,NULL,NULL),(367,98,NULL,19,'JOGADOR',2,5,21,21,NULL,NULL),(368,98,NULL,74,'JOGADOR',3,5,20,20,NULL,NULL),(369,98,NULL,146,'JOGADOR',4,5,20,20,NULL,NULL),(370,98,NULL,53,'INIMIGO',1,2,15,0,NULL,NULL),(371,98,NULL,60,'INIMIGO',2,2,15,0,NULL,NULL),(372,99,NULL,97,'JOGADOR',1,7,24,0,NULL,NULL),(373,99,NULL,19,'JOGADOR',2,7,26,0,NULL,NULL),(374,99,NULL,74,'JOGADOR',3,7,24,0,NULL,NULL),(375,99,NULL,146,'JOGADOR',4,7,24,0,NULL,NULL),(376,99,NULL,154,'INIMIGO',1,12,40,2,NULL,NULL),(377,100,NULL,16,'JOGADOR',1,5,19,18,NULL,NULL),(378,100,NULL,36,'INIMIGO',1,2,14,0,NULL,NULL),(379,101,NULL,16,'JOGADOR',1,6,20,20,NULL,NULL),(380,101,NULL,45,'INIMIGO',1,3,16,0,NULL,NULL),(381,102,NULL,16,'JOGADOR',1,7,22,20,NULL,NULL),(382,102,NULL,92,'INIMIGO',1,4,18,0,NULL,NULL),(383,103,NULL,16,'JOGADOR',1,9,24,5,NULL,NULL),(384,103,NULL,119,'INIMIGO',1,6,23,0,NULL,NULL),(385,104,NULL,16,'JOGADOR',1,10,29,0,NULL,NULL),(386,104,NULL,154,'INIMIGO',1,12,40,30,NULL,NULL),(387,105,NULL,19,'JOGADOR',1,5,21,16,NULL,NULL),(388,105,NULL,53,'INIMIGO',1,2,15,0,2,NULL),(389,105,NULL,60,'INIMIGO',2,2,15,0,2,NULL),(390,106,NULL,19,'JOGADOR',1,7,21,21,NULL,NULL),(391,106,NULL,164,'INIMIGO',1,4,18,0,NULL,NULL),(392,107,NULL,19,'JOGADOR',1,9,25,25,NULL,NULL),(393,107,NULL,130,'INIMIGO',1,6,21,0,NULL,NULL),(394,108,NULL,19,'JOGADOR',1,10,28,28,NULL,NULL),(395,108,NULL,130,'INIMIGO',1,7,23,0,NULL,NULL),(396,109,NULL,19,'JOGADOR',1,12,37,0,NULL,NULL),(397,109,NULL,154,'INIMIGO',1,12,40,33,2,NULL),(398,110,NULL,19,'JOGADOR',1,5,21,21,NULL,NULL),(399,110,NULL,81,'INIMIGO',1,2,15,0,NULL,NULL),(400,111,NULL,19,'JOGADOR',1,6,23,23,NULL,NULL),(401,111,NULL,119,'INIMIGO',1,3,16,0,NULL,NULL),(402,112,NULL,19,'JOGADOR',1,7,26,26,NULL,NULL),(403,112,NULL,61,'INIMIGO',1,4,17,0,NULL,NULL),(404,113,NULL,19,'JOGADOR',1,8,28,8,NULL,NULL),(405,113,NULL,59,'INIMIGO',1,5,27,0,2,NULL),(406,114,NULL,19,'JOGADOR',1,9,30,0,NULL,NULL),(407,114,NULL,146,'INIMIGO',1,12,35,0,2,NULL),(408,114,NULL,117,'INIMIGO',2,15,40,40,NULL,NULL),(409,115,NULL,19,'JOGADOR',1,5,21,21,NULL,NULL),(410,115,NULL,119,'INIMIGO',1,2,14,0,NULL,NULL),(411,116,NULL,19,'JOGADOR',1,7,26,0,NULL,NULL),(412,116,NULL,27,'INIMIGO',1,4,17,17,NULL,NULL),(413,116,NULL,25,'INIMIGO',2,4,17,17,NULL,NULL);
 /*!40000 ALTER TABLE `batalha_pokemon` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -222,7 +222,7 @@ CREATE TABLE `evolucao` (
   CONSTRAINT `fk_evolucao_origem` FOREIGN KEY (`id_pokemon_origem`) REFERENCES `pokemon_especie` (`id_pokemon_especie`) ON UPDATE CASCADE,
   CONSTRAINT `chk_evolucao_metodo` CHECK (`metodo_evolucao` in ('NIVEL','ITEM')),
   CONSTRAINT `chk_evolucao_requisito` CHECK (`metodo_evolucao` = 'NIVEL' and `nivel_requisito` between 1 and 100 and `id_item` is null or `metodo_evolucao` = 'ITEM' and `nivel_requisito` is null and `id_item` is not null)
-) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=136 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -231,7 +231,7 @@ CREATE TABLE `evolucao` (
 
 LOCK TABLES `evolucao` WRITE;
 /*!40000 ALTER TABLE `evolucao` DISABLE KEYS */;
-INSERT INTO `evolucao` VALUES (1,NULL,'NIVEL',34,'level-up',82,83),(2,NULL,'NIVEL',17,'level-up',16,17),(3,NULL,'NIVEL',36,'level-up',17,18),(6,NULL,'NIVEL',17,'level-up',19,20),(7,NULL,'NIVEL',36,'level-up',20,21),(8,NULL,'NIVEL',17,'level-up',22,23),(9,NULL,'NIVEL',36,'level-up',23,24),(12,NULL,'NIVEL',20,'level-up',25,26),(13,NULL,'NIVEL',16,'level-up',27,28),(14,NULL,'NIVEL',32,'level-up',28,29),(15,NULL,'NIVEL',20,'level-up',30,31),(16,NULL,'NIVEL',20,'level-up',32,33),(17,NULL,'NIVEL',20,'level-up',34,35),(18,NULL,'NIVEL',20,'level-up',36,37),(19,NULL,'NIVEL',28,'level-up',38,39),(20,NULL,'NIVEL',21,'level-up',40,41),(21,NULL,'NIVEL',32,'level-up',41,42),(24,NULL,'NIVEL',27,'level-up',43,44),(25,NULL,'NIVEL',25,'level-up',45,46),(26,NULL,'NIVEL',40,'level-up',46,47),(29,NULL,'NIVEL',22,'level-up',48,49),(33,NULL,'NIVEL',31,'level-up',50,51),(34,NULL,'NIVEL',25,'level-up',53,54),(35,NULL,'NIVEL',22,'level-up',54,55),(36,NULL,'NIVEL',25,'level-up',56,57),(37,NULL,'NIVEL',36,'level-up',57,58),(38,NULL,'NIVEL',20,'level-up',61,62),(39,NULL,'NIVEL',28,'level-up',62,63),(40,NULL,'NIVEL',22,'level-up',64,65),(41,NULL,'NIVEL',30,'level-up',65,66),(42,NULL,'NIVEL',25,'level-up',67,68),(43,NULL,'NIVEL',25,'level-up',69,70),(46,NULL,'NIVEL',30,'level-up',84,73),(50,NULL,'NIVEL',39,'level-up',85,86),(52,NULL,'NIVEL',34,'level-up',88,89),(59,NULL,'NIVEL',37,'level-up',92,93),(60,NULL,'NIVEL',52,'level-up',94,95),(62,NULL,'NIVEL',60,'level-up',95,96),(63,NULL,'NIVEL',37,'level-up',98,99),(64,NULL,'NIVEL',36,'level-up',100,101),(65,NULL,'NIVEL',30,'level-up',102,103),(69,NULL,'NIVEL',20,'level-up',106,107),(70,NULL,'NIVEL',32,'level-up',108,109),(72,NULL,'NIVEL',41,'level-up',109,110),(73,NULL,'NIVEL',32,'level-up',111,112),(75,NULL,'NIVEL',41,'level-up',112,113),(76,NULL,'NIVEL',35,'level-up',114,115),(77,NULL,'NIVEL',35,'level-up',116,117),(79,NULL,'NIVEL',47,'level-up',117,118),(80,NULL,'NIVEL',34,'level-up',119,120),(81,NULL,'NIVEL',30,'level-up',121,122),(82,NULL,'NIVEL',39,'level-up',123,124),(83,NULL,'NIVEL',36,'level-up',128,129),(84,NULL,'NIVEL',40,'level-up',130,131),(85,NULL,'NIVEL',38,'level-up',132,133),(87,NULL,'NIVEL',49,'level-up',133,134),(88,NULL,'NIVEL',39,'level-up',135,136),(90,NULL,'NIVEL',48,'level-up',136,137),(91,NULL,'NIVEL',42,'level-up',138,139),(92,NULL,'NIVEL',41,'level-up',140,141),(94,NULL,'NIVEL',50,'level-up',141,142),(95,NULL,'NIVEL',38,'level-up',143,144),(97,NULL,'NIVEL',48,'level-up',144,145),(98,NULL,'NIVEL',37,'level-up',146,147),(99,NULL,'NIVEL',48,'level-up',149,150),(100,NULL,'NIVEL',50,'level-up',152,153),(101,NULL,'NIVEL',43,'level-up',155,156),(104,NULL,'NIVEL',54,'level-up',158,159),(106,NULL,'NIVEL',54,'level-up',161,162),(107,NULL,'NIVEL',50,'level-up',165,166),(109,NULL,'NIVEL',64,'level-up',166,167),(110,NULL,'NIVEL',59,'level-up',168,169),(115,NULL,'NIVEL',35,'level-up',90,91),(116,NULL,'NIVEL',35,'level-up',77,79),(117,NULL,'NIVEL',35,'level-up',78,80),(118,NULL,'NIVEL',25,'level-up',69,71),(119,NULL,'NIVEL',30,'level-up',104,105),(127,NULL,'NIVEL',40,'level-up',125,126),(131,NULL,'NIVEL',40,'level-up',171,172);
+INSERT INTO `evolucao` VALUES (1,NULL,'NIVEL',34,'level-up',82,83),(2,NULL,'NIVEL',17,'level-up',16,17),(3,NULL,'NIVEL',36,'level-up',17,18),(6,NULL,'NIVEL',17,'level-up',19,20),(7,NULL,'NIVEL',36,'level-up',20,21),(8,NULL,'NIVEL',17,'level-up',22,23),(9,NULL,'NIVEL',36,'level-up',23,24),(12,NULL,'NIVEL',20,'level-up',25,26),(13,NULL,'NIVEL',16,'level-up',27,28),(14,NULL,'NIVEL',32,'level-up',28,29),(15,NULL,'NIVEL',20,'level-up',30,31),(16,NULL,'NIVEL',20,'level-up',32,33),(17,NULL,'NIVEL',20,'level-up',34,35),(18,NULL,'NIVEL',20,'level-up',36,37),(19,NULL,'NIVEL',28,'level-up',38,39),(20,NULL,'NIVEL',21,'level-up',40,41),(21,NULL,'NIVEL',32,'level-up',41,42),(24,NULL,'NIVEL',27,'level-up',43,44),(25,NULL,'NIVEL',25,'level-up',45,46),(26,NULL,'NIVEL',40,'level-up',46,47),(29,NULL,'NIVEL',22,'level-up',48,49),(33,NULL,'NIVEL',31,'level-up',50,51),(34,NULL,'NIVEL',25,'level-up',53,54),(35,NULL,'NIVEL',30,'level-up',54,55),(36,NULL,'NIVEL',25,'level-up',56,57),(37,NULL,'NIVEL',36,'level-up',57,58),(38,NULL,'NIVEL',20,'level-up',61,62),(39,NULL,'NIVEL',28,'level-up',62,63),(40,NULL,'NIVEL',22,'level-up',64,65),(41,NULL,'NIVEL',30,'level-up',65,66),(42,NULL,'NIVEL',25,'level-up',67,68),(43,NULL,'NIVEL',25,'level-up',69,70),(46,NULL,'NIVEL',30,'level-up',84,73),(50,NULL,'NIVEL',39,'level-up',85,86),(52,NULL,'NIVEL',34,'level-up',88,89),(59,NULL,'NIVEL',37,'level-up',92,93),(60,NULL,'NIVEL',52,'level-up',94,95),(62,NULL,'NIVEL',55,'level-up',95,96),(63,NULL,'NIVEL',37,'level-up',98,99),(64,NULL,'NIVEL',36,'level-up',100,101),(65,NULL,'NIVEL',30,'level-up',102,103),(69,NULL,'NIVEL',20,'level-up',106,107),(70,NULL,'NIVEL',32,'level-up',108,109),(72,NULL,'NIVEL',41,'level-up',109,110),(73,NULL,'NIVEL',32,'level-up',111,112),(75,NULL,'NIVEL',41,'level-up',112,113),(76,NULL,'NIVEL',35,'level-up',114,115),(77,NULL,'NIVEL',35,'level-up',116,117),(79,NULL,'NIVEL',47,'level-up',117,118),(80,NULL,'NIVEL',34,'level-up',119,120),(81,NULL,'NIVEL',30,'level-up',121,122),(82,NULL,'NIVEL',39,'level-up',123,124),(83,NULL,'NIVEL',36,'level-up',128,129),(84,NULL,'NIVEL',40,'level-up',130,131),(85,NULL,'NIVEL',38,'level-up',132,133),(87,NULL,'NIVEL',49,'level-up',133,134),(88,NULL,'NIVEL',39,'level-up',135,136),(90,NULL,'NIVEL',48,'level-up',136,137),(91,NULL,'NIVEL',42,'level-up',138,139),(92,NULL,'NIVEL',41,'level-up',140,141),(94,NULL,'NIVEL',50,'level-up',141,142),(95,NULL,'NIVEL',38,'level-up',143,144),(97,NULL,'NIVEL',48,'level-up',144,145),(98,NULL,'NIVEL',37,'level-up',146,147),(99,NULL,'NIVEL',48,'level-up',149,150),(100,NULL,'NIVEL',50,'level-up',152,153),(101,NULL,'NIVEL',43,'level-up',155,156),(104,NULL,'NIVEL',54,'level-up',158,159),(106,NULL,'NIVEL',54,'level-up',161,162),(107,NULL,'NIVEL',50,'level-up',165,166),(109,NULL,'NIVEL',64,'level-up',166,167),(110,NULL,'NIVEL',59,'level-up',168,169),(115,NULL,'NIVEL',35,'level-up',90,91),(116,NULL,'NIVEL',35,'level-up',77,79),(117,NULL,'NIVEL',35,'level-up',78,80),(118,NULL,'NIVEL',25,'level-up',69,71),(119,NULL,'NIVEL',30,'level-up',104,105),(127,NULL,'NIVEL',40,'level-up',125,126),(131,NULL,'NIVEL',40,'level-up',171,172);
 /*!40000 ALTER TABLE `evolucao` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -448,7 +448,7 @@ CREATE TABLE `mapa_conexao` (
   CONSTRAINT `fk_mapa_conexao_destino` FOREIGN KEY (`id_mapa_no_destino`) REFERENCES `mapa_no` (`id_mapa_no`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_mapa_conexao_origem` FOREIGN KEY (`id_mapa_no_origem`) REFERENCES `mapa_no` (`id_mapa_no`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `chk_mapa_conexao_direcao` CHECK (`id_mapa_no_origem` <> `id_mapa_no_destino`)
-) ENGINE=InnoDB AUTO_INCREMENT=885 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=925 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -457,7 +457,7 @@ CREATE TABLE `mapa_conexao` (
 
 LOCK TABLES `mapa_conexao` WRITE;
 /*!40000 ALTER TABLE `mapa_conexao` DISABLE KEYS */;
-INSERT INTO `mapa_conexao` VALUES (745,562,565),(746,562,566),(747,563,566),(748,563,567),(749,564,567),(750,564,568),(751,565,569),(752,566,569),(753,566,570),(754,567,570),(755,567,571),(756,568,571),(757,569,572),(758,570,572),(759,570,573),(760,571,573),(761,572,574),(762,573,575),(763,574,576),(764,575,576);
+INSERT INTO `mapa_conexao` VALUES (745,562,565),(746,562,566),(747,563,566),(748,563,567),(749,564,567),(750,564,568),(751,565,569),(752,566,569),(753,566,570),(754,567,570),(755,567,571),(756,568,571),(757,569,572),(758,570,572),(759,570,573),(760,571,573),(761,572,574),(762,573,575),(763,574,576),(764,575,576),(905,682,685),(906,682,686),(907,683,686),(908,683,687),(909,684,687),(910,684,688),(911,685,689),(912,686,689),(913,686,690),(914,687,690),(915,687,691),(916,688,691),(917,689,692),(918,690,692),(919,690,693),(920,691,693),(921,692,694),(922,693,695),(923,694,696),(924,695,696);
 /*!40000 ALTER TABLE `mapa_conexao` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -493,7 +493,7 @@ CREATE TABLE `mapa_no` (
   CONSTRAINT `chk_mapa_no_coordenadas` CHECK (`posicao_x` <= 100 and `posicao_y` <= 100),
   CONSTRAINT `chk_mapa_no_treinador` CHECK (`tipo_local` = 'TREINADOR' and `id_npc_tipo` is not null and `id_npc_mapa` is not null or `tipo_local` <> 'TREINADOR' and `id_npc_tipo` is null and `id_npc_mapa` is null),
   CONSTRAINT `chk_mapa_no_etapa` CHECK (`etapa` between 1 and 6)
-) ENGINE=InnoDB AUTO_INCREMENT=667 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=697 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -502,7 +502,7 @@ CREATE TABLE `mapa_no` (
 
 LOCK TABLES `mapa_no` WRITE;
 /*!40000 ALTER TABLE `mapa_no` DISABLE KEYS */;
-INSERT INTO `mapa_no` VALUES (562,33,'POKEBOLA',NULL,NULL,14,79,1,1,'IGNORADO','2026-11-23 14:59:46',NULL),(563,33,'SELVAGEM',NULL,NULL,50,79,1,2,'CONCLUIDO','2026-11-23 14:59:46','2026-11-23 15:00:13'),(564,33,'TREINADOR',2,186,86,79,1,3,'IGNORADO','2026-11-23 14:59:46',NULL),(565,33,'SELVAGEM',NULL,NULL,10,61,2,1,'BLOQUEADO','2026-11-23 14:59:46',NULL),(566,33,'TREINADOR',4,187,36,61,2,2,'IGNORADO','2026-11-23 14:59:46',NULL),(567,33,'POKEBOLA',NULL,NULL,64,61,2,3,'CONCLUIDO','2026-11-23 14:59:46','2026-11-23 15:00:31'),(568,33,'TREINADOR',4,188,90,61,2,4,'BLOQUEADO','2026-11-23 14:59:46',NULL),(569,33,'SELVAGEM',NULL,NULL,25,43,3,1,'BLOQUEADO','2026-11-23 14:59:46',NULL),(570,33,'POKEBOLA',NULL,NULL,50,43,3,2,'IGNORADO','2026-11-23 14:59:46',NULL),(571,33,'TREINADOR',4,189,75,43,3,3,'CONCLUIDO','2026-11-23 14:59:46','2026-11-23 15:00:42'),(572,33,'TREINADOR',6,190,36,30,4,1,'BLOQUEADO','2026-11-23 14:59:46',NULL),(573,33,'SELVAGEM',NULL,NULL,64,30,4,2,'CONCLUIDO','2026-11-23 14:59:46','2026-11-23 15:00:47'),(574,33,'POKEMART',NULL,NULL,36,17,5,1,'BLOQUEADO','2026-11-23 14:59:46',NULL),(575,33,'CENTRO_POKEMON',NULL,NULL,64,17,5,2,'CONCLUIDO','2026-11-23 14:59:46','2026-11-23 15:00:54'),(576,33,'DESAFIO',NULL,NULL,50,7,6,1,'CONCLUIDO','2026-11-23 14:59:46','2026-11-23 15:02:01');
+INSERT INTO `mapa_no` VALUES (562,33,'POKEBOLA',NULL,NULL,14,79,1,1,'IGNORADO','2026-11-23 14:59:46',NULL),(563,33,'SELVAGEM',NULL,NULL,50,79,1,2,'CONCLUIDO','2026-11-23 14:59:46','2026-11-23 15:00:13'),(564,33,'TREINADOR',2,186,86,79,1,3,'IGNORADO','2026-11-23 14:59:46',NULL),(565,33,'SELVAGEM',NULL,NULL,10,61,2,1,'BLOQUEADO','2026-11-23 14:59:46',NULL),(566,33,'TREINADOR',4,187,36,61,2,2,'IGNORADO','2026-11-23 14:59:46',NULL),(567,33,'POKEBOLA',NULL,NULL,64,61,2,3,'CONCLUIDO','2026-11-23 14:59:46','2026-11-23 15:00:31'),(568,33,'TREINADOR',4,188,90,61,2,4,'BLOQUEADO','2026-11-23 14:59:46',NULL),(569,33,'SELVAGEM',NULL,NULL,25,43,3,1,'BLOQUEADO','2026-11-23 14:59:46',NULL),(570,33,'POKEBOLA',NULL,NULL,50,43,3,2,'IGNORADO','2026-11-23 14:59:46',NULL),(571,33,'TREINADOR',4,189,75,43,3,3,'CONCLUIDO','2026-11-23 14:59:46','2026-11-23 15:00:42'),(572,33,'TREINADOR',6,190,36,30,4,1,'BLOQUEADO','2026-11-23 14:59:46',NULL),(573,33,'SELVAGEM',NULL,NULL,64,30,4,2,'CONCLUIDO','2026-11-23 14:59:46','2026-11-23 15:00:47'),(574,33,'POKEMART',NULL,NULL,36,17,5,1,'BLOQUEADO','2026-11-23 14:59:46',NULL),(575,33,'CENTRO_POKEMON',NULL,NULL,64,17,5,2,'CONCLUIDO','2026-11-23 14:59:46','2026-11-23 15:00:54'),(576,33,'DESAFIO',NULL,NULL,50,7,6,1,'CONCLUIDO','2026-11-23 14:59:46','2026-11-23 15:02:01'),(682,42,'POKEBOLA',NULL,NULL,14,79,1,1,'DISPONIVEL','2026-11-24 13:33:31',NULL),(683,42,'SELVAGEM',NULL,NULL,50,79,1,2,'DISPONIVEL','2026-11-24 13:33:31',NULL),(684,42,'TREINADOR',4,226,86,79,1,3,'DISPONIVEL','2026-11-24 13:33:31',NULL),(685,42,'TREINADOR',1,227,10,61,2,1,'BLOQUEADO','2026-11-24 13:33:31',NULL),(686,42,'SELVAGEM',NULL,NULL,36,61,2,2,'BLOQUEADO','2026-11-24 13:33:31',NULL),(687,42,'POKEBOLA',NULL,NULL,64,61,2,3,'BLOQUEADO','2026-11-24 13:33:31',NULL),(688,42,'TREINADOR',3,228,90,61,2,4,'BLOQUEADO','2026-11-24 13:33:31',NULL),(689,42,'TREINADOR',6,229,25,43,3,1,'BLOQUEADO','2026-11-24 13:33:31',NULL),(690,42,'POKEBOLA',NULL,NULL,50,43,3,2,'BLOQUEADO','2026-11-24 13:33:31',NULL),(691,42,'SELVAGEM',NULL,NULL,75,43,3,3,'BLOQUEADO','2026-11-24 13:33:31',NULL),(692,42,'SELVAGEM',NULL,NULL,36,30,4,1,'BLOQUEADO','2026-11-24 13:33:31',NULL),(693,42,'TREINADOR',5,230,64,30,4,2,'BLOQUEADO','2026-11-24 13:33:31',NULL),(694,42,'CENTRO_POKEMON',NULL,NULL,36,17,5,1,'BLOQUEADO','2026-11-24 13:33:31',NULL),(695,42,'POKEMART',NULL,NULL,64,17,5,2,'BLOQUEADO','2026-11-24 13:33:31',NULL),(696,42,'DESAFIO',NULL,NULL,50,7,6,1,'BLOQUEADO','2026-11-24 13:33:31',NULL);
 /*!40000 ALTER TABLE `mapa_no` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -529,7 +529,7 @@ CREATE TABLE `npc_mapa` (
   CONSTRAINT `fk_npc_mapa_perfil` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id_perfil`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_npc_mapa_tipo` FOREIGN KEY (`id_npc_tipo`) REFERENCES `npc_tipo` (`id_npc_tipo`) ON UPDATE CASCADE,
   CONSTRAINT `chk_npc_mapa_derrotado` CHECK (`derrotado` in (0,1))
-) ENGINE=InnoDB AUTO_INCREMENT=221 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=231 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -538,7 +538,7 @@ CREATE TABLE `npc_mapa` (
 
 LOCK TABLES `npc_mapa` WRITE;
 /*!40000 ALTER TABLE `npc_mapa` DISABLE KEYS */;
-INSERT INTO `npc_mapa` VALUES (186,33,2,860,790,1,0,'2026-11-23 14:59:46',NULL),(187,33,4,360,610,2,0,'2026-11-23 14:59:46',NULL),(188,33,4,900,610,3,0,'2026-11-23 14:59:46',NULL),(189,33,4,750,430,4,1,'2026-11-23 14:59:46','2026-11-23 15:00:36'),(190,33,6,360,300,5,0,'2026-11-23 14:59:46',NULL);
+INSERT INTO `npc_mapa` VALUES (186,33,2,860,790,1,0,'2026-11-23 14:59:46',NULL),(187,33,4,360,610,2,0,'2026-11-23 14:59:46',NULL),(188,33,4,900,610,3,0,'2026-11-23 14:59:46',NULL),(189,33,4,750,430,4,1,'2026-11-23 14:59:46','2026-11-23 15:00:36'),(190,33,6,360,300,5,0,'2026-11-23 14:59:46',NULL),(226,42,4,860,790,1,0,'2026-11-24 13:33:31',NULL),(227,42,1,100,610,2,0,'2026-11-24 13:33:31',NULL),(228,42,3,900,610,3,0,'2026-11-24 13:33:31',NULL),(229,42,6,250,430,4,0,'2026-11-24 13:33:31',NULL),(230,42,5,640,300,5,0,'2026-11-24 13:33:31',NULL);
 /*!40000 ALTER TABLE `npc_mapa` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -620,7 +620,7 @@ CREATE TABLE `perfil` (
   UNIQUE KEY `uq_usuario_nome_perfil` (`id_usuario`,`nome`),
   CONSTRAINT `fk_perfil_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `chk_perfil_dinheiro` CHECK (`dinheiro` >= 0)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -629,7 +629,7 @@ CREATE TABLE `perfil` (
 
 LOCK TABLES `perfil` WRITE;
 /*!40000 ALTER TABLE `perfil` DISABLE KEYS */;
-INSERT INTO `perfil` VALUES (33,1,'red',1700,'2026-11-18 11:53:44');
+INSERT INTO `perfil` VALUES (33,1,'red',1700,'2026-11-18 11:53:44'),(42,1,'leaf',0,'2026-11-24 13:33:29');
 /*!40000 ALTER TABLE `perfil` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -649,7 +649,7 @@ CREATE TABLE `perfil_log` (
   PRIMARY KEY (`id_perfil_log`),
   KEY `fk_perfil_log_perfil` (`id_perfil`),
   CONSTRAINT `fk_perfil_log_perfil` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id_perfil`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -658,7 +658,7 @@ CREATE TABLE `perfil_log` (
 
 LOCK TABLES `perfil_log` WRITE;
 /*!40000 ALTER TABLE `perfil_log` DISABLE KEYS */;
-INSERT INTO `perfil_log` VALUES (51,33,'CRIACAO','Nova jornada criada.',NULL,'2026-11-18 11:53:44'),(52,33,'INICIAL_ESCOLHIDO','Pokémon inicial escolhido.','{\"pokemon\":\"snivy\"}','2026-11-18 11:53:46'),(71,33,'ROTA_GERADA',NULL,'{\"id_desafio\":1,\"area\":1}','2026-11-23 14:43:11'),(72,33,'ROTA_GERADA',NULL,'{\"id_desafio\":2,\"area\":3}','2026-11-23 14:43:40'),(73,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":502,\"id_pokemon_especie\":102,\"nivel\":57}','2026-11-23 14:43:41'),(74,33,'POKEBOLA_CAPTURADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":502,\"id_pokemon_especie\":102,\"nivel\":57}','2026-11-23 14:43:43'),(75,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":506,\"id_pokemon_especie\":64,\"nivel\":57}','2026-11-23 14:43:43'),(76,33,'POKEBOLA_CAPTURADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":506,\"id_pokemon_especie\":64,\"nivel\":57}','2026-11-23 14:43:44'),(77,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":510,\"id_pokemon_especie\":61,\"nivel\":57}','2026-11-23 14:43:45'),(78,33,'POKEBOLA_CAPTURADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":510,\"id_pokemon_especie\":61,\"nivel\":57}','2026-11-23 14:43:46'),(79,33,'ROTA_GERADA',NULL,'{\"id_desafio\":3,\"area\":1}','2026-11-23 14:44:26'),(80,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":518,\"id_pokemon_especie\":84,\"nivel\":61}','2026-11-23 14:44:30'),(81,33,'POKEBOLA_CAPTURADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":518,\"id_pokemon_especie\":84,\"nivel\":61}','2026-11-23 14:44:32'),(82,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":521,\"id_pokemon_especie\":53,\"nivel\":61}','2026-11-23 14:44:33'),(83,33,'POKEBOLA_CAPTURADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":521,\"id_pokemon_especie\":53,\"nivel\":61}','2026-11-23 14:44:33'),(84,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":525,\"id_pokemon_especie\":128,\"nivel\":61}','2026-11-23 14:44:34'),(85,33,'POKEBOLA_TROCADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":525,\"id_pokemon_especie\":128,\"nivel\":61,\"id_pokemon_time_substituido\":50,\"id_pokemon_especie_substituido\":53,\"posicao_substituida\":6}','2026-11-23 14:45:31'),(86,33,'ROTA_GERADA',NULL,'{\"id_desafio\":4,\"area\":3}','2026-11-23 14:46:51'),(87,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":532,\"id_pokemon_especie\":148,\"nivel\":65}','2026-11-23 14:47:01'),(88,33,'POKEBOLA_RECUSADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":532,\"id_pokemon_especie\":148,\"nivel\":65}','2026-11-23 14:47:05'),(89,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":536,\"id_pokemon_especie\":90,\"nivel\":65}','2026-11-23 14:47:06'),(90,33,'POKEBOLA_TROCADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":536,\"id_pokemon_especie\":90,\"nivel\":65,\"id_pokemon_time_substituido\":48,\"id_pokemon_especie_substituido\":63,\"posicao_substituida\":4}','2026-11-23 14:47:58'),(91,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":540,\"id_pokemon_especie\":127,\"nivel\":65}','2026-11-23 14:48:00'),(92,33,'POKEBOLA_RECUSADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":540,\"id_pokemon_especie\":127,\"nivel\":65}','2026-11-23 14:48:05'),(93,33,'ROTA_GERADA',NULL,'{\"id_desafio\":5,\"area\":1}','2026-11-23 14:52:42'),(94,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":549,\"id_pokemon_especie\":59,\"nivel\":69}','2026-11-23 14:55:32'),(95,33,'POKEBOLA_TROCADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":549,\"id_pokemon_especie\":59,\"nivel\":69,\"id_pokemon_time_substituido\":47,\"id_pokemon_especie_substituido\":66,\"posicao_substituida\":3}','2026-11-23 14:55:36'),(96,33,'ROTA_GERADA',NULL,'{\"id_desafio\":6,\"area\":2}','2026-11-23 14:59:46'),(97,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":567,\"id_pokemon_especie\":140,\"nivel\":78}','2026-11-23 15:00:26'),(98,33,'POKEBOLA_TROCADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":567,\"id_pokemon_especie\":140,\"nivel\":78,\"id_pokemon_time_substituido\":53,\"id_pokemon_especie_substituido\":59,\"posicao_substituida\":4}','2026-11-23 15:00:31');
+INSERT INTO `perfil_log` VALUES (51,33,'CRIACAO','Nova jornada criada.',NULL,'2026-11-18 11:53:44'),(52,33,'INICIAL_ESCOLHIDO','Pokémon inicial escolhido.','{\"pokemon\":\"snivy\"}','2026-11-18 11:53:46'),(71,33,'ROTA_GERADA',NULL,'{\"id_desafio\":1,\"area\":1}','2026-11-23 14:43:11'),(72,33,'ROTA_GERADA',NULL,'{\"id_desafio\":2,\"area\":3}','2026-11-23 14:43:40'),(73,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":502,\"id_pokemon_especie\":102,\"nivel\":57}','2026-11-23 14:43:41'),(74,33,'POKEBOLA_CAPTURADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":502,\"id_pokemon_especie\":102,\"nivel\":57}','2026-11-23 14:43:43'),(75,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":506,\"id_pokemon_especie\":64,\"nivel\":57}','2026-11-23 14:43:43'),(76,33,'POKEBOLA_CAPTURADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":506,\"id_pokemon_especie\":64,\"nivel\":57}','2026-11-23 14:43:44'),(77,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":510,\"id_pokemon_especie\":61,\"nivel\":57}','2026-11-23 14:43:45'),(78,33,'POKEBOLA_CAPTURADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":510,\"id_pokemon_especie\":61,\"nivel\":57}','2026-11-23 14:43:46'),(79,33,'ROTA_GERADA',NULL,'{\"id_desafio\":3,\"area\":1}','2026-11-23 14:44:26'),(80,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":518,\"id_pokemon_especie\":84,\"nivel\":61}','2026-11-23 14:44:30'),(81,33,'POKEBOLA_CAPTURADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":518,\"id_pokemon_especie\":84,\"nivel\":61}','2026-11-23 14:44:32'),(82,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":521,\"id_pokemon_especie\":53,\"nivel\":61}','2026-11-23 14:44:33'),(83,33,'POKEBOLA_CAPTURADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":521,\"id_pokemon_especie\":53,\"nivel\":61}','2026-11-23 14:44:33'),(84,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":525,\"id_pokemon_especie\":128,\"nivel\":61}','2026-11-23 14:44:34'),(85,33,'POKEBOLA_TROCADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":525,\"id_pokemon_especie\":128,\"nivel\":61,\"id_pokemon_time_substituido\":50,\"id_pokemon_especie_substituido\":53,\"posicao_substituida\":6}','2026-11-23 14:45:31'),(86,33,'ROTA_GERADA',NULL,'{\"id_desafio\":4,\"area\":3}','2026-11-23 14:46:51'),(87,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":532,\"id_pokemon_especie\":148,\"nivel\":65}','2026-11-23 14:47:01'),(88,33,'POKEBOLA_RECUSADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":532,\"id_pokemon_especie\":148,\"nivel\":65}','2026-11-23 14:47:05'),(89,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":536,\"id_pokemon_especie\":90,\"nivel\":65}','2026-11-23 14:47:06'),(90,33,'POKEBOLA_TROCADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":536,\"id_pokemon_especie\":90,\"nivel\":65,\"id_pokemon_time_substituido\":48,\"id_pokemon_especie_substituido\":63,\"posicao_substituida\":4}','2026-11-23 14:47:58'),(91,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":540,\"id_pokemon_especie\":127,\"nivel\":65}','2026-11-23 14:48:00'),(92,33,'POKEBOLA_RECUSADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":540,\"id_pokemon_especie\":127,\"nivel\":65}','2026-11-23 14:48:05'),(93,33,'ROTA_GERADA',NULL,'{\"id_desafio\":5,\"area\":1}','2026-11-23 14:52:42'),(94,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":549,\"id_pokemon_especie\":59,\"nivel\":69}','2026-11-23 14:55:32'),(95,33,'POKEBOLA_TROCADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":549,\"id_pokemon_especie\":59,\"nivel\":69,\"id_pokemon_time_substituido\":47,\"id_pokemon_especie_substituido\":66,\"posicao_substituida\":3}','2026-11-23 14:55:36'),(96,33,'ROTA_GERADA',NULL,'{\"id_desafio\":6,\"area\":2}','2026-11-23 14:59:46'),(97,33,'POKEBOLA_OFERTA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":567,\"id_pokemon_especie\":140,\"nivel\":78}','2026-11-23 15:00:26'),(98,33,'POKEBOLA_TROCADA','Encontro com uma Pokébola do mapa.','{\"id_mapa_no\":567,\"id_pokemon_especie\":140,\"nivel\":78,\"id_pokemon_time_substituido\":53,\"id_pokemon_especie_substituido\":59,\"posicao_substituida\":4}','2026-11-23 15:00:31'),(130,42,'CRIACAO','Nova jornada criada.',NULL,'2026-11-24 13:33:29'),(131,42,'INICIAL_ESCOLHIDO','Pokémon inicial escolhido.','{\"pokemon\":\"tepig\"}','2026-11-24 13:33:31'),(132,42,'ROTA_GERADA',NULL,'{\"id_desafio\":1,\"area\":1}','2026-11-24 13:33:31');
 /*!40000 ALTER TABLE `perfil_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -732,312 +732,312 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_golpe_dano_insert
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-BEFORE INSERT ON pokemon_especie_golpe
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-FOR EACH ROW
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-BEGIN
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    DECLARE v_categoria VARCHAR(20);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    SELECT categoria
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    INTO v_categoria
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    FROM golpe
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    WHERE id_golpe = NEW.id_golpe;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    IF v_categoria <> 'DANO' THEN
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        SIGNAL SQLSTATE '45000'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        SET MESSAGE_TEXT =
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            'Os slots do Pokemon devem conter apenas golpes de dano.';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    END IF;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_golpe_dano_insert
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BEFORE INSERT ON pokemon_especie_golpe
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+FOR EACH ROW
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BEGIN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    DECLARE v_categoria VARCHAR(20);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    SELECT categoria
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    INTO v_categoria
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    FROM golpe
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    WHERE id_golpe = NEW.id_golpe;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    IF v_categoria <> 'DANO' THEN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        SIGNAL SQLSTATE '45000'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        SET MESSAGE_TEXT =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            'Os slots do Pokemon devem conter apenas golpes de dano.';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    END IF;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1053,312 +1053,312 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_golpe_dano_update
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-BEFORE UPDATE ON pokemon_especie_golpe
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-FOR EACH ROW
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-BEGIN
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    DECLARE v_categoria VARCHAR(20);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    SELECT categoria
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    INTO v_categoria
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    FROM golpe
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    WHERE id_golpe = NEW.id_golpe;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    IF v_categoria <> 'DANO' THEN
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        SIGNAL SQLSTATE '45000'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        SET MESSAGE_TEXT =
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            'Os slots do Pokemon devem conter apenas golpes de dano.';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    END IF;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_golpe_dano_update
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BEFORE UPDATE ON pokemon_especie_golpe
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+FOR EACH ROW
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BEGIN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    DECLARE v_categoria VARCHAR(20);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    SELECT categoria
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    INTO v_categoria
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    FROM golpe
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    WHERE id_golpe = NEW.id_golpe;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    IF v_categoria <> 'DANO' THEN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        SIGNAL SQLSTATE '45000'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        SET MESSAGE_TEXT =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            'Os slots do Pokemon devem conter apenas golpes de dano.';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    END IF;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1389,7 +1389,7 @@ CREATE TABLE `pokemon_especie_status_opcao` (
 
 LOCK TABLES `pokemon_especie_status_opcao` WRITE;
 /*!40000 ALTER TABLE `pokemon_especie_status_opcao` DISABLE KEYS */;
-INSERT INTO `pokemon_especie_status_opcao` VALUES (16,28,'TEM_FISICO'),(16,34,'TIPO_GRASS'),(17,28,'TEM_FISICO'),(17,34,'TIPO_GRASS'),(18,28,'TEM_FISICO'),(18,34,'TIPO_GRASS'),(19,28,'TEM_FISICO'),(19,35,'TIPO_FIRE_GHOST'),(20,28,'TEM_FISICO'),(20,33,'TIPO_FIGHTING'),(20,35,'TIPO_FIRE_GHOST'),(21,28,'TEM_FISICO'),(21,33,'TIPO_FIGHTING'),(21,35,'TIPO_FIRE_GHOST'),(22,29,'TEM_ESPECIAL'),(23,29,'TEM_ESPECIAL'),(24,29,'TEM_ESPECIAL'),(25,28,'TEM_FISICO'),(26,28,'TEM_FISICO'),(27,28,'TEM_FISICO'),(28,28,'TEM_FISICO'),(29,28,'TEM_FISICO'),(30,28,'TEM_FISICO'),(31,28,'TEM_FISICO'),(32,28,'TEM_FISICO'),(32,34,'TIPO_GRASS'),(33,28,'TEM_FISICO'),(33,34,'TIPO_GRASS'),(34,28,'TEM_FISICO'),(34,35,'TIPO_FIRE_GHOST'),(35,28,'TEM_FISICO'),(35,35,'TIPO_FIRE_GHOST'),(36,28,'TEM_FISICO'),(37,28,'TEM_FISICO'),(38,29,'TEM_ESPECIAL'),(38,32,'TIPO_PSYCHIC'),(39,29,'TEM_ESPECIAL'),(39,32,'TIPO_PSYCHIC'),(40,28,'TEM_FISICO'),(41,28,'TEM_FISICO'),(42,28,'TEM_FISICO'),(43,28,'TEM_FISICO'),(43,30,'TIPO_ELETRICO'),(44,28,'TEM_FISICO'),(44,30,'TIPO_ELETRICO'),(45,28,'TEM_FISICO'),(46,28,'TEM_FISICO'),(47,28,'TEM_FISICO'),(48,29,'TEM_ESPECIAL'),(48,32,'TIPO_PSYCHIC'),(49,29,'TEM_ESPECIAL'),(49,32,'TIPO_PSYCHIC'),(50,28,'TEM_FISICO'),(51,28,'TEM_FISICO'),(52,28,'TEM_FISICO'),(53,28,'TEM_FISICO'),(53,33,'TIPO_FIGHTING'),(54,28,'TEM_FISICO'),(54,33,'TIPO_FIGHTING'),(55,28,'TEM_FISICO'),(55,33,'TIPO_FIGHTING'),(56,28,'TEM_FISICO'),(57,28,'TEM_FISICO'),(58,28,'TEM_FISICO'),(59,28,'TEM_FISICO'),(59,33,'TIPO_FIGHTING'),(60,28,'TEM_FISICO'),(60,33,'TIPO_FIGHTING'),(61,28,'TEM_FISICO'),(61,34,'TIPO_GRASS'),(62,28,'TEM_FISICO'),(62,34,'TIPO_GRASS'),(63,28,'TEM_FISICO'),(63,34,'TIPO_GRASS'),(64,28,'TEM_FISICO'),(64,31,'TIPO_POISON'),(65,28,'TEM_FISICO'),(65,31,'TIPO_POISON'),(66,28,'TEM_FISICO'),(66,31,'TIPO_POISON'),(67,29,'TEM_ESPECIAL'),(67,34,'TIPO_GRASS'),(68,29,'TEM_ESPECIAL'),(68,34,'TIPO_GRASS'),(69,29,'TEM_ESPECIAL'),(69,34,'TIPO_GRASS'),(70,29,'TEM_ESPECIAL'),(70,34,'TIPO_GRASS'),(71,28,'TEM_FISICO'),(71,33,'TIPO_FIGHTING'),(71,34,'TIPO_GRASS'),(72,28,'TEM_FISICO'),(73,28,'TEM_FISICO'),(73,35,'TIPO_FIRE_GHOST'),(74,28,'TEM_FISICO'),(75,28,'TEM_FISICO'),(76,28,'TEM_FISICO'),(77,28,'TEM_FISICO'),(77,35,'TIPO_FIRE_GHOST'),(78,28,'TEM_FISICO'),(79,28,'TEM_FISICO'),(79,35,'TIPO_FIRE_GHOST'),(80,28,'TEM_FISICO'),(81,29,'TEM_ESPECIAL'),(81,34,'TIPO_GRASS'),(82,28,'TEM_FISICO'),(83,28,'TEM_FISICO'),(84,28,'TEM_FISICO'),(85,28,'TEM_FISICO'),(85,33,'TIPO_FIGHTING'),(86,28,'TEM_FISICO'),(86,33,'TIPO_FIGHTING'),(87,29,'TEM_ESPECIAL'),(87,32,'TIPO_PSYCHIC'),(88,29,'TEM_ESPECIAL'),(88,35,'TIPO_FIRE_GHOST'),(89,29,'TEM_ESPECIAL'),(89,35,'TIPO_FIRE_GHOST'),(90,28,'TEM_FISICO'),(90,35,'TIPO_FIRE_GHOST'),(91,28,'TEM_FISICO'),(91,35,'TIPO_FIRE_GHOST'),(92,28,'TEM_FISICO'),(93,28,'TEM_FISICO'),(94,28,'TEM_FISICO'),(95,28,'TEM_FISICO'),(96,28,'TEM_FISICO'),(97,28,'TEM_FISICO'),(97,30,'TIPO_ELETRICO'),(98,28,'TEM_FISICO'),(99,28,'TEM_FISICO'),(100,28,'TEM_FISICO'),(100,31,'TIPO_POISON'),(101,28,'TEM_FISICO'),(101,31,'TIPO_POISON'),(102,29,'TEM_ESPECIAL'),(103,29,'TEM_ESPECIAL'),(104,29,'TEM_ESPECIAL'),(104,35,'TIPO_FIRE_GHOST'),(105,29,'TEM_ESPECIAL'),(105,35,'TIPO_FIRE_GHOST'),(106,28,'TEM_FISICO'),(107,28,'TEM_FISICO'),(108,29,'TEM_ESPECIAL'),(108,32,'TIPO_PSYCHIC'),(109,29,'TEM_ESPECIAL'),(109,32,'TIPO_PSYCHIC'),(110,29,'TEM_ESPECIAL'),(110,32,'TIPO_PSYCHIC'),(111,29,'TEM_ESPECIAL'),(111,32,'TIPO_PSYCHIC'),(112,29,'TEM_ESPECIAL'),(112,32,'TIPO_PSYCHIC'),(113,29,'TEM_ESPECIAL'),(113,32,'TIPO_PSYCHIC'),(114,28,'TEM_FISICO'),(115,28,'TEM_FISICO'),(116,29,'TEM_ESPECIAL'),(117,29,'TEM_ESPECIAL'),(118,29,'TEM_ESPECIAL'),(119,28,'TEM_FISICO'),(119,34,'TIPO_GRASS'),(120,28,'TEM_FISICO'),(121,28,'TEM_FISICO'),(122,28,'TEM_FISICO'),(123,28,'TEM_FISICO'),(123,31,'TIPO_POISON'),(123,34,'TIPO_GRASS'),(124,28,'TEM_FISICO'),(124,31,'TIPO_POISON'),(124,34,'TIPO_GRASS'),(125,29,'TEM_ESPECIAL'),(126,29,'TEM_ESPECIAL'),(127,28,'TEM_FISICO'),(128,29,'TEM_ESPECIAL'),(128,30,'TIPO_ELETRICO'),(129,29,'TEM_ESPECIAL'),(129,30,'TIPO_ELETRICO'),(130,28,'TEM_FISICO'),(130,34,'TIPO_GRASS'),(131,28,'TEM_FISICO'),(131,34,'TIPO_GRASS'),(132,28,'TEM_FISICO'),(133,28,'TEM_FISICO'),(134,28,'TEM_FISICO'),(135,28,'TEM_FISICO'),(135,30,'TIPO_ELETRICO'),(136,28,'TEM_FISICO'),(136,30,'TIPO_ELETRICO'),(137,28,'TEM_FISICO'),(137,30,'TIPO_ELETRICO'),(138,29,'TEM_ESPECIAL'),(138,32,'TIPO_PSYCHIC'),(139,29,'TEM_ESPECIAL'),(139,32,'TIPO_PSYCHIC'),(140,29,'TEM_ESPECIAL'),(140,35,'TIPO_FIRE_GHOST'),(141,29,'TEM_ESPECIAL'),(141,35,'TIPO_FIRE_GHOST'),(142,29,'TEM_ESPECIAL'),(142,35,'TIPO_FIRE_GHOST'),(143,28,'TEM_FISICO'),(144,28,'TEM_FISICO'),(145,28,'TEM_FISICO'),(146,28,'TEM_FISICO'),(147,28,'TEM_FISICO'),(148,29,'TEM_ESPECIAL'),(149,28,'TEM_FISICO'),(150,29,'TEM_ESPECIAL'),(151,29,'TEM_ESPECIAL'),(151,30,'TIPO_ELETRICO'),(152,28,'TEM_FISICO'),(152,33,'TIPO_FIGHTING'),(153,28,'TEM_FISICO'),(153,33,'TIPO_FIGHTING'),(154,28,'TEM_FISICO'),(155,28,'TEM_FISICO'),(155,35,'TIPO_FIRE_GHOST'),(156,28,'TEM_FISICO'),(156,35,'TIPO_FIRE_GHOST'),(157,28,'TEM_FISICO'),(158,28,'TEM_FISICO'),(159,28,'TEM_FISICO'),(160,29,'TEM_ESPECIAL'),(160,32,'TIPO_PSYCHIC'),(161,28,'TEM_FISICO'),(162,28,'TEM_FISICO'),(163,29,'TEM_ESPECIAL'),(163,35,'TIPO_FIRE_GHOST'),(164,28,'TEM_FISICO'),(165,28,'TEM_FISICO'),(166,28,'TEM_FISICO'),(167,29,'TEM_ESPECIAL'),(168,28,'TEM_FISICO'),(168,35,'TIPO_FIRE_GHOST'),(169,29,'TEM_ESPECIAL'),(169,35,'TIPO_FIRE_GHOST'),(170,28,'TEM_FISICO'),(171,29,'TEM_ESPECIAL'),(172,29,'TEM_ESPECIAL');
+INSERT INTO `pokemon_especie_status_opcao` VALUES (16,28,'TEM_FISICO'),(16,34,'TIPO_GRASS'),(17,28,'TEM_FISICO'),(17,34,'TIPO_GRASS'),(18,28,'TEM_FISICO'),(18,34,'TIPO_GRASS'),(19,28,'TEM_FISICO'),(19,35,'TIPO_FIRE_GHOST'),(20,28,'TEM_FISICO'),(20,33,'TIPO_FIGHTING'),(20,35,'TIPO_FIRE_GHOST'),(21,28,'TEM_FISICO'),(21,33,'TIPO_FIGHTING'),(21,35,'TIPO_FIRE_GHOST'),(22,29,'TEM_ESPECIAL'),(23,29,'TEM_ESPECIAL'),(24,29,'TEM_ESPECIAL'),(25,28,'TEM_FISICO'),(26,28,'TEM_FISICO'),(27,28,'TEM_FISICO'),(28,28,'TEM_FISICO'),(29,28,'TEM_FISICO'),(30,28,'TEM_FISICO'),(31,28,'TEM_FISICO'),(32,28,'TEM_FISICO'),(32,34,'TIPO_GRASS'),(33,28,'TEM_FISICO'),(33,34,'TIPO_GRASS'),(34,28,'TEM_FISICO'),(34,35,'TIPO_FIRE_GHOST'),(35,28,'TEM_FISICO'),(35,35,'TIPO_FIRE_GHOST'),(36,28,'TEM_FISICO'),(37,28,'TEM_FISICO'),(38,29,'TEM_ESPECIAL'),(38,32,'TIPO_PSYCHIC'),(39,29,'TEM_ESPECIAL'),(39,32,'TIPO_PSYCHIC'),(40,28,'TEM_FISICO'),(41,28,'TEM_FISICO'),(42,28,'TEM_FISICO'),(43,28,'TEM_FISICO'),(43,30,'TIPO_ELETRICO'),(44,28,'TEM_FISICO'),(44,30,'TIPO_ELETRICO'),(45,28,'TEM_FISICO'),(46,28,'TEM_FISICO'),(47,28,'TEM_FISICO'),(48,29,'TEM_ESPECIAL'),(48,32,'TIPO_PSYCHIC'),(49,29,'TEM_ESPECIAL'),(49,32,'TIPO_PSYCHIC'),(50,28,'TEM_FISICO'),(51,28,'TEM_FISICO'),(52,28,'TEM_FISICO'),(53,28,'TEM_FISICO'),(53,33,'TIPO_FIGHTING'),(54,28,'TEM_FISICO'),(55,28,'TEM_FISICO'),(55,33,'TIPO_FIGHTING'),(56,28,'TEM_FISICO'),(57,28,'TEM_FISICO'),(58,28,'TEM_FISICO'),(59,28,'TEM_FISICO'),(59,33,'TIPO_FIGHTING'),(60,28,'TEM_FISICO'),(60,33,'TIPO_FIGHTING'),(61,28,'TEM_FISICO'),(61,34,'TIPO_GRASS'),(62,28,'TEM_FISICO'),(62,34,'TIPO_GRASS'),(63,28,'TEM_FISICO'),(63,34,'TIPO_GRASS'),(64,28,'TEM_FISICO'),(64,31,'TIPO_POISON'),(65,28,'TEM_FISICO'),(65,31,'TIPO_POISON'),(66,28,'TEM_FISICO'),(66,31,'TIPO_POISON'),(67,29,'TEM_ESPECIAL'),(67,34,'TIPO_GRASS'),(68,29,'TEM_ESPECIAL'),(68,34,'TIPO_GRASS'),(69,29,'TEM_ESPECIAL'),(69,34,'TIPO_GRASS'),(70,29,'TEM_ESPECIAL'),(70,34,'TIPO_GRASS'),(71,28,'TEM_FISICO'),(71,33,'TIPO_FIGHTING'),(71,34,'TIPO_GRASS'),(72,28,'TEM_FISICO'),(73,28,'TEM_FISICO'),(73,35,'TIPO_FIRE_GHOST'),(74,28,'TEM_FISICO'),(75,28,'TEM_FISICO'),(76,28,'TEM_FISICO'),(77,28,'TEM_FISICO'),(77,35,'TIPO_FIRE_GHOST'),(78,28,'TEM_FISICO'),(79,28,'TEM_FISICO'),(79,35,'TIPO_FIRE_GHOST'),(80,28,'TEM_FISICO'),(81,29,'TEM_ESPECIAL'),(81,34,'TIPO_GRASS'),(82,28,'TEM_FISICO'),(83,28,'TEM_FISICO'),(84,28,'TEM_FISICO'),(85,28,'TEM_FISICO'),(85,33,'TIPO_FIGHTING'),(86,28,'TEM_FISICO'),(86,33,'TIPO_FIGHTING'),(87,29,'TEM_ESPECIAL'),(87,32,'TIPO_PSYCHIC'),(88,29,'TEM_ESPECIAL'),(88,35,'TIPO_FIRE_GHOST'),(89,29,'TEM_ESPECIAL'),(89,35,'TIPO_FIRE_GHOST'),(90,28,'TEM_FISICO'),(90,35,'TIPO_FIRE_GHOST'),(91,28,'TEM_FISICO'),(91,35,'TIPO_FIRE_GHOST'),(92,28,'TEM_FISICO'),(93,28,'TEM_FISICO'),(94,28,'TEM_FISICO'),(95,28,'TEM_FISICO'),(96,28,'TEM_FISICO'),(97,28,'TEM_FISICO'),(97,30,'TIPO_ELETRICO'),(98,28,'TEM_FISICO'),(99,28,'TEM_FISICO'),(100,28,'TEM_FISICO'),(100,31,'TIPO_POISON'),(101,28,'TEM_FISICO'),(101,31,'TIPO_POISON'),(102,29,'TEM_ESPECIAL'),(103,29,'TEM_ESPECIAL'),(104,29,'TEM_ESPECIAL'),(104,35,'TIPO_FIRE_GHOST'),(105,29,'TEM_ESPECIAL'),(105,35,'TIPO_FIRE_GHOST'),(106,28,'TEM_FISICO'),(107,28,'TEM_FISICO'),(108,29,'TEM_ESPECIAL'),(108,32,'TIPO_PSYCHIC'),(109,29,'TEM_ESPECIAL'),(109,32,'TIPO_PSYCHIC'),(110,29,'TEM_ESPECIAL'),(110,32,'TIPO_PSYCHIC'),(111,29,'TEM_ESPECIAL'),(111,32,'TIPO_PSYCHIC'),(112,29,'TEM_ESPECIAL'),(112,32,'TIPO_PSYCHIC'),(113,29,'TEM_ESPECIAL'),(113,32,'TIPO_PSYCHIC'),(114,28,'TEM_FISICO'),(115,28,'TEM_FISICO'),(116,29,'TEM_ESPECIAL'),(117,29,'TEM_ESPECIAL'),(118,29,'TEM_ESPECIAL'),(119,28,'TEM_FISICO'),(119,34,'TIPO_GRASS'),(120,28,'TEM_FISICO'),(121,28,'TEM_FISICO'),(122,28,'TEM_FISICO'),(123,28,'TEM_FISICO'),(123,31,'TIPO_POISON'),(123,34,'TIPO_GRASS'),(124,28,'TEM_FISICO'),(124,31,'TIPO_POISON'),(124,34,'TIPO_GRASS'),(125,29,'TEM_ESPECIAL'),(126,29,'TEM_ESPECIAL'),(127,28,'TEM_FISICO'),(128,29,'TEM_ESPECIAL'),(128,30,'TIPO_ELETRICO'),(129,29,'TEM_ESPECIAL'),(129,30,'TIPO_ELETRICO'),(130,28,'TEM_FISICO'),(130,34,'TIPO_GRASS'),(131,28,'TEM_FISICO'),(131,34,'TIPO_GRASS'),(132,28,'TEM_FISICO'),(133,28,'TEM_FISICO'),(134,28,'TEM_FISICO'),(135,28,'TEM_FISICO'),(135,30,'TIPO_ELETRICO'),(136,28,'TEM_FISICO'),(136,30,'TIPO_ELETRICO'),(137,28,'TEM_FISICO'),(137,30,'TIPO_ELETRICO'),(138,29,'TEM_ESPECIAL'),(138,32,'TIPO_PSYCHIC'),(139,29,'TEM_ESPECIAL'),(139,32,'TIPO_PSYCHIC'),(140,29,'TEM_ESPECIAL'),(140,35,'TIPO_FIRE_GHOST'),(141,29,'TEM_ESPECIAL'),(141,35,'TIPO_FIRE_GHOST'),(142,29,'TEM_ESPECIAL'),(142,35,'TIPO_FIRE_GHOST'),(143,28,'TEM_FISICO'),(144,28,'TEM_FISICO'),(145,28,'TEM_FISICO'),(146,28,'TEM_FISICO'),(147,28,'TEM_FISICO'),(148,29,'TEM_ESPECIAL'),(149,28,'TEM_FISICO'),(150,29,'TEM_ESPECIAL'),(151,29,'TEM_ESPECIAL'),(151,30,'TIPO_ELETRICO'),(152,28,'TEM_FISICO'),(152,33,'TIPO_FIGHTING'),(153,28,'TEM_FISICO'),(153,33,'TIPO_FIGHTING'),(154,28,'TEM_FISICO'),(155,28,'TEM_FISICO'),(155,35,'TIPO_FIRE_GHOST'),(156,28,'TEM_FISICO'),(156,35,'TIPO_FIRE_GHOST'),(157,28,'TEM_FISICO'),(158,28,'TEM_FISICO'),(159,28,'TEM_FISICO'),(160,29,'TEM_ESPECIAL'),(160,32,'TIPO_PSYCHIC'),(161,28,'TEM_FISICO'),(162,28,'TEM_FISICO'),(163,29,'TEM_ESPECIAL'),(163,35,'TIPO_FIRE_GHOST'),(164,28,'TEM_FISICO'),(165,28,'TEM_FISICO'),(166,28,'TEM_FISICO'),(167,29,'TEM_ESPECIAL'),(168,28,'TEM_FISICO'),(168,35,'TIPO_FIRE_GHOST'),(169,29,'TEM_ESPECIAL'),(169,35,'TIPO_FIRE_GHOST'),(170,28,'TEM_FISICO'),(171,29,'TEM_ESPECIAL'),(172,29,'TEM_ESPECIAL');
 /*!40000 ALTER TABLE `pokemon_especie_status_opcao` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1506,7 +1506,7 @@ CREATE TABLE `pokemon_time` (
   CONSTRAINT `chk_pokemon_ataque_especial` CHECK (`ataque_especial` >= 0),
   CONSTRAINT `chk_pokemon_defesa_especial` CHECK (`defesa_especial` >= 0),
   CONSTRAINT `chk_pokemon_velocidade` CHECK (`velocidade` >= 0)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1515,7 +1515,7 @@ CREATE TABLE `pokemon_time` (
 
 LOCK TABLES `pokemon_time` WRITE;
 /*!40000 ALTER TABLE `pokemon_time` DISABLE KEYS */;
-INSERT INTO `pokemon_time` VALUES (39,33,18,NULL,NULL,71,187,187,111,139,111,139,165,'normal',5,28),(46,33,103,NULL,NULL,83,192,0,179,104,204,104,179,'normal',1,29),(49,33,73,NULL,NULL,83,292,292,190,112,137,129,134,'normal',4,28),(51,33,129,NULL,NULL,83,209,209,132,104,166,104,184,'normal',6,29),(52,33,91,NULL,NULL,83,189,143,162,245,88,179,54,'normal',2,28),(54,33,142,NULL,NULL,83,192,192,96,154,245,154,137,'normal',3,29);
+INSERT INTO `pokemon_time` VALUES (39,33,18,NULL,NULL,71,187,187,111,139,111,139,165,'normal',5,28),(46,33,103,NULL,NULL,83,192,0,179,104,204,104,179,'normal',1,29),(49,33,73,NULL,NULL,83,292,292,190,112,137,129,134,'normal',4,28),(51,33,129,NULL,NULL,83,209,209,132,104,166,104,184,'normal',6,29),(52,33,91,NULL,NULL,83,189,143,162,245,88,179,54,'normal',2,28),(54,33,142,NULL,NULL,83,192,192,96,154,245,154,137,'normal',3,29),(67,42,19,NULL,NULL,5,21,21,11,9,9,9,9,'normal',1,28);
 /*!40000 ALTER TABLE `pokemon_time` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -1527,398 +1527,398 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_status_pokemon_time_insert
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-BEFORE INSERT ON pokemon_time
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-FOR EACH ROW
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-BEGIN
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    DECLARE v_existe INT DEFAULT 0;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    IF NEW.id_golpe_status IS NOT NULL THEN
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        SELECT COUNT(*)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        INTO v_existe
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        FROM pokemon_especie_status_opcao
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        WHERE id_pokemon_especie = NEW.id_pokemon_especie
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          AND id_golpe = NEW.id_golpe_status;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        IF v_existe = 0 THEN
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            SIGNAL SQLSTATE '45000'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            SET MESSAGE_TEXT =
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                'O golpe de status escolhido nao e uma opcao valida para este Pokemon.';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        END IF;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    END IF;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_status_pokemon_time_insert
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BEFORE INSERT ON pokemon_time
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+FOR EACH ROW
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BEGIN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    DECLARE v_existe INT DEFAULT 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    IF NEW.id_golpe_status IS NOT NULL THEN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        SELECT COUNT(*)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        INTO v_existe
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        FROM pokemon_especie_status_opcao
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        WHERE id_pokemon_especie = NEW.id_pokemon_especie
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          AND id_golpe = NEW.id_golpe_status;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        IF v_existe = 0 THEN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            SIGNAL SQLSTATE '45000'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            SET MESSAGE_TEXT =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                'O golpe de status escolhido nao e uma opcao valida para este Pokemon.';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        END IF;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    END IF;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1934,398 +1934,398 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_status_pokemon_time_update
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-BEFORE UPDATE ON pokemon_time
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-FOR EACH ROW
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-BEGIN
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    DECLARE v_existe INT DEFAULT 0;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    IF NEW.id_golpe_status IS NOT NULL THEN
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        SELECT COUNT(*)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        INTO v_existe
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        FROM pokemon_especie_status_opcao
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        WHERE id_pokemon_especie = NEW.id_pokemon_especie
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          AND id_golpe = NEW.id_golpe_status;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        IF v_existe = 0 THEN
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            SIGNAL SQLSTATE '45000'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            SET MESSAGE_TEXT =
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                'O golpe de status escolhido nao e uma opcao valida para este Pokemon.';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        END IF;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    END IF;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER trg_validar_status_pokemon_time_update
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BEFORE UPDATE ON pokemon_time
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+FOR EACH ROW
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BEGIN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    DECLARE v_existe INT DEFAULT 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    IF NEW.id_golpe_status IS NOT NULL THEN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        SELECT COUNT(*)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        INTO v_existe
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        FROM pokemon_especie_status_opcao
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        WHERE id_pokemon_especie = NEW.id_pokemon_especie
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          AND id_golpe = NEW.id_golpe_status;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        IF v_existe = 0 THEN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            SIGNAL SQLSTATE '45000'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            SET MESSAGE_TEXT =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                'O golpe de status escolhido nao e uma opcao valida para este Pokemon.';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        END IF;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    END IF;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2593,4 +2593,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-23 18:45:40
+-- Dump completed on 2026-11-24 13:43:09

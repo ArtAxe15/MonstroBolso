@@ -186,7 +186,7 @@ function obterRegrasPersonalizadasEvolucao(): array
         'gurdurr>conkeldurr' => [
             'origem' => 'gurdurr',
             'destino' => 'conkeldurr',
-            'nivel' => 22,
+            'nivel' => 30,
         ],
         'swadloon>leavanny' => [
             'origem' => 'swadloon',
@@ -236,7 +236,7 @@ function obterRegrasPersonalizadasEvolucao(): array
         'bisharp>kingambit' => [
             'origem' => 'bisharp',
             'destino' => 'kingambit',
-            'nivel' => 60,
+            'nivel' => 55,
         ],
         'zorua-hisui>zoroark-hisui' => [
             'origem' => 'zorua-hisui',
