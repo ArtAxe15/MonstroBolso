@@ -1,7 +1,7 @@
 <?php
 
-$cssUrl = $baseUrl . '/css/monstrobolso.css';
-$jsUrl = $baseUrl . '/js/main.js';
+$cssUrl = $baseUrl . '/css/monstrobolso.css?v=' . filemtime(__DIR__ . '/../../public/css/monstrobolso.css');
+$jsUrl = $baseUrl . '/js/main.js?v=' . filemtime(__DIR__ . '/../../public/js/main.js');
 
 ?>
 <!DOCTYPE html>
@@ -10,7 +10,7 @@ $jsUrl = $baseUrl . '/js/main.js';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#285a91">
-    <title>Roguemon | MONSTROBOLSO</title>
+    <title>Roguemon</title>
 
     <link rel="stylesheet" href="<?= htmlspecialchars($cssUrl, ENT_QUOTES, 'UTF-8') ?>">
     <script src="<?= htmlspecialchars($jsUrl, ENT_QUOTES, 'UTF-8') ?>" defer></script>
@@ -24,7 +24,7 @@ $jsUrl = $baseUrl . '/js/main.js';
     </div>
 
     <noscript>
-        <p class="noscript-message">Ative o JavaScript para jogar MONSTROBOLSO.</p>
+        <p class="noscript-message">Ative o JavaScript para jogar Roguemon.</p>
     </noscript>
 </body>
 </html>

@@ -443,3 +443,1230 @@ body.tela-mapa { display:block; min-height:100vh; padding:0; background:#77c6ef;
 .mapa-npc,.mapa-inicio,.mapa-chegada { position:absolute; z-index:2; transform:translate(-50%,-50%); }.mapa-npc { width:42px; min-height:42px; border:2px solid #394f44; border-radius:50%; background:#eee4c8; font-size:20px; cursor:pointer; box-shadow:2px 3px 0 #254d39; }.mapa-npc small { position:absolute; top:100%; left:50%; transform:translateX(-50%); padding:2px 4px; border-radius:3px; background:#f4f0dc; color:#344a3a; font-size:9px; white-space:nowrap; text-transform:capitalize; }.mapa-npc.derrotado { background:#b9c8b4; opacity:.55; }.mapa-inicio { padding:7px 10px; border:2px solid #4c633d; border-radius:8px; background:#f2d17b; color:#60451c; font-size:10px; font-weight:900; }.mapa-chegada { width:34px; height:34px; display:grid; place-items:center; border-radius:50%; background:#33415f; color:#fff; font-size:20px; }.mapa-legenda { color:#f4faee; text-align:center; font-size:12px; text-shadow:1px 1px 2px #244b38; }
 @media(max-width:850px){.game-layout{grid-template-columns:1fr}.painel-lateral{min-height:0}.painel-time{order:2}.mapa-area{order:1}.painel-itens{order:3}.mapa-tabuleiro{max-height:900px}.game-status{flex-wrap:wrap;justify-content:flex-end}.perfis-grid,.starter-grid{grid-template-columns:1fr}.selecao-shell,.starter-shell{padding:22px 16px}}
 @media(max-width:520px){.jogo-topo,.game-header{align-items:flex-start;flex-direction:column}.game-status{justify-content:flex-start}.perfil-card{min-height:150px}.mapa-npc{width:34px;min-height:34px;font-size:16px}}
+
+body.tela-batalha { display:block; min-height:100vh; padding:24px 16px; background:#77c6ef; background-image:linear-gradient(180deg,#79c9f1 0 35%,#9ed8f1 35% 43%,#4e9ed4 43% 52%,#82b86a 52% 100%); background-attachment:fixed; }
+.tela-batalha .app-shell { display:block; }
+.battle-shell { width:min(100%,1150px); margin:0 auto; padding:14px; }
+.battle-heading { margin:24px auto; padding:20px; border:2px solid #263b4c; background:#f3efe3; box-shadow:4px 4px 0 #263b4c; text-align:center; }
+.battle-heading h1 { margin:0 0 8px; color:#1c3554; text-transform:capitalize; }
+.battle-heading p:last-child { margin:0; color:#61738a; font-weight:700; }
+.battle-teams { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+.battle-panel { min-width:0; padding:16px; border:2px solid #263b4c; background:#f3efe3; box-shadow:4px 4px 0 #263b4c; }
+.battle-panel h2 { margin:0 0 14px; color:#6e6b5f; font-size:14px; letter-spacing:.08em; }
+.battle-pokemon { display:flex; align-items:center; gap:12px; margin:10px 0; padding:10px; border:1px solid #c8d0ca; border-radius:8px; background:#fffdf6; }
+.battle-pokemon img { flex:0 0 64px; width:64px; height:64px; object-fit:contain; image-rendering:pixelated; }
+.battle-pokemon strong,.battle-pokemon span,.battle-pokemon small { display:block; overflow-wrap:anywhere; }
+.battle-pokemon strong { color:#263b4c; text-transform:capitalize; }
+.battle-pokemon span,.battle-pokemon small { margin-top:4px; color:#657386; font-size:12px; }
+.battle-empty { color:#7d7b72; font-size:13px; }
+.battle-notice { margin:24px 0 12px; color:#f4faee; text-align:center; text-shadow:1px 1px 2px #244b38; }
+.battle-shell > .botao-voltar { display:flex; margin:0 auto; }
+.battle-active { padding:12px; border:1px solid #c8d0ca; border-radius:8px; background:#fffdf6; }
+.battle-active-heading { display:flex; align-items:center; gap:12px; }
+.battle-active-heading img { flex:0 0 88px; width:88px; height:88px; object-fit:contain; image-rendering:pixelated; }
+.battle-active-heading strong,.battle-active-heading span { display:block; overflow-wrap:anywhere; }
+.battle-active-heading strong { color:#263b4c; font-size:17px; text-transform:capitalize; }
+.battle-active-heading span { margin-top:5px; color:#657386; font-size:12px; }
+.battle-hp { margin:12px 0; color:#263b4c; font-size:12px; font-weight:700; }
+.battle-hp-bar { height:9px; overflow:hidden; border:1px solid #687b75; background:#cbd3d5; }
+.battle-hp-bar i { display:block; height:100%; background:#45b85a; }
+.battle-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin:12px 0; }
+.battle-stats > div { display:flex; justify-content:space-between; gap:5px; padding:6px; border:1px solid #d6ddd8; border-radius:4px; background:#f3efe3; color:#61738a; font-size:11px; }
+.battle-stats strong { color:#263b4c; }
+.battle-reserve,.battle-moves { margin-top:16px; }
+.battle-reserve h3,.battle-moves h3 { margin:0 0 8px; color:#6e6b5f; font-size:11px; letter-spacing:.06em; }
+.battle-reserve-pokemon { display:flex; align-items:center; gap:8px; margin-top:7px; padding:7px; border:1px solid #d6ddd8; border-radius:5px; background:#fffdf6; }
+.battle-reserve-pokemon img { width:42px; height:42px; object-fit:contain; image-rendering:pixelated; }
+.battle-reserve-pokemon strong,.battle-reserve-pokemon small { display:block; overflow-wrap:anywhere; }
+.battle-reserve-pokemon strong { color:#263b4c; font-size:12px; text-transform:capitalize; }
+.battle-reserve-pokemon small { margin:3px 0; color:#657386; font-size:10px; }
+.battle-move { display:grid; grid-template-columns:1fr auto; gap:3px 8px; margin-top:6px; padding:7px; border:1px solid #d6ddd8; border-radius:5px; background:#fffdf6; }
+.battle-move strong { color:#263b4c; font-size:12px; }
+.battle-move span,.battle-move small { color:#657386; font-size:10px; }
+.battle-move span { text-align:right; }
+.battle-move small { grid-column:1 / -1; }
+.battle-actions { margin-top:16px; }
+.battle-actions > h3,.battle-action-view > h3 { margin:0 0 8px; color:#6e6b5f; font-size:11px; letter-spacing:.06em; }
+.battle-action-menu { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
+.battle-action-option { min-height:42px; border:2px solid #263b4c; border-radius:5px; background:#e4e9e5; color:#263b4c; box-shadow:2px 2px 0 #263b4c; cursor:pointer; font-weight:800; }
+.battle-action-option.selecionada,.battle-action-option:hover { background:#f2d17b; }
+.battle-action-option:focus-visible,.battle-action-back:focus-visible { outline:3px solid #4e9ed4; outline-offset:2px; }
+.battle-action-back { margin:10px 0 2px; padding:6px 9px; border:1px solid #263b4c; border-radius:4px; background:#dce7ef; color:#263b4c; cursor:pointer; font-size:11px; font-weight:700; }
+.battle-action-view { margin-top:12px; }
+.battle-action-note { margin:8px 0 0; color:#657386; font-size:11px; }
+.battle-item { margin-top:7px; padding:8px; border:1px solid #d6ddd8; border-radius:5px; background:#fffdf6; }
+.battle-item strong,.battle-item span,.battle-item small { display:block; overflow-wrap:anywhere; }
+.battle-item strong { color:#263b4c; font-size:12px; }
+.battle-item span,.battle-item small { margin-top:4px; color:#657386; font-size:10px; }
+.mapa-chegada[data-desafio] { cursor:pointer; }
+.mapa-chegada[data-desafio]:focus-visible { outline:3px solid #f2d17b; outline-offset:3px; }
+@media(max-width:650px){.battle-teams{grid-template-columns:1fr}.battle-shell{padding:10px}.battle-heading{padding:16px}.battle-pokemon img{flex-basis:54px;width:54px;height:54px}}
+
+
+/* Mapa roguelike: a área do jogo ocupa a janela sem rolagem vertical. */
+body.tela-mapa {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+}
+body.tela-mapa {
+    display: block;
+    padding: 0;
+    background: #77c6ef;
+    background-image: linear-gradient(180deg, #79c9f1 0 35%, #9ed8f1 35% 43%, #4e9ed4 43% 52%, #82b86a 52% 100%);
+    background-attachment: fixed;
+}
+.tela-mapa .app-shell,
+.tela-mapa #app {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+.tela-mapa .app-shell { display: block; }
+.tela-mapa .game-shell {
+    width: min(100%, 1420px);
+    height: 100dvh;
+    min-height: 0;
+    margin: 0 auto;
+    padding: 10px 16px 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.tela-mapa .game-header {
+    flex: 0 0 auto;
+    min-height: 58px;
+    padding: 8px 16px;
+}
+.tela-mapa .game-layout {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(145px, 190px) minmax(360px, 590px) minmax(145px, 190px);
+    justify-content: center;
+    align-items: stretch;
+    gap: 14px;
+    margin-top: 12px;
+}
+.tela-mapa .painel-lateral {
+    min-height: 0;
+    align-self: start;
+    max-height: 100%;
+    overflow: hidden;
+    padding: 12px;
+}
+.tela-mapa .painel-lateral h2 { margin-bottom: 10px; }
+.tela-mapa .mapa-area {
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.tela-mapa .mapa-titulo { flex: 0 0 auto; width: 100%; }
+.tela-mapa .mapa-tabuleiro {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: auto;
+    max-width: 100%;
+    aspect-ratio: .67;
+    border-width: 5px;
+    isolation: isolate;
+}
+.tela-mapa .mapa-conexoes { z-index: 1; }
+.tela-mapa .mapa-conexoes line {
+    stroke: #244d3d;
+    stroke-width: .55;
+    stroke-dasharray: 1.35 1.45;
+    opacity: .86;
+}
+.tela-mapa .mapa-no,
+.tela-mapa .mapa-inicio {
+    position: absolute;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+}
+.tela-mapa .mapa-no {
+    width: 46px;
+    height: 46px;
+    min-height: 46px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border: 2px solid #354c3e;
+    border-radius: 50%;
+    background: #f2eddb;
+    color: #203b31;
+    box-shadow: 2px 3px 0 #254d39;
+    cursor: pointer;
+    transition: transform .12s, filter .12s, opacity .12s;
+}
+.tela-mapa .mapa-no:hover:not(:disabled) {
+    transform: translate(-50%, -50%) scale(1.12);
+    filter: brightness(1.08);
+}
+.tela-mapa .mapa-no:disabled { cursor: not-allowed; }
+.tela-mapa .mapa-no-icone { font-size: 22px; line-height: 1; }
+.tela-mapa .mapa-no small {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 50%;
+    max-width: 100px;
+    transform: translateX(-50%);
+    padding: 2px 4px;
+    border: 1px solid #536c56;
+    border-radius: 3px;
+    background: #f7f1dd;
+    color: #294536;
+    font-size: 9px;
+    line-height: 1.1;
+    white-space: nowrap;
+    text-transform: capitalize;
+    box-shadow: 1px 1px 0 #34533d;
+}
+.tela-mapa .mapa-no.status-bloqueado {
+    opacity: .42;
+    filter: grayscale(1);
+    box-shadow: none;
+}
+.tela-mapa .mapa-no.status-concluido {
+    background: #b9d6a9;
+    opacity: .75;
+    cursor: default;
+}
+.tela-mapa .mapa-no.tipo-treinador { background: #f0dfb5; }
+.tela-mapa .mapa-no.tipo-selvagem { background: #d7edc0; }
+.tela-mapa .mapa-no.tipo-pokebola { background: #f5d6d2; }
+.tela-mapa .mapa-no.tipo-centro { background: #f5d9df; border-color: #91485a; }
+.tela-mapa .mapa-no.tipo-pokemart { background: #f5e3b7; border-color: #8c6c2c; }
+.tela-mapa .mapa-no.tipo-desafio { background: #33415f; color: #fff; border-color: #d5d9e4; }
+.tela-mapa .mapa-no.tipo-desafio .mapa-no-icone { font-size: 24px; }
+.tela-mapa .mapa-inicio {
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border: 2px solid #4c633d;
+    border-radius: 50%;
+    background: #f2d17b;
+    color: #60451c;
+    box-shadow: 2px 3px 0 #254d39;
+}
+.tela-mapa .mapa-inicio span { font-size: 21px; }
+.tela-mapa .mapa-inicio small {
+    position: absolute;
+    top: calc(100% + 2px);
+    padding: 2px 4px;
+    border-radius: 3px;
+    background: #f7f1dd;
+    color: #294536;
+    font-size: 9px;
+    font-weight: 800;
+}
+.tela-mapa .mapa-legenda {
+    flex: 0 0 auto;
+    margin: 7px 0 0;
+    font-size: 11px;
+}
+.tela-mapa .painel-time .mini-pokemon { gap: 5px; margin: 8px 0; font-size: 11px; }
+.tela-mapa .painel-time .mini-pokemon img { width: 38px; height: 38px; }
+.tela-mapa .painel-time .barra-hp { width: 86px; }
+.tela-mapa .painel-itens p { margin: 7px 0 12px; }
+.tela-mapa .game-status button { white-space: nowrap; }
+
+@media (max-width: 900px) {
+    .tela-mapa .game-shell { padding: 8px; }
+    .tela-mapa .game-layout {
+        grid-template-columns: 120px minmax(0, 1fr) 120px;
+        gap: 8px;
+    }
+    .tela-mapa .painel-lateral { padding: 8px; }
+    .tela-mapa .mapa-no { width: 39px; height: 39px; min-height: 39px; }
+    .tela-mapa .mapa-no-icone { font-size: 19px; }
+}
+@media (max-height: 720px) {
+    .tela-mapa .game-shell { padding-top: 6px; padding-bottom: 6px; }
+    .tela-mapa .game-header { min-height: 48px; padding-top: 5px; padding-bottom: 5px; }
+    .tela-mapa .game-layout { margin-top: 7px; }
+    .tela-mapa .mapa-legenda { display: none; }
+    .tela-mapa .painel-lateral { padding: 8px; }
+    .tela-mapa .mapa-no { width: 38px; height: 38px; min-height: 38px; }
+}
+
+@media (max-width: 520px) {
+    .tela-mapa .game-header { align-items: center; flex-direction: row; }
+    .tela-mapa .game-status { gap: 6px; font-size: 11px; }
+    .tela-mapa .game-status button { padding: 6px 7px; font-size: 10px; }
+}
+
+.battle-move-button {
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+.battle-move-button:hover:not(:disabled) { border-color: #4b8cc1; background: #f7f1dd; }
+.battle-move-button:disabled,
+.battle-action-option:disabled { opacity: .58; cursor: not-allowed; box-shadow: none; }
+.battle-log {
+    height: 150px;
+    margin: 18px 0 14px;
+    padding: 12px 14px;
+    overflow: hidden;
+    border: 2px solid #263b4c;
+    background: #f3efe3;
+    box-shadow: 4px 4px 0 #263b4c;
+}
+.battle-log h2 {
+    margin: 0 0 8px;
+    color: #6e6b5f;
+    font-size: 11px;
+    letter-spacing: .08em;
+}
+.battle-log ol {
+    height: calc(100% - 24px);
+    margin: 0;
+    padding: 0 5px 0 20px;
+    overflow-y: auto;
+    color: #263b4c;
+    font-size: 13px;
+    line-height: 1.55;
+}
+.battle-log li { padding-left: 2px; }
+.battle-log li.log-critico,
+.battle-log li.log-efetividade { font-weight: 800; }
+.battle-result {
+    margin: 24px auto 16px;
+    padding: 22px;
+    border: 2px solid #263b4c;
+    background: #f3efe3;
+    box-shadow: 4px 4px 0 #263b4c;
+    text-align: center;
+}
+.battle-result h1 { margin: 0 0 12px; color: #1c3554; }
+.battle-result.vitoria .eyebrow { color: #287348; }
+.battle-result.derrota .eyebrow { color: #a52e32; }
+.battle-victory-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(22, 39, 55, .58);
+}
+.battle-victory-dialog {
+    width: min(100%, 560px);
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 24px;
+    border: 2px solid #263b4c;
+    background: #f3efe3;
+    box-shadow: 5px 5px 0 #263b4c;
+    text-align: center;
+}
+.battle-victory-dialog .eyebrow { color: #287348; }
+.battle-victory-dialog h1 { margin: 0 0 12px; color: #1c3554; }
+.battle-victory-dialog > p:not(.eyebrow) { color: #657386; }
+.battle-continue { min-width: 180px; margin-top: 20px; }
+.battle-victory-dialog .battle-money-reward { color: #287348; font-weight: 800; }
+.battle-finished-note { margin: 14px 0 0; color: #657386; font-weight: 700; }
+.battle-level-summary {
+    display: grid;
+    gap: 7px;
+    max-width: 560px;
+    margin: 18px auto 0;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+}
+.battle-level-summary li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 10px;
+    border: 1px solid #d6ddd8;
+    background: #fffdf6;
+}
+.battle-level-summary span { color: #657386; }
+@media (max-width: 520px) {
+    .battle-level-summary li { flex-wrap: wrap; }
+    .battle-log { height: 135px; }
+}
+
+
+/* Histórico de batalhas: botão discreto no painel e janela sobre o mapa. */
+.tela-mapa .botao-ver-batalhas {
+    display: block;
+    width: 100%;
+    padding: 10px 8px;
+    margin-top: 12px;
+    border: 2px solid #244c3c;
+    border-radius: 6px;
+    background: #2c7054;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+.tela-mapa .botao-ver-batalhas:hover,
+.tela-mapa .botao-ver-batalhas:focus-visible { background: #215740; }
+.pokemart-dialogo {
+    width: min(620px, calc(100% - 24px));
+    max-height: 88vh;
+    padding: 18px;
+    border: 3px solid #263b4c;
+    border-radius: 12px;
+    background: #f5f2e8;
+    color: #253d4f;
+}
+.pokemart-dialogo::backdrop { background: rgba(9, 30, 46, .75); }
+.pokemart-dialogo header,
+.pokemart-catalogo li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+}
+.pokemart-dialogo h2, .pokemart-catalogo p { margin: 0; }
+.pokemart-catalogo { display: grid; gap: 8px; padding: 0; list-style: none; }
+.pokemart-catalogo li {
+    padding: 10px;
+    border: 1px solid #b7c5bd;
+    border-radius: 7px;
+    background: #fffdf7;
+}
+.pokemart-catalogo li div { flex: 1 1 220px; }
+.pokemart-dialogo button {
+    padding: 8px 12px;
+    border: 1px solid #255c45;
+    border-radius: 6px;
+    background: #2c7054;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+.pokemart-dialogo button:disabled { opacity: .55; cursor: default; }
+
+.historico-sobreposicao {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    background: rgba(9, 30, 46, .75);
+}
+.historico-janela {
+    width: min(760px, 100%);
+    max-height: min(90vh, 90dvh);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    border: 3px solid #263b4c;
+    border-radius: 12px;
+    background: #f5f2e8;
+    box-shadow: 7px 7px 0 rgba(10, 22, 28, .6);
+    overflow: hidden;
+}
+.historico-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 22px;
+    background: #2c7054;
+    color: #fff;
+}
+.historico-cabecalho h2 { margin: 2px 0 0; font-size: 23px; }
+.historico-subtitulo { margin: 0; font-size: 10px; letter-spacing: .1em; }
+.historico-fechar {
+    flex: 0 0 auto;
+    padding: 9px 12px;
+    border: 0;
+    border-radius: 6px;
+    background: #e5ebef;
+    color: #253d4f;
+    font-weight: 700;
+    cursor: pointer;
+}
+.historico-contagem { margin: 0; padding: 10px 22px; color: #526b67; font-size: 12px; font-weight: 700; }
+.historico-lista { min-height: 80px; overflow-y: auto; padding: 0 22px 22px; overscroll-behavior: contain; }
+.historico-batalha { margin: 0 0 10px; border: 1px solid #b7c5bd; border-radius: 7px; background: #fffdf7; overflow: hidden; }
+.historico-batalha summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 13px;
+    cursor: pointer;
+}
+.historico-batalha summary:hover { background: #eef5ec; }
+.historico-resumo-texto { display: flex; flex: 1 1 180px; flex-direction: column; gap: 4px; }
+.historico-resumo-texto strong { color: #254a3d; font-size: 14px; }
+.historico-resumo-texto small { color: #6e7c79; font-size: 11px; }
+.historico-resultado, .historico-recompensa { padding: 4px 7px; border-radius: 5px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.historico-vitoria { background: #d5edda; color: #205c34; }
+.historico-derrota { background: #f6dddd; color: #9d3333; }
+.historico-recompensa { color: #926a0b; background: #f8edcc; }
+.historico-detalhes { padding: 10px 18px 16px; border-top: 1px solid #d9e0db; }
+.historico-detalhes h3 { margin: 0 0 10px; color: #315747; font-size: 13px; }
+.historico-eventos { margin: 0; padding: 0 0 0 20px; }
+.historico-evento { padding: 5px 0; font-size: 12px; line-height: 1.5; color: #35463e; }
+.historico-evento-fim { font-weight: 700; color: #2a5543; }
+.historico-evento-premio { font-weight: 700; color: #987209; }
+.historico-vazio { margin: 14px 0; color: #607268; text-align: center; }
+@media (max-width: 540px) {
+    .historico-sobreposicao { padding: 8px; }
+    .historico-cabecalho { padding: 14px; }
+    .historico-lista { padding: 0 12px 14px; }
+    .historico-cabecalho h2 { font-size: 19px; }
+}
+
+#form-item-mapa,
+#form-item-mapa label,
+[data-item-batalha] label {
+    display: grid;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+#form-item-mapa {
+    margin-bottom: 1rem;
+}
+
+#form-item-mapa select,
+[data-item-batalha] select {
+    width: 100%;
+    padding: 0.35rem;
+}
+
+/* Pokébola: oferta única de um Pokémon, sem modificar a tela de batalha. */
+.pokebola-dialogo {
+    width: min(440px, calc(100vw - 28px));
+    max-height: min(90vh, 90dvh);
+    padding: 18px 18px 16px;
+    border: 3px solid #253b49;
+    border-radius: 10px;
+    background: #f5f0e4;
+    color: #273b4a;
+    text-align: center;
+    box-shadow: 6px 7px 0 rgba(10, 30, 39, .35);
+    overflow-y: auto;
+}
+.pokebola-dialogo::backdrop { background: rgba(7, 24, 40, .72); }
+.pokebola-cabecalho p { margin: 0 0 6px; color: #b9800e; font-size: 11px; font-weight: 900; letter-spacing: .08em; }
+.pokebola-cabecalho h2 { margin: 0 0 12px; font-size: 19px; }
+.pokebola-cartao {
+    position: relative;
+    width: min(100%, 290px);
+    margin: 0 auto;
+    padding: 10px 18px 15px;
+    border: 3px solid #37464d;
+    background: #e9e4d8;
+    box-shadow: 4px 4px 0 #3c4c55;
+}
+.pokebola-desenho { position: absolute; top: 10px; left: 12px; font-size: 18px; }
+.pokebola-sprite { display: block; width: 108px; height: 108px; margin: 2px auto; object-fit: contain; image-rendering: pixelated; }
+.pokebola-cartao h3 { margin: 4px 0 2px; text-transform: capitalize; font-size: 20px; }
+.pokebola-nivel { margin: 0 0 5px; font-weight: 800; font-size: 12px; }
+.pokebola-tipos { display: inline-block; max-width: 100%; margin: 0 0 10px; padding: 3px 9px; background: #2c7054; color: white; border-radius: 4px; font-size: 11px; font-weight: 800; text-transform: capitalize; }
+.pokebola-atributos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; margin: 0; }
+.pokebola-atributos div { display: flex; align-items: center; justify-content: space-between; gap: 5px; padding: 6px; background: #f8f5ee; border: 1px solid #d3d4c9; font-size: 11px; }
+.pokebola-atributos dt { color: #606c72; }
+.pokebola-atributos dd { margin: 0; font-weight: 900; }
+.pokebola-aviso { margin: 16px 0 10px; font-size: 13px; font-weight: 600; line-height: 1.45; }
+.pokebola-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.pokebola-acoes button { flex: 1; min-width: 140px; padding: 10px 13px; border: 2px solid #254f40; border-radius: 6px; background: #2c7054; color: white; cursor: pointer; font-weight: 800; }
+.pokebola-acoes button:last-child { background: #e8e6df; color: #324654; border-color: #aab7b6; }
+.pokebola-acoes button:disabled { opacity: .45; cursor: not-allowed; }
+.pokebola-fechar { display: block; margin: 12px auto 0; padding: 5px; border: 0; background: transparent; color: #536b7c; text-decoration: underline; cursor: pointer; font-size: 12px; }
+.pokebola-feedback { margin-top: 8px; }
+.pokebola-troca-time { margin: 12px 0; padding: 10px; border: 1px solid #b8b8ad; border-radius: 6px; text-align: left; }
+.pokebola-troca-time legend { padding: 0 5px; font-size: 12px; font-weight: 800; }
+.pokebola-troca-opcoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+.pokebola-troca-opcao { display: flex; align-items: center; gap: 5px; padding: 5px; border: 2px solid #bcc5ba; border-radius: 5px; background: #fffdf7; cursor: pointer; min-width: 0; }
+.pokebola-troca-opcao:has(input:checked) { border-color: #2c7054; background: #e0f2e4; }
+.pokebola-troca-opcao:focus-within { outline: 2px solid #277ab4; outline-offset: 1px; }
+.pokebola-troca-opcao input { flex: 0 0 auto; margin: 0 1px; }
+.pokebola-troca-opcao img { width: 40px; height: 40px; object-fit: contain; image-rendering: pixelated; flex: 0 0 auto; }
+.pokebola-troca-opcao span { min-width: 0; }
+.pokebola-troca-opcao strong { display: block; font-size: 11px; overflow-wrap: anywhere; }
+.pokebola-troca-opcao small { color: #566963; font-size: 10px; }
+@media (max-width: 410px) { .pokebola-troca-opcoes { grid-template-columns: 1fr; } }
+
+
+/* A ordem é salva em pokemon_time.posicao e também usada pelas batalhas. */
+.painel-time .mini-pokemon { gap: 4px; margin: 8px 0; }
+.painel-time .mini-pokemon-posicao { min-width: 12px; color: #667a76; font-size: 10px; font-weight: 900; }
+.painel-time .mini-pokemon img { width: 36px; height: 40px; flex-shrink: 0; }
+.painel-time .mini-pokemon-info { min-width: 0; flex: 1; }
+.painel-time .mini-pokemon-info strong { overflow-wrap: anywhere; }
+.painel-time .mini-pokemon-info .barra-hp { width: 100%; }
+.painel-time .mini-pokemon-ordenar { display: grid; gap: 3px; }
+.painel-time .mini-pokemon-ordenar button { width: 23px; height: 23px; padding: 0; border: 1px solid #a5b8ac; border-radius: 3px; background: #dfebd9; color: #315642; font-size: 10px; cursor: pointer; }
+.painel-time .mini-pokemon-ordenar button:disabled { opacity: .24; cursor: default; }
+.painel-time .mini-pokemon-ordenar button:not(:disabled):hover { background: #b8dbb8; }
+.painel-time .equipe-ajuda { margin: 12px 0 0; font-size: 10px; line-height: 1.4; }
+
+/* PC Pokémon e Team Builder (tela independente, com rolagem apenas aqui). */
+.tela-mapa .botao-acessar-pc {
+    display: block; width: 100%; margin-top: 12px; padding: 10px 7px;
+    background: #215e78; color: #fff; border: 2px solid #17455a;
+    border-radius: 6px; font-size: 12px; font-weight: 800; cursor: pointer;
+}
+.tela-mapa .botao-acessar-pc:hover, .tela-mapa .botao-acessar-pc:focus-visible { background: #12485f; }
+body.tela-pc {
+    min-height: 100vh; padding: 20px;
+    background-color: #683e63;
+    background-image: linear-gradient(rgba(41, 20, 65, .13), rgba(33, 25, 47, .22)), url('../images/fundo-mapa-pixel.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.tela-pc .app-shell { display: block; }
+.pc-pagina {
+    max-width: 1230px; margin: 0 auto; padding: 24px;
+    border: 3px solid #405f60; border-radius: 12px;
+    background: #f5f6ee; box-shadow: 5px 6px 0 #476c74;
+}
+.pc-topo { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+.pc-topo h1 { margin: 5px 0; color: #23485a; }
+.pc-topo p { margin: 4px 0; }
+.pc-instrucao { padding: 12px; border-radius: 7px; background: #e4efe5; color: #244d39; font-weight: 650; }
+.pc-troca-selecao { display: flex; flex-direction: column; gap: 6px; padding: 12px; border: 1px solid #91af9a; border-radius: 8px; background: #f1faf2; font-weight: 700; }
+.pc-troca-selecao select { width: min(100%, 420px); padding: 9px; border-radius: 5px; border: 1px solid #8da598; }
+.pc-colunas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 18px; }
+.pc-secao { min-width: 0; padding: 16px; background: #fff; border: 2px solid #a7c2b1; border-radius: 9px; }
+.pc-secao h2 { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 19px; color: #275248; }
+.pc-secao h2 small { background: #dcece3; border-radius: 99px; padding: 4px 9px; font-size: 12px; }
+.pc-grid { display: grid; gap: 10px; margin-top: 10px; }
+.pc-pokemon-card { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px; border: 1px solid #bdd1c3; border-radius: 7px; background: #f9faf5; }
+.pc-pokemon-card > img { width: 72px; height: 72px; object-fit: contain; image-rendering: pixelated; }
+.pc-pokemon-dados { min-width: 0; display: grid; gap: 3px; }
+.pc-pokemon-dados strong { text-transform: capitalize; overflow-wrap: anywhere; font-size: 14px; }
+.pc-pokemon-dados small { color: #486357; font-size: 11px; }
+.pc-pokemon-dados .barra-hp { width: 100%; max-width: 230px; }
+.pc-acoes { display: flex; flex-direction: column; gap: 7px; align-items: stretch; }
+.pc-acoes button { padding: 8px 9px; border: 1px solid #286651; border-radius: 5px; background: #2b745b; color: #fff; font-size: 12px; font-weight: 800; cursor: pointer; }
+.pc-acoes button:hover:not(:disabled) { background: #205640; }
+.pc-acoes button:disabled { opacity: .4; cursor: not-allowed; }
+.pc-ordem { display: flex; gap: 5px; justify-content: center; }
+.pc-ordem button { padding: 5px 8px; background: #e2f0e9; color: #2b6951; }
+@media (max-width: 920px) { .pc-colunas { grid-template-columns: 1fr; } }
+@media (max-width: 540px) { body.tela-pc { padding: 7px; } .pc-pagina { padding: 12px; } .pc-pokemon-card { grid-template-columns: 50px minmax(0, 1fr); } .pc-pokemon-card > img { width: 50px; height: 50px; } .pc-acoes { grid-column: 1 / -1; flex-direction: row; } }
+
+/* Finais da jornada: derrota definitiva e salão da fama. */
+body.tela-final {
+    min-height: 100vh;
+    padding: clamp(12px, 3vw, 30px);
+    background-color: #683e63;
+    background-image: linear-gradient(rgba(41, 20, 65, .13), rgba(33, 25, 47, .22)), url('../images/fundo-mapa-pixel.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.tela-final .app-shell { display: block; }
+.final-pagina { width: min(100%, 1020px); margin: 0 auto; }
+.final-marca {
+    padding: 18px 24px; border: 3px solid #223f57;
+    background: #f2ecdf; box-shadow: 4px 4px 0 #263d4d;
+    font-weight: 900; letter-spacing: .14em; color: #1f3855;
+}
+.final-marca span { display: block; font-size: 10px; color: #7a90a4; margin-top: 3px; }
+.final-painel {
+    margin-top: 20px; padding: clamp(18px, 4vw, 40px); border: 3px solid #253e50;
+    background: #f6f1e7; box-shadow: 5px 6px 0 #344b56;
+    text-align: center;
+}
+.final-painel h1 { color: #193a58; font-size: clamp(27px, 4.5vw, 47px); margin: 7px 0 12px; }
+.final-painel h2 { margin: 25px 0 13px; font-size: 17px; text-transform: uppercase; letter-spacing: .08em; }
+.final-painel > p { max-width: 650px; margin: 0 auto 12px; line-height: 1.6; }
+.final-painel .final-tag { color: #b33342; letter-spacing: .21em; font-size: 12px; font-weight: 900; }
+.final-campeao .final-tag { color: #93640c; }
+.final-trofeu { font-size: 66px; line-height: 1.3; }
+.final-equipe {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 13px;
+}
+.final-pokemon {
+    position: relative; min-width: 0; width: min(100%, 304px); flex: 0 1 304px; padding: 14px 12px; display: flex; flex-direction: column;
+    align-items: center; gap: 4px; border: 2px solid #536b6c; background: #fffdf6;
+    box-shadow: 3px 3px 0 rgba(19, 46, 57, .22);
+}
+.final-pokemon img { display: block; width: 93px; height: 93px; object-fit: contain; image-rendering: pixelated; }
+.final-pokemon strong { color: #193e4e; overflow-wrap: anywhere; }
+.final-pokemon span, .final-pokemon small { color: #526778; font-size: 12px; }
+.final-pokemon .final-slot { position: absolute; top: 7px; left: 9px; font-size: 10px; font-weight: 800; }
+.final-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 30px; }
+.final-acoes .botao { min-width: 195px; }
+.tela-final-vitoria .final-painel { border-color: #aa8332; box-shadow: 5px 6px 0 #b2914e; }
+
+/* ================================================================
+   ROGUEMON: refinamentos de interface — 25/11/2026
+   ================================================================ */
+
+/* Plano de fundo enviado pelo usuário: manter arquivo original, sem alterações. */
+body.tela-mapa {
+    background-color: #683e63;
+    background-image: linear-gradient(rgba(41, 20, 65, .13), rgba(33, 25, 47, .22)), url('../images/fundo-mapa-pixel.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* Estado visual: todo nó inacessível fica cinza, inclusive IGNORADO e CONCLUÍDO. */
+.tela-mapa .mapa-no.status-bloqueado,
+.tela-mapa .mapa-no.status-ignorado,
+.tela-mapa .mapa-no.status-concluido,
+.tela-mapa .mapa-no.status-bloqueado.tipo-treinador,
+.tela-mapa .mapa-no.status-ignorado.tipo-treinador,
+.tela-mapa .mapa-no.status-concluido.tipo-treinador,
+.tela-mapa .mapa-no.status-bloqueado.tipo-selvagem,
+.tela-mapa .mapa-no.status-ignorado.tipo-selvagem,
+.tela-mapa .mapa-no.status-concluido.tipo-selvagem,
+.tela-mapa .mapa-no.status-bloqueado.tipo-pokebola,
+.tela-mapa .mapa-no.status-ignorado.tipo-pokebola,
+.tela-mapa .mapa-no.status-concluido.tipo-pokebola,
+.tela-mapa .mapa-no.status-bloqueado.tipo-desafio,
+.tela-mapa .mapa-no.status-ignorado.tipo-desafio,
+.tela-mapa .mapa-no.status-concluido.tipo-desafio {
+    background: #a8b1ae;
+    border-color: #7b8482;
+    color: #4c5454;
+    filter: grayscale(1);
+    opacity: .49;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+.tela-mapa .mapa-no:is(.status-bloqueado, .status-ignorado, .status-concluido) small {
+    border-color: #909999;
+    background: #d0d6d3;
+    color: #5b6060;
+    box-shadow: none;
+}
+.tela-mapa .mapa-no.status-disponivel { opacity: 1; filter: none; }
+.tela-mapa .mapa-titulo {
+    background: #284f56;
+    border-color: #17333b;
+    color: #fff9ed;
+    padding: 8px 13px;
+}
+.tela-mapa .mapa-titulo strong { font-size: 15px; letter-spacing: .07em; }
+
+/* Troca de duas posições com dois cliques — mapa e Team Builder. */
+.tela-mapa .painel-time .mini-pokemon-clicavel {
+    width: 100%;
+    min-height: 49px;
+    border: 2px solid transparent;
+    border-radius: 7px;
+    padding: 3px 4px;
+    text-align: left;
+    color: #263b4c;
+    background: #fffdf6;
+    cursor: pointer;
+    transition: background .16s, border-color .16s, transform .16s;
+}
+.tela-mapa .painel-time .mini-pokemon-clicavel:hover,
+.tela-mapa .painel-time .mini-pokemon-clicavel:focus-visible {
+    border-color: #69a5bb;
+    background: #ebfaff;
+}
+.tela-mapa .painel-time .mini-pokemon-selecionado {
+    border-color: #d28d28;
+    background: #fff1bf;
+    box-shadow: 0 0 0 2px #fff3c4;
+}
+.tela-mapa .painel-time .mini-pokemon-posicao {
+    flex: 0 0 16px;
+    font-weight: 800;
+    color: #67808d;
+}
+.tela-mapa .painel-time .mini-pokemon-info { flex: 1; min-width: 0; }
+/* A barra é um span porque o cartão inteiro é um botão; precisa ser bloco.
+   Sem display:block a largura é ignorada, restando uma linha vertical. */
+.tela-mapa .painel-time .mini-pokemon-info .barra-hp {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    height: 8px;
+    margin-top: 5px;
+    overflow: hidden;
+    border-radius: 3px;
+}
+.tela-mapa .painel-time .mini-pokemon-info .barra-hp > i {
+    display: block;
+    height: 100%;
+    background: #42b568;
+}
+.tela-mapa .painel-time .mini-pokemon-info strong { font-size: 11px; overflow-wrap: anywhere; }
+.tela-mapa .painel-time .mini-pokemon-info small { display: block; font-size: 10px; line-height: 1.3; }
+.tela-mapa .equipe-ajuda { line-height: 1.35; color: #445d68; }
+.tela-mapa .mapa-avisos { margin-top: 12px; width: 100%; }
+.tela-mapa .mapa-avisos .mensagem { margin: 0; font-size: 12px; overflow-wrap: anywhere; }
+.tela-mapa .painel-time { overflow-y: auto; scrollbar-width: thin; }
+.tela-mapa .painel-itens { overflow-y: auto; scrollbar-width: thin; }
+.pc-ordem-escolher {
+    padding: 9px 11px;
+    border: 2px solid #8db4c7;
+    border-radius: 7px;
+    color: #23495f;
+    background: #edf8ff;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 800;
+}
+.pc-ordem-escolher.selecionado { border-color: #bc8724; background: #fff1c7; }
+.pc-ordem-escolher:hover { background: #d9f0ff; }
+
+/* Arena: registro à esquerda, jogador em destaque no centro e adversário à direita. */
+body.tela-batalha {
+    display: block;
+    padding: 0;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    /* A mesma arte pixelada do mapa acompanha os confrontos. */
+    background-color: #683e63;
+    background-image: linear-gradient(rgba(32, 24, 51, .14), rgba(29, 22, 43, .24)), url('../images/fundo-mapa-pixel.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+.tela-batalha .app-shell,
+.tela-batalha #app { display: block; width: 100%; height: 100%; min-height: 0; }
+.tela-batalha .battle-shell {
+    width: min(100%, 1520px);
+    height: 100dvh;
+    min-height: 0;
+    margin: auto;
+    padding: 10px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: hidden;
+}
+.tela-batalha .game-header { flex: 0 0 auto; min-height: 47px; padding: 7px 16px; }
+.tela-batalha .battle-heading { flex: 0 0 auto; margin: 0; padding: 9px 15px; }
+.tela-batalha .battle-heading h1 { margin: 0; font-size: clamp(19px, 2.3vw, 27px); }
+.tela-batalha .battle-heading .eyebrow { margin-bottom: 3px; }
+.battle-stage {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    /* Sidebar de eventos, Pokémon do jogador em destaque, adversário. */
+    grid-template-columns: minmax(0, .82fr) minmax(0, 1.3fr) minmax(0, .98fr);
+    gap: 12px;
+    align-items: stretch;
+}
+.battle-stage .battle-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 14px;
+    overflow: hidden;
+    background: rgba(250, 247, 236, .92);
+}
+.battle-stage .battle-panel h2 { flex: 0 0 auto; margin: 0 0 10px; }
+.battle-stage .battle-active {
+    min-width: 0;
+    padding: 12px;
+    border-radius: 8px;
+}
+.battle-stage .battle-active-heading img { flex-basis: 100px; width: 100px; height: 100px; }
+.battle-stage .battle-active-heading strong { font-size: 17px; }
+.battle-stage .battle-hp { margin: 11px 0; }
+.battle-stage .battle-hp-bar { height: 12px; border-radius: 5px; }
+.battle-hp-bar > i { transition: width .65s cubic-bezier(.2,.8,.2,1), background-color .3s; }
+.battle-stage .battle-reserve {
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 6px;
+    background: #e3e8e0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+.battle-stage .battle-reserve summary {
+    color: #536a67;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 800;
+}
+.battle-stage .battle-reserve:not([open]) { flex: 0 0 auto; }
+.battle-stage .battle-reserve[open] { min-height: 70px; }
+.battle-stage .battle-reserve-pokemon { margin-top: 6px; }
+.battle-stage .battle-log {
+    margin: 0;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+    background: rgba(249, 245, 232, .92);
+}
+.battle-stage .battle-log h2 { font-size: 13px; margin: 0 0 13px; color: #243d4b; }
+.battle-stage .battle-log ol {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+    margin: 0;
+    padding: 0 4px 8px 22px;
+    font-size: 14px;
+    line-height: 1.7;
+    scrollbar-width: thin;
+}
+.battle-log li { margin-bottom: 9px; overflow-wrap: anywhere; }
+.battle-log-novo { animation: novoEvento .32s ease-out; }
+@keyframes novoEvento { from { opacity: .1; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.battle-stage .battle-actions { margin-top: 10px; }
+.battle-stage .battle-action-menu { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.battle-stage .battle-action-option { min-height: 40px; font-size: 13px; }
+.battle-stage .battle-moves { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin-top: 10px; }
+.battle-stage .battle-moves h3 { grid-column: 1/-1; margin-bottom: 0; }
+.battle-stage .battle-move-button {
+    min-height: 66px;
+    margin: 0;
+    padding: 11px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 7px;
+    background: #eef5f6;
+    border: 2px solid #7892a1;
+    border-radius: 8px;
+    box-shadow: 1px 2px 0 #6e8794;
+    cursor: pointer;
+}
+.battle-stage .battle-move-button strong { font-size: 14px; }
+.battle-stage .battle-move-button span { font-size: 11px; text-align: left; }
+.battle-stage .battle-move-button:hover:not(:disabled) { transform: translateY(-2px); background: #fff4ca; }
+.battle-stage .battle-move-button.tipo-fogo { border-color: #d77d4c; background: #fff0e6; }
+.battle-stage .battle-move-button.tipo-agua { border-color: #6c94c9; background: #e8f5ff; }
+.battle-stage .battle-move-button.tipo-grama { border-color: #62a078; background: #e7f9eb; }
+.battle-stage .battle-move-button.tipo-eletrico { border-color: #c9af40; background: #fff9dc; }
+.battle-stage .battle-move-button.tipo-psiquico { border-color: #b488c5; background: #f9edff; }
+.battle-stage .battle-move-button.tipo-lutador { border-color: #bf8780; background: #fff0eb; }
+.battle-stage .battle-rival-note { font-size: 12px; color: #60727d; }
+.battle-stage .battle-ataque-em-curso { font-size: 13px; font-weight: 800; color: #a35e28; }
+.battle-stage .battle-panel .battle-moves[data-item-batalha] { display: flex; flex-direction: column; }
+.battle-stage .battle-panel .battle-moves[data-item-batalha] .battle-move-button { width: 100%; }
+.battle-stage .battle-panel .battle-moves select { max-width: 100%; }
+.battle-active-heading img.animacao-ataque { animation: ataqueSprite .55s ease-in-out; }
+@keyframes ataqueSprite {
+    0%, 100% { transform: translateX(0) scale(1); }
+    35% { transform: translateX(17px) translateY(-7px) scale(1.1); }
+    60% { transform: translateX(-7px) translateY(3px) scale(.95); }
+}
+.lado-adversario .battle-active-heading img.animacao-ataque { animation-name: ataqueAdversario; }
+@keyframes ataqueAdversario {
+    0%, 100% { transform: translateX(0) scale(1); }
+    35% { transform: translateX(-17px) translateY(-7px) scale(1.1); }
+    60% { transform: translateX(7px) translateY(3px) scale(.95); }
+}
+
+/* Evolução pós-batalha e por Moon Stone, com a mesma transição de sprites. */
+.dialogo-evolucao {
+    width: min(94vw, 520px);
+    max-height: 90dvh;
+    padding: 0;
+    border: 4px solid #233d59;
+    border-radius: 16px;
+    background: radial-gradient(circle at 50% 45%, #fff7e5, #c0d8e8);
+    box-shadow: 0 14px 45px rgba(11, 24, 46, .4);
+    color: #213b50;
+    text-align: center;
+}
+.dialogo-evolucao::backdrop { background: rgba(12, 24, 45, .84); }
+.evolucao-cena { padding: 26px; }
+.evolucao-cena h2 { font-size: clamp(20px, 4vw, 26px); }
+.evolucao-imagens { position: relative; width: min(58vw, 230px); height: min(58vw, 230px); margin: 8px auto 20px; }
+.evolucao-imagens::before { position: absolute; content: ''; inset: -10%; border-radius: 50%; background: repeating-conic-gradient(#ffedb766 0deg 12deg, #b9e2ff66 12deg 24deg); animation: giroEvolucao 3s linear infinite; }
+.evolucao-imagens img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 8px 6px #27465c44); }
+.evolucao-antes { animation: desapareceEvolucao 2.6s ease-in forwards; }
+.evolucao-depois { opacity: 0; animation: apareceEvolucao 2.6s ease-in forwards; }
+.evolucao-resultado { font-size: 15px; line-height: 1.45; }
+.dialogo-evolucao .botao { max-width: 280px; margin: 12px auto 0; }
+@keyframes desapareceEvolucao { 0%, 22% {opacity:1;transform:scale(1)} 35%,60% {opacity:.3;transform:scale(.72)} 80%,100% {opacity:0;transform:scale(1.15)} }
+@keyframes apareceEvolucao { 0%,55%{opacity:0;transform:scale(.7)} 76%{opacity:.9;transform:scale(1.22)} 100%{opacity:1;transform:scale(1)} }
+@keyframes giroEvolucao { to { transform: rotate(360deg); } }
+
+@media (max-width: 1100px) {
+    .tela-batalha .battle-shell { padding: 8px; gap: 8px; }
+    .battle-stage { gap: 8px; grid-template-columns: minmax(0,.84fr) minmax(0,1.26fr) minmax(0,.98fr); }
+    .battle-stage .battle-panel { padding: 8px; }
+    .battle-stage .battle-active { padding: 9px; }
+    .battle-stage .battle-active-heading img { width: 76px; height: 76px; flex-basis: 76px; }
+    .battle-stage .battle-move-button strong { font-size: 12px; }
+}
+@media (max-width: 760px) {
+    body.tela-batalha { height: auto; min-height: 100dvh; overflow-y: auto; }
+    .tela-batalha .app-shell, .tela-batalha #app { height: auto; }
+    .tela-batalha .battle-shell { height: auto; min-height: 100dvh; overflow: visible; }
+    .battle-stage { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .battle-stage .battle-log { grid-column: 1/-1; grid-row: 2; min-height: 230px; max-height: 260px; }
+    .battle-stage .lado-jogador { grid-column: 1; grid-row: 1; }
+    .battle-stage .lado-adversario { grid-column: 2; grid-row: 1; }
+}
+@media (max-width: 510px) {
+    .battle-stage { grid-template-columns: 1fr; }
+    .battle-stage .lado-jogador { grid-column: 1; grid-row: 1; }
+    .battle-stage .battle-log { grid-column: 1; grid-row: 2; }
+    .battle-stage .lado-adversario { grid-column: 1; grid-row: 3; }
+    .tela-mapa .game-layout { grid-template-columns: 105px minmax(0,1fr) 105px; }
+    .tela-mapa .painel-lateral { padding: 5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .battle-active-heading img.animacao-ataque, .evolucao-imagens::before,
+    .evolucao-antes, .evolucao-depois, .battle-log-novo { animation-duration: .01ms; }
+    .battle-hp-bar > i { transition-duration: .01ms; }
+    .evolucao-antes { opacity: 0; }
+    .evolucao-depois { opacity: 1; }
+}
+
+
+/* =============================================================
+   ROGUEMON — telas no tamanho da janela, sem rolagem de página.
+   Os logs, a loja e listas extensas mantêm rolagem INTERNA.
+   ============================================================= */
+html {
+    height: 100%;
+    overflow: hidden;
+}
+body {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+}
+body.tela-auth,
+body.tela-dashboard,
+body.tela-jogo {
+    padding: clamp(8px, 2dvh, 24px) clamp(8px, 2vw, 24px);
+}
+body.tela-auth .app-shell,
+body.tela-dashboard .app-shell,
+body.tela-jogo .app-shell {
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    align-items: center;
+}
+/* Formulários podem crescer com mensagens de erro ou zoom; preservar
+   os campos e as ações sem liberar scroll na página inteira. */
+.tela-auth .auth-card,
+.tela-dashboard .dashboard-card,
+.tela-jogo .selecao-shell,
+.tela-jogo .starter-shell {
+    max-height: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+/* Painéis de jornadas e escolha inicial mais compactos quando a
+   altura disponível é pequena, mantendo os três Pokémon legíveis. */
+.tela-jogo .selecao-shell,
+.tela-jogo .starter-shell { padding: clamp(12px, 2.5dvh, 30px); }
+.tela-jogo .jogo-topo { margin-bottom: clamp(10px, 2dvh, 25px); }
+.tela-starter .starter-grid {
+    margin: clamp(8px, 2dvh, 25px) 0;
+    gap: clamp(8px, 1.5dvh, 22px);
+}
+.tela-starter .starter-card { padding: clamp(8px, 1.6dvh, 20px); gap: clamp(4px, 1dvh, 10px); }
+.tela-starter .starter-card img {
+    width: clamp(56px, 12dvh, 110px);
+    height: clamp(56px, 12dvh, 110px);
+}
+.tela-starter .starter-stats { gap: 4px; margin: 1px 0; }
+.tela-starter .starter-stats span { padding: clamp(3px, .6dvh, 7px) 5px; }
+
+/* PC: sem rolagem da página. Cada lista de Pokémon rola dentro
+   de seu painel, pois pode conter muito mais do que seis entradas. */
+body.tela-pc { height: 100dvh; min-height: 0; overflow: hidden; padding: clamp(6px, 1.4dvh, 20px); }
+.tela-pc .app-shell,
+.tela-pc #app { height: 100%; min-height: 0; }
+.tela-pc .pc-pagina {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    padding: clamp(8px, 1.5dvh, 24px);
+    overflow: hidden;
+}
+.tela-pc .pc-topo,
+.tela-pc .pc-instrucao,
+.tela-pc .pc-troca-selecao { flex: 0 0 auto; }
+.tela-pc .pc-instrucao { margin: clamp(6px, 1dvh, 12px) 0; padding: 8px 12px; }
+.tela-pc .pc-colunas {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    margin-top: clamp(6px, 1dvh, 18px);
+}
+.tela-pc .pc-secao {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    padding: clamp(7px, 1.2dvh, 16px);
+}
+.tela-pc .pc-secao h2 { flex: 0 0 auto; margin: 0 0 8px; }
+.tela-pc .pc-grid {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    padding: 2px 4px 4px 2px;
+}
+/* Mantém ambas as listas visíveis também em largura de tablet. */
+@media (max-width: 920px) {
+    .tela-pc .pc-colunas { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .tela-pc .pc-pokemon-card { grid-template-columns: 50px minmax(0,1fr); padding: 7px; gap: 7px; }
+    .tela-pc .pc-pokemon-card > img { width: 50px; height: 50px; }
+    .tela-pc .pc-acoes { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; }
+}
+
+/* Finais: reduzir margens e cartões conforme a altura do navegador.
+   1 a 6 Pokémon permanecem centralizados e as ações ficam visíveis. */
+body.tela-final {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    padding: clamp(5px, 1.5dvh, 22px) clamp(6px, 2vw, 24px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tela-final .app-shell,
+.tela-final #app {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+.tela-final .final-pagina {
+    --final-gap: clamp(5px, .85dvh, 13px);
+    width: min(100%, 1020px);
+    max-height: 100%;
+    min-height: 0;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(5px, 1dvh, 14px);
+}
+.tela-final .final-marca { flex: 0 0 auto; padding: clamp(6px, 1dvh, 13px) clamp(10px, 1.5vw, 24px); }
+.tela-final .final-painel {
+    flex: 0 1 auto;
+    min-height: 0;
+    margin-top: 0;
+    padding: clamp(8px, 1.4dvh, 26px) clamp(9px, 2.5vw, 30px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(3px, .55dvh, 9px);
+}
+.tela-final .final-trofeu { font-size: clamp(26px, 5dvh, 56px); line-height: 1; }
+.tela-final .final-painel h1 {
+    margin: 0;
+    font-size: clamp(20px, 4.4dvh, 44px);
+    line-height: 1.12;
+}
+.tela-final .final-painel h2 {
+    margin: clamp(5px, .9dvh, 14px) 0 0;
+    font-size: clamp(12px, 1.7dvh, 17px);
+}
+.tela-final .final-painel > p {
+    margin: 0;
+    line-height: 1.35;
+    font-size: clamp(12px, 1.65dvh, 16px);
+}
+.tela-final .final-equipe {
+    width: 100%;
+    gap: var(--final-gap);
+    justify-content: center;
+    align-items: stretch;
+}
+.tela-final .final-pokemon {
+    flex: 0 1 calc((100% - 2 * var(--final-gap)) / 3);
+    max-width: 304px;
+    padding: clamp(6px, 1dvh, 14px) clamp(5px, .8vw, 12px);
+    gap: clamp(2px, .4dvh, 4px);
+    box-shadow: 2px 2px 0 rgba(19, 46, 57, .22);
+}
+.tela-final .final-pokemon img {
+    width: clamp(45px, 9.5dvh, 93px);
+    height: clamp(45px, 9.5dvh, 93px);
+}
+.tela-final .final-pokemon strong { font-size: clamp(12px, 1.7dvh, 16px); }
+.tela-final .final-pokemon span,
+.tela-final .final-pokemon small { font-size: clamp(10px, 1.4dvh, 12px); line-height: 1.15; }
+.tela-final .final-pokemon .final-slot { top: 6px; left: 8px; }
+.tela-final .final-acoes {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: min(100%, 720px);
+    gap: clamp(5px, .75dvh, 12px);
+    margin-top: clamp(5px, 1.1dvh, 15px);
+}
+.tela-final .final-acoes .botao {
+    flex: 1 1 190px;
+    width: auto;
+    min-width: 0;
+    min-height: clamp(34px, 5dvh, 44px);
+    margin-top: 0;
+    padding: 7px 12px;
+}
+@media (max-width: 620px) {
+    .tela-final .final-pokemon { flex-basis: calc((100% - var(--final-gap)) / 2); }
+    .tela-final .final-painel { padding: clamp(7px, 1dvh, 14px); }
+}
+@media (max-height: 650px) {
+    .tela-final .final-pagina { gap: 4px; }
+    .tela-final .final-painel { padding-top: 6px; padding-bottom: 6px; gap: 2px; }
+    .tela-final .final-pokemon { padding-top: 4px; padding-bottom: 4px; gap: 1px; }
+    .tela-final .final-pokemon img { width: clamp(32px, 7dvh, 53px); height: clamp(32px, 7dvh, 53px); }
+    .tela-final .final-painel h2 { margin-top: 2px; }
+    .tela-final .final-acoes { margin-top: 3px; }
+    .tela-final .final-trofeu { font-size: 27px; }
+}
+
+/* Batalhas: a página permanece fixa até mesmo em largura estreita;
+   somente o registro e painéis internos podem rolar quando necessário. */
+@media (max-width: 760px) {
+    body.tela-batalha { height: 100dvh; min-height: 0; overflow: hidden; }
+    .tela-batalha .app-shell,
+    .tela-batalha #app { height: 100%; min-height: 0; }
+    .tela-batalha .battle-shell { height: 100dvh; min-height: 0; overflow: hidden; }
+    .tela-batalha .battle-stage { min-height: 0; overflow: hidden; }
+    .tela-batalha .battle-stage .battle-panel { min-height: 0; overflow-y: auto; scrollbar-width: thin; }
+    .tela-batalha .battle-stage .battle-log { min-height: 0; max-height: none; overflow: hidden; }
+    .tela-batalha .battle-stage .battle-log ol { overflow-y: auto; }
+}
+@media (max-width: 510px) {
+    .tela-batalha .battle-stage {
+        grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+        grid-template-rows: minmax(0,2fr) minmax(85px,1fr);
+    }
+    .tela-batalha .battle-stage .lado-jogador { grid-column: 1; grid-row: 1; }
+    .tela-batalha .battle-stage .lado-adversario { grid-column: 2; grid-row: 1; }
+    .tela-batalha .battle-stage .battle-log { grid-column: 1 / -1; grid-row: 2; }
+}
+/* Loja e histórico continuam roláveis dentro de suas próprias janelas. */
+.pokemart-dialogo { max-height: 88dvh; overflow-y: auto; }
+.historico-lista { overflow-y: auto; }

@@ -123,6 +123,61 @@ function coletarTransicoesEvolutivas(array $elo, array &$transicoes): void
 function obterRegrasPersonalizadasEvolucao(): array
 {
     return [
+        'vanillish>vanilluxe' => [
+            'origem' => 'vanillish',
+            'destino' => 'vanilluxe',
+            'nivel' => 45,
+        ],
+        'klang>klinklang' => [
+            'origem' => 'klang',
+            'destino' => 'klinklang',
+            'nivel' => 45,
+        ],
+        'fraxure>haxorus' => [
+            'origem' => 'fraxure',
+            'destino' => 'haxorus',
+            'nivel' => 45,
+        ],
+        'deino>zweilous' => [
+            'origem' => 'deino',
+            'destino' => 'zweilous',
+            'nivel' => 36,
+        ],
+        'zweilous>hydreigon' => [
+            'origem' => 'zweilous',
+            'destino' => 'hydreigon',
+            'nivel' => 45,
+        ],
+        'mienfoo>mienshao' => [
+            'origem' => 'mienfoo',
+            'destino' => 'mienshao',
+            'nivel' => 40,
+        ],
+        'rufflet>braviary' => [
+            'origem' => 'rufflet',
+            'destino' => 'braviary',
+            'nivel' => 44,
+        ],
+        'vullaby>mandibuzz' => [
+            'origem' => 'vullaby',
+            'destino' => 'mandibuzz',
+            'nivel' => 44,
+        ],
+        'larvesta>volcarona' => [
+            'origem' => 'larvesta',
+            'destino' => 'volcarona',
+            'nivel' => 45,
+        ],
+        'frillish-male>jellicent-male' => [
+            'origem' => 'frillish-male',
+            'destino' => 'jellicent-male',
+            'nivel' => 40,
+        ],
+        'frillish-female>jellicent-female' => [
+            'origem' => 'frillish-female',
+            'destino' => 'jellicent-female',
+            'nivel' => 40,
+        ],
         'pansage>simisage' => [
             'origem' => 'pansage',
             'destino' => 'simisage',
@@ -158,6 +213,11 @@ function obterRegrasPersonalizadasEvolucao(): array
             'destino' => 'runerigus',
             'nivel' => 35,
         ],
+        'darumaka>darmanitan-standard' => [
+            'origem' => 'darumaka',
+            'destino' => 'darmanitan-standard',
+            'nivel' => 35,
+        ],
         'darumaka-galar>darmanitan-galar-standard' => [
             'origem' => 'darumaka-galar',
             'destino' => 'darmanitan-galar-standard',
@@ -171,7 +231,7 @@ function obterRegrasPersonalizadasEvolucao(): array
         'gurdurr>conkeldurr' => [
             'origem' => 'gurdurr',
             'destino' => 'conkeldurr',
-            'nivel' => 22,
+            'nivel' => 30,
         ],
         'swadloon>leavanny' => [
             'origem' => 'swadloon',
@@ -206,12 +266,12 @@ function obterRegrasPersonalizadasEvolucao(): array
         'eelektrik>eelektross' => [
             'origem' => 'eelektrik',
             'destino' => 'eelektross',
-            'nivel' => 48,
+            'nivel' => 45,
         ],
         'lampent>chandelure' => [
             'origem' => 'lampent',
             'destino' => 'chandelure',
-            'nivel' => 50,
+            'nivel' => 45,
         ],
         'shelmet>accelgor' => [
             'origem' => 'shelmet',
@@ -221,7 +281,7 @@ function obterRegrasPersonalizadasEvolucao(): array
         'bisharp>kingambit' => [
             'origem' => 'bisharp',
             'destino' => 'kingambit',
-            'nivel' => 60,
+            'nivel' => 45,
         ],
         'zorua-hisui>zoroark-hisui' => [
             'origem' => 'zorua-hisui',
@@ -274,7 +334,9 @@ function determinarRegraEvolucao(
             'metodo_evolucao' => 'NIVEL',
             'nivel_requisito' => $regrasPersonalizadas[$chave]['nivel'],
             'id_item' => null,
-            'api_trigger' => $gatilhoOriginal,
+            // O método efetivo no jogo é por nível, mesmo que a
+            // PokéAPI exija outro tipo de condição.
+            'api_trigger' => 'level-up',
         ];
     }
 
@@ -331,9 +393,10 @@ function sincronizarCadeiaEvolutiva(PDO $pdo, array $dadosCadeia, int $idMoonSto
     $regrasPersonalizadas = obterRegrasPersonalizadasEvolucao();
 
     foreach ($regrasPersonalizadas as $chave => $regraPersonalizada) {
-        // Só acrescentar uma transição especial quando
-        // o Pokémon importado for a origem dessa evolução.
-        if ($nomeImportado !== $regraPersonalizada['origem']) {
+        // A transição deve ser registrada quando a origem OU o destino
+        // for importado; a outra espécie pode já existir no banco.
+        if ($nomeImportado !== $regraPersonalizada['origem']
+            && $nomeImportado !== $regraPersonalizada['destino']) {
             continue;
         }
 
@@ -612,38 +675,9 @@ try {
         $slot++;
     }
 
-    /*
-     * Opções genéricas:
-     * - físico (incluindo empate): Dança das Espadas, exceto tipo Lutador;
-     * - especial: Maquinação Maliciosa, exceto tipo Psíquico.
-     * As opções específicas por tipo continuam independentes.
-     */
-    $opcoesStatus = [];
-    if ($classeEscolhida === 'PHYSICAL' && !in_array('fighting', $tiposApi, true)) {
-        $opcoesStatus['Dança das Espadas'] = 'TEM_FISICO';
-    }
-    if ($classeEscolhida === 'SPECIAL' && !in_array('psychic', $tiposApi, true)) {
-        $opcoesStatus['Maquinação Maliciosa'] = 'TEM_ESPECIAL';
-    }
-
-    if (in_array('electric', $tiposApi, true)) {
-        $opcoesStatus['Onda Trovão'] = 'TIPO_ELETRICO';
-    }
-    if (in_array('poison', $tiposApi, true)) {
-        $opcoesStatus['Tóxico'] = 'TIPO_POISON';
-    }
-    if (in_array('psychic', $tiposApi, true)) {
-        $opcoesStatus['Paz Mental'] = 'TIPO_PSYCHIC';
-    }
-    if (in_array('fighting', $tiposApi, true)) {
-        $opcoesStatus['Corpulência'] = 'TIPO_FIGHTING';
-    }
-    if (in_array('grass', $tiposApi, true)) {
-        $opcoesStatus['Esporo'] = 'TIPO_GRASS';
-    }
-    if (in_array('fire', $tiposApi, true) || in_array('ghost', $tiposApi, true)) {
-        $opcoesStatus['Fogo Fátuo'] = 'TIPO_FIRE_GHOST';
-    }
+    $opcoesStatus = $classeEscolhida === 'PHYSICAL'
+        ? ['Dança das Espadas' => 'TEM_FISICO']
+        : ['Maquinação Maliciosa' => 'TEM_ESPECIAL'];
 
     $stmtBuscarGolpeStatus = $pdo->prepare(
         "SELECT id_golpe FROM golpe WHERE nome = ? AND categoria = 'STATUS' LIMIT 1"

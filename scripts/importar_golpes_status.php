@@ -227,7 +227,7 @@ try {
             ':nome'         => $nomeBanco,
             ':id_tipo'      => $idTipo,
             ':poder'        => $poder,
-            ':precisao'     => $dados['accuracy'],
+            ':precisao'     => 100,
             ':pp'           => $dados['pp'],
             ':prioridade'   => $dados['priority'],
             ':classe_dano'  => $dados['damage_class']['name'] ?? null,

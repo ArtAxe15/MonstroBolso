@@ -156,8 +156,8 @@ try {
             . ' do tipo ' . ($nomesTipos[$tipoApi] ?? $tipoApi) . ' que causa dano.';
 
         $descricoesImplementadas = [
-            'body-slam' => 'Causa dano e tem 30% de chance de paralisar o oponente.',
-            'fire-fang' => 'Causa dano e tem 10% de chance de causar queimadura.',
+            'body-slam' => 'Causa dano e tem 25% de chance de paralisar o oponente.',
+            'fire-fang' => 'Causa dano e tem 25% de chance de causar queimadura.',
             'mega-drain' => 'Causa dano e recupera HP equivalente a 50% do dano causado.',
             'drain-punch' => 'Causa dano e recupera HP equivalente a 50% do dano causado.',
             'sucker-punch' => 'Golpe físico do tipo Sombrio com prioridade de execução 1.',
@@ -165,13 +165,32 @@ try {
             'shadow-sneak' => 'Golpe físico do tipo Fantasma com prioridade de execução 1.',
             'aqua-jet' => 'Golpe físico do tipo Água com prioridade de execução 1.',
             'ice-shard' => 'Golpe físico do tipo Gelo com prioridade de execução 1.',
-            'dragon-breath' => 'Causa dano e tem 30% de chance de paralisar o oponente.',
-            'poison-jab' => 'Causa dano e tem 30% de chance de envenenar o oponente.',
-            'sludge-bomb' => 'Causa dano e tem 30% de chance de envenenar o oponente.',
-            'ice-beam' => 'Causa dano e tem 10% de chance de congelar o oponente.',
+            'dragon-breath' => 'Causa dano e tem 25% de chance de paralisar o oponente.',
+            'poison-jab' => 'Causa dano e tem 25% de chance de envenenar o oponente.',
+            'sludge-bomb' => 'Causa dano e tem 25% de chance de envenenar o oponente.',
+            'ice-beam' => 'Causa dano e tem 25% de chance de congelar o oponente.',
         ];
         if (isset($descricoesImplementadas[$slug])) {
             $descricao = $descricoesImplementadas[$slug];
+        }
+
+        $efeitodeTipo = [
+            'electric' => 'paralisar',
+            'fire' => 'queimar',
+            'ice' => 'congelar',
+            'poison' => 'envenenar',
+            'psychic' => 'adormecer',
+            'grass' => 'adormecer',
+            'water' => 'congelar',
+            'bug' => 'envenenar',
+            'dragon' => 'queimar',
+        ];
+        // Esses golpes ja explicam o mesmo efeito na propria descricao.
+        // Dragon Breath preserva Paralisia e ainda recebe Queimadura pelo tipo.
+        $efeitosJaDescritos = ['fire-fang', 'sludge-bomb', 'poison-jab', 'ice-beam'];
+        if (isset($efeitodeTipo[$tipoApi]) && !in_array($slug, $efeitosJaDescritos, true)) {
+            $descricao .= ' Efeito de tipo: 25% de chance de '
+                . $efeitodeTipo[$tipoApi] . ' o oponente.';
         }
 
         $prioridade = in_array($slug, $golpesPrioridadeUm, true)
@@ -185,7 +204,7 @@ try {
             'tipo' => $tipoApi,
             'categoria' => 'DANO',
             'poder' => 65,
-            'precisao' => $dados['accuracy'] ?? null,
+            'precisao' => 100,
             'pp' => $dados['pp'] ?? null,
             'prioridade' => $prioridade,
             'classe_dano' => $esperado['classe'],
@@ -231,6 +250,54 @@ try {
             ':descricao' => $registro['descricao'],
         ]);
     }
+    // Mantem golpe_efeito sincronizada mesmo quando o importador e reexecutado.
+    // Ataques de status, dreno e bonus de atributos nao entram nesta chance.
+    $pdo->exec("
+        UPDATE golpe_efeito AS ge
+        JOIN golpe AS g ON g.id_golpe = ge.id_golpe
+        SET ge.chance = 25
+        WHERE g.categoria = 'DANO' AND ge.tipo_efeito = 'APLICAR_STATUS'
+    ");
+    $pdo->exec("
+        INSERT INTO golpe_efeito
+          (id_golpe, tipo_efeito, alvo, id_status, atributo, alteracao, percentual, chance)
+        SELECT g.id_golpe, 'APLICAR_STATUS', 'OPONENTE', sp.id_status, NULL, NULL, NULL, 25
+        FROM golpe AS g
+        JOIN tipo AS t ON t.id_tipo = g.id_tipo
+        JOIN status_pokemon AS sp ON sp.nome = CASE t.api_nome
+          WHEN 'fire' THEN 'Queimadura'
+          WHEN 'dragon' THEN 'Queimadura'
+          WHEN 'electric' THEN 'Paralisia'
+          WHEN 'water' THEN 'Congelamento'
+          WHEN 'ice' THEN 'Congelamento'
+          WHEN 'grass' THEN 'Sono'
+          WHEN 'psychic' THEN 'Sono'
+          WHEN 'bug' THEN 'Envenenamento'
+          WHEN 'poison' THEN 'Envenenamento'
+        END
+        WHERE g.categoria = 'DANO'
+          AND t.api_nome IN ('fire','dragon','electric','water','ice','grass','psychic','bug','poison')
+          AND NOT EXISTS (
+            SELECT 1 FROM golpe_efeito AS ge
+            WHERE ge.id_golpe = g.id_golpe
+              AND ge.tipo_efeito = 'APLICAR_STATUS'
+              AND ge.id_status = sp.id_status
+          )
+    ");
+    $pdo->exec("
+        INSERT INTO golpe_efeito
+          (id_golpe, tipo_efeito, alvo, id_status, atributo, alteracao, percentual, chance)
+        SELECT g.id_golpe, 'APLICAR_STATUS', 'OPONENTE', sp.id_status, NULL, NULL, NULL, 25
+        FROM golpe AS g
+        JOIN status_pokemon AS sp ON sp.nome = 'Paralisia'
+        WHERE g.categoria = 'DANO' AND g.api_id IN (34,225)
+          AND NOT EXISTS (
+            SELECT 1 FROM golpe_efeito AS ge
+            WHERE ge.id_golpe = g.id_golpe
+              AND ge.tipo_efeito = 'APLICAR_STATUS'
+              AND ge.id_status = sp.id_status
+          )
+    ");
     $pdo->commit();
 
     echo '<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Importação de golpes</title><body>';

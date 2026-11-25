@@ -42,6 +42,7 @@ class AuthController
         JsonResponse::send([
             'ok' => true,
             'autenticado' => is_array($usuario),
+            'batalha_ativa' => is_array($_SESSION['batalha'] ?? null),
             'usuario' => is_array($usuario) ? [
                 'id_usuario' => (int) ($usuario['id_usuario'] ?? 0),
                 'nome_usuario' => (string) ($usuario['nome_usuario'] ?? '')
