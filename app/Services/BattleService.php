@@ -42,7 +42,7 @@ final class BattleService
     private const CONDICAO_POR_GOLPE = [34 => 'Paralisia', 225 => 'Paralisia'];
     private const NIVEIS_POR_ENCONTRO = [
         'treinador' => 4,
-        'selvagem' => 3,
+        'selvagem' => 2,
         'desafio' => 3,
     ];
 
