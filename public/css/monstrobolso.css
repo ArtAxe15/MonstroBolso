@@ -609,7 +609,8 @@ body.tela-mapa {
     filter: brightness(1.08);
 }
 .tela-mapa .mapa-no:disabled { cursor: not-allowed; }
-.tela-mapa .mapa-no-icone { font-size: 22px; line-height: 1; }
+.tela-mapa .mapa-no-icone { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; font-size: 22px; line-height: 1; }
+.tela-mapa .mapa-no-icone img { display: block; width: 24px; height: 24px; object-fit: contain; image-rendering: pixelated; }
 .tela-mapa .mapa-no small {
     position: absolute;
     top: calc(100% + 2px);
@@ -685,7 +686,8 @@ body.tela-mapa {
     }
     .tela-mapa .painel-lateral { padding: 8px; }
     .tela-mapa .mapa-no { width: 39px; height: 39px; min-height: 39px; }
-    .tela-mapa .mapa-no-icone { font-size: 19px; }
+    .tela-mapa .mapa-no-icone { width: 20px; height: 20px; font-size: 19px; }
+    .tela-mapa .mapa-no-icone img { width: 20px; height: 20px; }
 }
 @media (max-height: 720px) {
     .tela-mapa .game-shell { padding-top: 6px; padding-bottom: 6px; }

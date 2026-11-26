@@ -3,6 +3,7 @@
 const appElement = document.querySelector('#app');
 const entryUrl = document.body.dataset.entryUrl.replace(/\/$/, '');
 const entryPath = new URL(entryUrl, window.location.origin).pathname;
+const assetBaseUrl = entryUrl.replace(/\/index\.php$/, '');
 const state = { usuario: null, autenticado: false, perfil: null, perfis: [], jogo: null, excluindo: false, encounterSelection: null, battle: null, battleMenu: 'fight', battleBusy: false, battleLogVisible: [], battleSummary: null, battleMessage: null, epilogo: null, campeao: null, timeSelecionado: null, pcTimeSelecionado: null, dadosPc: null, battleHpAntes: null, visuaisAntesEvolucao: null };
 
 function escaparHtml(valor) {
@@ -1125,11 +1126,11 @@ function renderizarMapa(aviso = '') {
     const conexoes = jogo.conexoes || [];
 
     const tiposLocal = {
-        TREINADOR: { icone: '🧢', nome: 'Treinador', classe: 'treinador' },
-        SELVAGEM: { icone: '⚔️', nome: 'Selvagem', classe: 'selvagem' },
-        POKEBOLA: { icone: '🔴', nome: 'Pokébola', classe: 'pokebola' },
-        CENTRO_POKEMON: { icone: '✚', nome: 'Centro Pokémon', classe: 'centro' },
-        POKEMART: { icone: '🛒', nome: 'Poké Mart', classe: 'pokemart' },
+        TREINADOR: { icone: '⚔️', nome: 'Treinador', classe: 'treinador', imagem: '/images/map-icons/trainer-swords.svg' },
+        SELVAGEM: { icone: '🌿', nome: 'Selvagem', classe: 'selvagem', imagem: '/images/map-icons/grass.svg' },
+        POKEBOLA: { icone: '🔴', nome: 'Pokébola', classe: 'pokebola', imagem: '/images/map-icons/pokeball.svg' },
+        CENTRO_POKEMON: { icone: '✚', nome: 'Centro Pokémon', classe: 'centro', imagem: '/images/map-icons/pokemon-center.svg' },
+        POKEMART: { icone: '🛒', nome: 'Poké Mart', classe: 'pokemart', imagem: '/images/map-icons/poke-mart.svg' },
         DESAFIO: { icone: '★', nome: 'Desafio', classe: 'desafio' }
     };
 
@@ -1161,7 +1162,11 @@ function renderizarMapa(aviso = '') {
         const desabilitado = !disponivel
             || (no.tipo_local === 'TREINADOR' && !Number(no.id_npc_mapa))
             || (no.tipo_local === 'DESAFIO' && !Number(jogo.desafio_atual?.id_desafio));
-        const icone = concluido ? '✓' : tipo.icone;
+        const icone = concluido
+            ? '✓'
+            : (tipo.imagem
+                ? `<img src="${escaparHtml(`${assetBaseUrl}${tipo.imagem}`)}" alt="" loading="lazy">`
+                : escaparHtml(tipo.icone));
 
         return `<button class="mapa-no tipo-${tipo.classe} status-${String(no.status).toLowerCase()}"
             style="left:${Number(no.posicao_x)}%;top:${Number(no.posicao_y)}%"
