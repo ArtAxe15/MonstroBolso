@@ -372,7 +372,7 @@ async function abrirPokemart(idMapaNo) {
         let ultimoGrupo = '';
         dialogo.innerHTML = `
             <header><h2 id="pokemart-titulo">Poké Mart</h2>
-                <button type="button" data-mart-acao="fechar">Fechar</button>
+                <button type="button" data-mart-acao="concluir">Concluir visita</button>
             </header>
             <p>Saldo: ₽ ${Number(catalogo.dinheiro).toLocaleString('pt-BR')}</p>
             ${mensagem(aviso, tipo)}
@@ -400,8 +400,7 @@ async function abrirPokemart(idMapaNo) {
                         </button>
                     </li>`;
                 }).join('')}
-            </ul>
-            <button type="button" data-mart-acao="concluir">Concluir visita</button>`;
+            </ul></ul>`;
     }
 
     dialogo.addEventListener('cancel', ev => { if (ocupado) ev.preventDefault(); });
