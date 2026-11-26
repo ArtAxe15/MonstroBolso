@@ -18,14 +18,41 @@ final class ServicosMapa
     public function catalogo(int $perfil, int $no): array
     {
         $this->localDisponivel($perfil, $no, 'POKEMART');
+        // Ordem fixa para facilitar a compra: pedra, curas progressivas, status, revives.
+        // Sprites oficiais de itens disponibilizados pelo repositório da PokéAPI.
+        $itens = $this->consulta(
+            "SELECT i.id_item, i.nome, i.categoria, i.preco, i.descricao,
+                    COALESCE(inv.quantidade, 0) AS quantidade
+             FROM item i
+             LEFT JOIN inventario inv ON inv.id_item = i.id_item AND inv.id_perfil = ?
+             ORDER BY CASE i.nome
+                WHEN 'Moon Stone' THEN 0
+                WHEN 'Potion' THEN 10
+                WHEN 'Super Potion' THEN 11
+                WHEN 'Hyper Potion' THEN 12
+                WHEN 'Max Potion' THEN 13
+                WHEN 'Full Restore' THEN 14
+                WHEN 'Antidote' THEN 20
+                WHEN 'Burn Heal' THEN 21
+                WHEN 'Ice Heal' THEN 22
+                WHEN 'Awakening' THEN 23
+                WHEN 'Paralyze Heal' THEN 24
+                WHEN 'Full Heal' THEN 25
+                WHEN 'Revive' THEN 30
+                WHEN 'Max Revive' THEN 31
+                ELSE 99 END, i.nome",
+            [$perfil]
+        )->fetchAll();
+        foreach ($itens as &$item) {
+            $slug = strtolower(trim(preg_replace('/[^a-z0-9]+/i', '-', (string) $item['nome']), '-'));
+            $item['imagem_url'] = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/'
+                . rawurlencode($slug) . '.png';
+        }
+        unset($item);
+
         return [
             'dinheiro' => $this->saldo($perfil),
-            'itens' => $this->consulta(
-                'SELECT i.id_item, i.nome, i.preco, i.descricao, COALESCE(inv.quantidade, 0) AS quantidade
-                 FROM item i LEFT JOIN inventario inv ON inv.id_item = i.id_item AND inv.id_perfil = ?
-                 ORDER BY i.categoria, i.nome',
-                [$perfil]
-            )->fetchAll(),
+            'itens' => $itens,
         ];
     }
 

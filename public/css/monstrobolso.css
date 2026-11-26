@@ -1670,3 +1670,59 @@ body.tela-final {
 /* Loja e histórico continuam roláveis dentro de suas próprias janelas. */
 .pokemart-dialogo { max-height: 88dvh; overflow-y: auto; }
 .historico-lista { overflow-y: auto; }
+
+/* Poké Mart: ilustrações oficiais da PokéAPI com substituto visual offline. */
+.pokemart-catalogo li.pokemart-produto {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 12px;
+}
+.pokemart-sprite {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border: 1px solid #c9d3c4;
+    border-radius: 9px;
+    background: #e5efe1;
+    overflow: hidden;
+}
+.pokemart-sprite-reserva { font-size: 26px; }
+.pokemart-sprite img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    padding: 4px;
+    background: #e5efe1;
+}
+.pokemart-catalogo .pokemart-produto-info { min-width: 0; }
+.pokemart-catalogo .pokemart-produto-info strong { color: #294b43; }
+.pokemart-catalogo .pokemart-produto-info p { margin: 3px 0; line-height: 1.35; }
+.pokemart-catalogo li.pokemart-produto button { white-space: nowrap; }
+@media (max-width: 590px) {
+    .pokemart-catalogo li.pokemart-produto {
+        grid-template-columns: 48px minmax(0,1fr);
+    }
+    .pokemart-sprite { width: 48px; height: 48px; }
+    .pokemart-catalogo li.pokemart-produto button { grid-column: 1 / -1; width: 100%; }
+}
+
+.pokemart-catalogo li.pokemart-grupo {
+    display: block;
+    padding: 8px 10px;
+    margin: 5px 0 0;
+    border: 0;
+    border-bottom: 2px solid #799884;
+    border-radius: 0;
+    background: transparent;
+    color: #285744;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+}

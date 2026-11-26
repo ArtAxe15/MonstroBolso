@@ -22,9 +22,9 @@ final class BattleService
     // Chance de um NPC escolher o golpe de aumento a cada turno elegível.
     private const CHANCE_AUMENTO_NPC_DENOMINADOR = 6;
     private const NIVEL_MAXIMO = 100;
-    private const RECOMPENSA_SELVA = 400;
-    private const RECOMPENSA_TREINADOR = 600;
-    private const RECOMPENSA_DESAFIO = 900;
+    private const RECOMPENSA_SELVA = 600;
+    private const RECOMPENSA_TREINADOR = 1000;
+    private const RECOMPENSA_DESAFIO = 2000;
     private const CONDICAO_POR_TIPO = [
         'Fogo' => 'Queimadura',
         'Eletrico' => 'Paralisia',
@@ -1081,9 +1081,11 @@ final class BattleService
                     'id' => $id,
                     'nome' => 'Encontro selvagem',
                 ],
+                // O bioma é apenas visual; espécies selvagens devem respeitar
+                // o progresso dos ginásios, para não surgirem evoluções finais cedo.
                 'time_adversario' => $this->montador->montarPokemonSelvagem(
                     $idPerfil,
-                    $area
+                    (int) $estadoDesafios['estagio_npc']
                 ),
             ];
         }
@@ -1112,7 +1114,15 @@ final class BattleService
             'alvo' => [
                 'tipo' => 'desafio',
                 'id' => (int) $desafio['id_desafio'],
-                'nome' => $desafio['nome'],
+                'nome' => match ((int) $desafio['ordem']) {
+                    1 => 'Ginásio de Gelo',
+                    2 => 'Ginásio de Água',
+                    3 => 'Ginásio Voador',
+                    4 => 'Ginásio de Fogo',
+                    5 => 'Ex-campeão',
+                    6 => 'Rival',
+                    default => $desafio['nome'],
+                },
                 'tipo_desafio' => $desafio['tipo'],
             ],
             'desafio' => $desafio,

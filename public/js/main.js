@@ -202,9 +202,8 @@ async function abrirPokebola(idMapaNo) {
     const stats = pokemon.atributos || {};
     const nome = formatarNomeFrontend(pokemon.nome);
     const timeCheio = Boolean(oferta.time_cheio);
-    const dialogo = document.createElement('dialog');
-    dialogo.className = 'pokebola-dialogo';
-    dialogo.setAttribute('aria-labelledby', 'pokebola-titulo');
+    document.body.insertAdjacentHTML('beforeend', '<dialog class="pokebola-dialogo" aria-labelledby="pokebola-titulo"></dialog>');
+    const dialogo = document.body.lastElementChild;
     let ocupado = false;
     const atributos = [
         ['HP', stats.hp_max],
@@ -272,7 +271,6 @@ async function abrirPokebola(idMapaNo) {
             }
         }
     });
-    document.body.appendChild(dialogo);
     dialogo.showModal();
 }
 
@@ -324,6 +322,10 @@ function renderizarPc(dados, aviso = '') {
     const time = Array.isArray(dados.time) ? dados.time : [];
     const pc = Array.isArray(dados.pc) ? dados.pc : [];
     const timeCheio = time.length >= 6;
+    // Uma seleção anterior pode não existir mais após uma movimentação no PC.
+    if (!time.some(p => Number(p.id_pokemon_time) === state.pcTimeSelecionado)) {
+        state.pcTimeSelecionado = null;
+    }
     appElement.innerHTML = `<main class="pc-pagina">
         <header class="pc-topo">
             <div><p class="eyebrow">ROGUEMON · TEAM BUILDER</p><h1>PC Pokémon</h1>
@@ -332,8 +334,11 @@ function renderizarPc(dados, aviso = '') {
         </header>
         ${aviso ? mensagem(aviso, 'sucesso') : ''}
         <p class="pc-instrucao">Equipe: ${time.length}/6 · Armazenados: ${pc.length}. Clique em um Pokémon da equipe e depois no outro para trocar as posições. Mantenha pelo menos um Pokémon no time.</p>
-        ${timeCheio && pc.length ? `<label class="pc-troca-selecao">Para retirar um Pokémon com equipe cheia, escolha qual será guardado:
-            <select id="pc-time-para-troca">${time.map(p => `<option value="${Number(p.id_pokemon_time)}">${escaparHtml(p.nome_exibicao || p.nome_especie)} · Nv. ${Number(p.nivel)}</option>`).join('')}</select>
+        ${timeCheio && pc.length ? `<label class="pc-troca-selecao">Equipe cheia: selecione no time quem será enviado ao PC (pelo botão de posição ou pela lista):
+            <select id="pc-time-para-troca" aria-label="Pokémon da equipe que será enviado ao PC">
+                <option value="" ${state.pcTimeSelecionado === null ? 'selected' : ''}>Escolha um Pokémon da equipe...</option>
+                ${time.map(p => `<option value="${Number(p.id_pokemon_time)}" ${state.pcTimeSelecionado === Number(p.id_pokemon_time) ? 'selected' : ''}>${escaparHtml(p.nome_exibicao || p.nome_especie)} · Nv. ${Number(p.nivel)}</option>`).join('')}
+            </select>
         </label>` : ''}
         <div class="pc-colunas">
             <section class="pc-secao"><h2>Equipe <small>${time.length}/6</small></h2>
@@ -351,18 +356,20 @@ async function movimentarPc(acao, idTime = null, idPc = null) {
         method: 'POST',
         body: { acao, ...(idTime ? { id_pokemon_time: idTime } : {}), ...(idPc ? { id_pokemon_pc: idPc } : {}) }
     });
+    // Os IDs de pokemon_time mudam ao trocar com o PC: não guardar seleção antiga.
+    state.pcTimeSelecionado = null;
     await carregarPc(resultado.message);
 }
 
 async function abrirPokemart(idMapaNo) {
     const catalogo = await requisitarApi(`/api/game/pokemart?id_mapa_no=${idMapaNo}`);
-    const dialogo = document.createElement('dialog');
-    dialogo.className = 'pokemart-dialogo';
-    dialogo.setAttribute('aria-labelledby', 'pokemart-titulo');
+    appElement.insertAdjacentHTML('beforeend', '<dialog class="pokemart-dialogo" aria-labelledby="pokemart-titulo"></dialog>');
+    const dialogo = appElement.lastElementChild;
     let ocupado = false;
     let comprou = false;
 
     function renderizar(aviso = '', tipo = 'sucesso') {
+        let ultimoGrupo = '';
         dialogo.innerHTML = `
             <header><h2 id="pokemart-titulo">Poké Mart</h2>
                 <button type="button" data-mart-acao="fechar">Fechar</button>
@@ -370,16 +377,29 @@ async function abrirPokemart(idMapaNo) {
             <p>Saldo: ₽ ${Number(catalogo.dinheiro).toLocaleString('pt-BR')}</p>
             ${mensagem(aviso, tipo)}
             <ul class="pokemart-catalogo">
-                ${catalogo.itens.map(item => `
-                    <li>
-                        <div><strong>${escaparHtml(item.nome)}</strong>
+                ${catalogo.itens.map(item => {
+                    const grupo = item.nome === 'Moon Stone' ? 'Pedras de evolução'
+                        : ['Potion', 'Super Potion', 'Hyper Potion', 'Max Potion', 'Full Restore'].includes(item.nome) ? 'Poções e recuperação'
+                        : item.categoria === 'STATUS' ? 'Cura de condições'
+                        : item.categoria === 'REVIVE' ? 'Reviver Pokémon' : 'Outros itens';
+                    const cabecalho = grupo !== ultimoGrupo ? `<li class="pokemart-grupo">${escaparHtml(grupo)}</li>` : '';
+                    ultimoGrupo = grupo;
+                    return `${cabecalho}
+                    <li class="pokemart-produto">
+                        <span class="pokemart-sprite" aria-hidden="true">
+                            <span class="pokemart-sprite-reserva">🎒</span>
+                            <img src="${escaparHtml(item.imagem_url || '')}" alt="" loading="lazy"
+                                onerror="this.style.display='none'">
+                        </span>
+                        <div class="pokemart-produto-info"><strong>${escaparHtml(item.nome)}</strong>
                             <p>${escaparHtml(item.descricao)}</p>
                             <small>Na bolsa: ${Number(item.quantidade)}</small></div>
                         <button type="button" data-mart-item="${Number(item.id_item)}"
                             ${Number(item.preco) > Number(catalogo.dinheiro) ? 'disabled' : ''}>
                             Comprar · ₽ ${Number(item.preco).toLocaleString('pt-BR')}
                         </button>
-                    </li>`).join('')}
+                    </li>`;
+                }).join('')}
             </ul>
             <button type="button" data-mart-acao="concluir">Concluir visita</button>`;
     }
@@ -426,7 +446,6 @@ async function abrirPokemart(idMapaNo) {
         }
     });
     renderizar();
-    appElement.appendChild(dialogo);
     dialogo.showModal();
 }
 
@@ -472,6 +491,18 @@ async function abrirBatalha() {
     renderizarBatalha();
 }
 
+function nomeDoDesafio(numero, alternativo = 'Próximo desafio') {
+    const nomes = {
+        1: 'Ginásio de Gelo',
+        2: 'Ginásio de Água',
+        3: 'Ginásio Voador',
+        4: 'Ginásio de Fogo',
+        5: 'Ex-campeão',
+        6: 'Rival'
+    };
+    return nomes[Number(numero)] || alternativo;
+}
+
 function renderizarBatalha() {
     const batalha = state.battle;
     if (batalha.finalizada && batalha.resultado === 'DERROTA') {
@@ -492,10 +523,7 @@ function renderizarBatalha() {
                 <strong>${escaparHtml(state.perfil?.nome || `Jornada ${batalha.id_perfil}`)}</strong>
             </header>
             <section class="battle-heading">
-                <p class="eyebrow">${Number(batalha.numero_desafio) >= 1 && Number(batalha.numero_desafio) <= 4
-                    ? `Ginásio ${Number(batalha.numero_desafio)}`
-                    : Number(batalha.numero_desafio) === 5 ? 'Ex-campeão'
-                    : Number(batalha.numero_desafio) === 6 ? 'Rival' : 'UNOVA'}</p>
+                <p class="eyebrow">${escaparHtml(nomeDoDesafio(batalha.numero_desafio, 'UNOVA'))}</p>
                 <h1>${escaparHtml(batalha.alvo.nome)}</h1>
             </section>
             <div class="battle-stage">
@@ -638,11 +666,8 @@ function adicionarEventosBatalha(eventos) {
     const lista = appElement.querySelector('#battle-log-list');
     if (!lista) return;
     for (const evento of visiveis) {
-        const item = document.createElement('li');
-        item.className = `log-${String(evento.tipo || '').replace(/[^a-z0-9_-]/gi, '')}`;
-        item.textContent = evento.texto;
-        item.classList.add('battle-log-novo');
-        lista.appendChild(item);
+        const classe = String(evento.tipo || '').replace(/[^a-z0-9_-]/gi, '');
+        lista.insertAdjacentHTML('beforeend', `<li class="log-${classe} battle-log-novo">${escaparHtml(evento.texto)}</li>`);
     }
     while (lista.children.length > 24) lista.firstElementChild.remove();
     lista.scrollTop = lista.scrollHeight;
@@ -662,11 +687,11 @@ function capturarHpsBatalha(batalha) {
 }
 function ativarTransicaoDeHp() {
     const barras = [...appElement.querySelectorAll('[data-hp-destino]')];
-    requestAnimationFrame(() => requestAnimationFrame(() => {
+    setTimeout(() => {
         for (const barra of barras) {
             if (barra.isConnected) barra.style.width = `${Number(barra.dataset.hpDestino)}%`;
         }
-    }));
+    }, 32);
     state.battleHpAntes = null;
 }
 function animarAtaque(lado) {
@@ -685,8 +710,8 @@ function evolucoesDaVitoria() {
 async function mostrarCenasDeEvolucao(evolucoes) {
     for (const evolucao of evolucoes) {
         await new Promise(resolve => {
-            const dialogo = document.createElement('dialog');
-            dialogo.className = 'dialogo-evolucao';
+            document.body.insertAdjacentHTML('beforeend', '<dialog class="dialogo-evolucao"></dialog>');
+            const dialogo = document.body.lastElementChild;
             dialogo.innerHTML = `<div class="evolucao-cena">
                 <p class="eyebrow">EVOLUÇÃO</p>
                 <h2>${escaparHtml(formatarNomeFrontend(evolucao.antes))} está evoluindo!</h2>
@@ -697,7 +722,6 @@ async function mostrarCenasDeEvolucao(evolucoes) {
                 <p class="evolucao-resultado">Incrível! ${escaparHtml(formatarNomeFrontend(evolucao.antes))} evoluiu para <strong>${escaparHtml(formatarNomeFrontend(evolucao.depois))}</strong>!</p>
                 <button type="button" class="botao botao-principal" data-evolucao-avancar>Continuar jornada</button>
             </div>`;
-            document.body.appendChild(dialogo);
             const concluir = () => { dialogo.close(); dialogo.remove(); resolve(); };
             dialogo.querySelector('[data-evolucao-avancar]').addEventListener('click', concluir, { once: true });
             // A animação faz parte do pós-batalha; não é possível descartá-la pelo Esc.
@@ -1069,8 +1093,8 @@ async function abrirHistoricoBatalhas() {
                 </details>`;
         }).join('') : '<p class="historico-vazio">Nenhuma batalha concluída nesta jornada.</p>';
 
-        const sobreposicao = document.createElement('div');
-        sobreposicao.className = 'historico-sobreposicao';
+        appElement.insertAdjacentHTML('beforeend', '<div class="historico-sobreposicao"></div>');
+        const sobreposicao = appElement.lastElementChild;
         sobreposicao.innerHTML = `
             <section class="historico-janela" role="dialog" aria-modal="true" aria-labelledby="historico-titulo" tabindex="-1">
                 <div class="historico-cabecalho">
@@ -1080,7 +1104,6 @@ async function abrirHistoricoBatalhas() {
                 <p class="historico-contagem">${batalhas.length} ${batalhas.length === 1 ? 'batalha registrada' : 'batalhas registradas'}</p>
                 <div class="historico-lista">${conteudo}</div>
             </section>`;
-        appElement.appendChild(sobreposicao);
         sobreposicao.querySelector('.historico-fechar')?.focus();
     } finally {
         historicoCarregando = false;
@@ -1177,10 +1200,7 @@ function renderizarMapa(aviso = '') {
     // O nome apresentado ao jogador é o próximo desafio pela ordem real do banco.
     const numeroDesafio = Number(jogo.desafio_atual?.ordem || 0);
     const tituloDesafio = jogo.jornada_concluida ? 'Jornada concluída'
-        : numeroDesafio >= 1 && numeroDesafio <= 4 ? `Ginásio ${numeroDesafio}`
-        : numeroDesafio === 5 ? 'Ex-campeão'
-        : numeroDesafio === 6 ? 'Rival'
-        : escaparHtml(jogo.desafio_atual?.nome || 'Próximo desafio');
+        : nomeDoDesafio(numeroDesafio, jogo.desafio_atual?.nome || 'Próximo desafio');
     const locaisConcluidos = Number(jogo.progresso?.concluidos || 0);
     const totalTreinadores = (jogo.npc || []).length;
     const treinadoresDerrotados = (jogo.npc || []).filter(n => Number(n.derrotado) === 1).length;
@@ -1335,6 +1355,17 @@ document.addEventListener('submit', async ev => {
     finally { if (btn.isConnected) { btn.disabled = false; btn.textContent = old; } }
 });
 
+document.addEventListener('change', ev => {
+    if (ev.target.matches('#pc-time-para-troca') && state.dadosPc) {
+        // O seletor e os botões "Posição X · Selecionar" compartilham a mesma escolha.
+        const id = Number(ev.target.value);
+        state.pcTimeSelecionado = id > 0 && (state.dadosPc.time || []).some(
+            p => Number(p.id_pokemon_time) === id
+        ) ? id : null;
+        renderizarPc(state.dadosPc);
+    }
+});
+
 document.addEventListener('click', async ev => {
     const link = ev.target.closest('[data-rota]'); if (link) { ev.preventDefault(); await navegar(link.dataset.rota); return; }
     const acao = ev.target.closest('[data-acao]')?.dataset.acao;
@@ -1386,10 +1417,20 @@ document.addEventListener('click', async ev => {
         }
         const retirarPc = ev.target.closest('[data-pc-retirar]');
         if (retirarPc && !retirarPc.disabled) {
+            const time = state.dadosPc?.time || [];
+            const timeCheio = time.length >= 6;
+            const alvo = state.pcTimeSelecionado;
+            if (timeCheio && !time.some(p => Number(p.id_pokemon_time) === alvo)) {
+                alert('Selecione primeiro qual Pokémon da equipe deseja trocar.');
+                return;
+            }
             retirarPc.disabled = true;
-            const selecionar = document.querySelector('#pc-time-para-troca');
-            const alvo = selecionar ? Number(selecionar.value) : null;
-            await movimentarPc(selecionar ? 'trocar' : 'retirar', alvo, Number(retirarPc.dataset.pcRetirar));
+            try {
+                await movimentarPc(timeCheio ? 'trocar' : 'retirar', timeCheio ? alvo : null,
+                    Number(retirarPc.dataset.pcRetirar));
+            } finally {
+                if (retirarPc.isConnected) retirarPc.disabled = false;
+            }
             return;
         }
         if (acao === 'abrir-pc') { await navegar('/pc'); return; }

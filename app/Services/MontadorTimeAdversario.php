@@ -9,10 +9,15 @@ use RuntimeException;
 
 final class MontadorTimeAdversario
 {
-    private const QUANTIDADE_TIME_POR_ESTAGIO = [
-        1 => [1, 2],
+    // O número de adversários segue o desafio, separadamente do estágio
+    // evolutivo: a mudança da evolução NÃO altera o tamanho do time NPC.
+    private const QUANTIDADE_TIME_POR_DESAFIO = [
+        1 => [1, 1],
         2 => [2, 3],
-        3 => [3, 3],
+        3 => [2, 3],
+        4 => [3, 3],
+        5 => [3, 3],
+        6 => [3, 3],
     ];
 
     private const NIVEL_MAXIMO = 100;
@@ -39,27 +44,45 @@ final class MontadorTimeAdversario
         // O estágio dos NPCs depende do próximo desafio, independentemente do bioma.
         $numeroDesafio = (int) ($desafioAtual['ordem'] ?? 6);
 
+        $concluidos = $this->encontro->contarConcluidos($idPerfil);
+
         return [
             'area_atual' => $area,
-            'estagio_npc' => self::estagioNpcPorDesafio($numeroDesafio),
+            'estagio_npc' => self::estagioNpcSeguro($numeroDesafio, $concluidos),
             'desafio_atual' => $desafioAtual,
         ];
     }
 
     /**
-     * Progressão dos NPCs determinada pelo próximo ginásio, NÃO pelo bioma
-     * aleatório do mapa: Ginásio 1 = base, 2–3 = intermediário, 4–6 = final.
+     * Progressão dos NPCs determinada pelo próximo desafio, NÃO pelo bioma
+     * aleatório do mapa: desafios 1–2 = inicial; 3–4 = intermediário;
+     * 5–6 = final. O estágio muda só DEPOIS de vencer o ginásio de Água.
      */
     public static function estagioNpcPorDesafio(int $numeroDesafio): int
     {
-        if ($numeroDesafio <= 1) {
+        if ($numeroDesafio <= 2) {
             return 1;
         }
-        if ($numeroDesafio <= 3) {
+        if ($numeroDesafio <= 4) {
             return 2;
         }
 
         return 3;
+    }
+
+    /**
+     * Defesa adicional contra evoluções antecipadas: não basta a área sorteada
+     * nem uma rota antiga indicar estágio avançado; o progresso confirmado
+     * do perfil também precisa permitir a evolução.
+     */
+    public static function estagioNpcSeguro(int $numeroDesafio, int $desafiosConcluidos): int
+    {
+        // 0–1 ginásios vencidos: inicial; 2–3: intermediário; 4–5: final.
+        // Nunca permite a espécie do estágio seguinte antes da vitória.
+        $estagioPorProgresso = $desafiosConcluidos <= 1 ? 1
+            : ($desafiosConcluidos <= 3 ? 2 : 3);
+
+        return min(self::estagioNpcPorDesafio($numeroDesafio), $estagioPorProgresso);
     }
 
     public function montarTimeTreinador(
@@ -72,17 +95,12 @@ final class MontadorTimeAdversario
         // impedir que um chamador passe a área aleatória por engano.
         $desafioAtual = $this->encontro->encontrarAtual($idPerfil);
         $numeroDesafio = (int) ($desafioAtual['ordem'] ?? 6);
-        $estagioNpc = self::estagioNpcPorDesafio($numeroDesafio);
+        $desafiosConcluidos = $this->encontro->contarConcluidos($idPerfil);
+        $estagioNpc = self::estagioNpcSeguro($numeroDesafio, $desafiosConcluidos);
 
-        $quantidade = self::QUANTIDADE_TIME_POR_ESTAGIO[$estagioNpc] ?? null;
+        $quantidade = self::QUANTIDADE_TIME_POR_DESAFIO[$numeroDesafio] ?? null;
         if ($quantidade === null) {
-            throw new RuntimeException('Não há regras configuradas para o estágio do NPC.');
-        }
-
-        // No primeiro roteiro, o treinador comum usa apenas um Pokémon.
-        // Os demais roteiros conservam a quantidade tradicional por área.
-        if ($this->encontro->contarConcluidos($idPerfil) === 0) {
-            $quantidade = [1, 1];
+            throw new RuntimeException('Não há regras configuradas para o próximo desafio do NPC.');
         }
 
         $nivelTreinador = $this->nivelDaEquipe($idPerfil, 'treinador');
@@ -147,10 +165,10 @@ final class MontadorTimeAdversario
 
     public function montarPokemonSelvagem(
         int $idPerfil,
-        int $area
+        int $estagioEvolutivo
     ): array {
         $nivel = $this->nivelDaEquipe($idPerfil, 'selvagem');
-        $idsEspecie = $this->encontro->encontrarEspeciesSelvagensPorArea($area);
+        $idsEspecie = $this->encontro->encontrarEspeciesSelvagensPorArea($estagioEvolutivo);
         if ($idsEspecie === []) {
             throw new RuntimeException('Não há Pokémon selvagens cadastrados para esta área.');
         }
@@ -178,10 +196,9 @@ final class MontadorTimeAdversario
     }
 
     /**
-     * Calcula o nível pelos integrantes vivos: o segundo maior nível (quando
-     * existe) impede que um único Pokémon muito forte infle todos os encontros.
-     * As dificuldades por tipo são proporcionais à referência, e os chefes não
-     * mudam: seu nível fixo funciona como teto para os encontros comuns.
+     * Treinadores: nível do Pokémon vivo mais forte - 5 (com teto no próximo
+     * desafio). Selvagens: segundo mais forte - margem adaptativa original.
+     * Os chefes continuam em seus níveis fixos.
      * Método independente do banco para testes rápidos.
      */
     public static function calcularNivelAdaptativo(array $niveis, string $tipo, ?int $nivelMaximoDesafio = null): int
@@ -199,15 +216,16 @@ final class MontadorTimeAdversario
         }
 
         rsort($niveis, SORT_NUMERIC);
-        $referencia = $niveis[min(1, count($niveis) - 1)];
-        $margem = $tipo === 'selvagem'
-            ? max(2, (int) ceil($referencia * 0.15))
-            : max(1, (int) ceil($referencia * 0.10));
-        $nivel = max(self::NIVEL_MINIMO, $referencia - $margem);
+        // Selvagens e treinadores: 5 níveis abaixo do
+        // Pokémon vivo mais forte do jogador.
+        $nivel = max(self::NIVEL_MINIMO, $niveis[0] - 5);
 
-        if ($nivelMaximoDesafio !== null) {
-            $distanciaDoChefe = $tipo === 'selvagem' ? 3 : 2;
-            $nivel = min($nivel, max(self::NIVEL_MINIMO, $nivelMaximoDesafio - $distanciaDoChefe));
+        // Mantém o limite do próximo chefe apenas para treinadores.
+        if ($tipo === 'treinador' && $nivelMaximoDesafio !== null) {
+            $nivel = min(
+                $nivel,
+                max(self::NIVEL_MINIMO, $nivelMaximoDesafio - 2)
+            );
         }
 
         return min(self::NIVEL_MAXIMO, $nivel);

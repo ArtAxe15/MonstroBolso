@@ -1,0 +1,317 @@
+{
+  "names": {
+    "16": "snivy",
+    "17": "servine",
+    "18": "serperior",
+    "19": "tepig",
+    "20": "pignite",
+    "21": "emboar",
+    "22": "oshawott",
+    "23": "dewott",
+    "24": "samurott",
+    "25": "patrat",
+    "26": "watchog",
+    "27": "lillipup",
+    "28": "herdier",
+    "29": "stoutland",
+    "30": "purrloin",
+    "31": "liepard",
+    "32": "pansage",
+    "33": "simisage",
+    "34": "pansear",
+    "35": "simisear",
+    "36": "panpour",
+    "37": "simipour",
+    "38": "munna",
+    "39": "musharna",
+    "40": "pidove",
+    "41": "tranquill",
+    "42": "unfezant",
+    "43": "blitzle",
+    "44": "zebstrika",
+    "45": "roggenrola",
+    "46": "boldore",
+    "47": "gigalith",
+    "48": "woobat",
+    "49": "swoobat",
+    "50": "drilbur",
+    "51": "excadrill",
+    "52": "audino",
+    "53": "timburr",
+    "54": "gurdurr",
+    "55": "conkeldurr",
+    "56": "tympole",
+    "57": "palpitoad",
+    "58": "seismitoad",
+    "59": "throh",
+    "60": "sawk",
+    "61": "sewaddle",
+    "62": "swadloon",
+    "63": "leavanny",
+    "64": "venipede",
+    "65": "whirlipede",
+    "66": "scolipede",
+    "67": "cottonee",
+    "68": "whimsicott",
+    "69": "petilil",
+    "70": "lilligant",
+    "71": "lilligant-hisui",
+    "72": "basculin-red-striped",
+    "73": "basculegion-male",
+    "74": "sandile",
+    "75": "krokorok",
+    "76": "krookodile",
+    "77": "darumaka",
+    "78": "darumaka-galar",
+    "79": "darmanitan-standard",
+    "80": "darmanitan-galar-standard",
+    "81": "maractus",
+    "82": "dwebble",
+    "83": "crustle",
+    "84": "basculin-white-striped",
+    "85": "scraggy",
+    "86": "scrafty",
+    "87": "sigilyph",
+    "88": "yamask",
+    "89": "cofagrigus",
+    "90": "yamask-galar",
+    "91": "runerigus",
+    "92": "tirtouga",
+    "93": "carracosta",
+    "94": "pawniard",
+    "95": "bisharp",
+    "96": "kingambit",
+    "97": "emolga",
+    "98": "archen",
+    "99": "archeops",
+    "100": "trubbish",
+    "101": "garbodor",
+    "102": "zorua",
+    "103": "zoroark",
+    "104": "zorua-hisui",
+    "105": "zoroark-hisui",
+    "106": "minccino",
+    "107": "cinccino",
+    "108": "gothita",
+    "109": "gothorita",
+    "110": "gothitelle",
+    "111": "solosis",
+    "112": "duosion",
+    "113": "reuniclus",
+    "114": "ducklett",
+    "115": "swanna",
+    "116": "vanillite",
+    "117": "vanillish",
+    "118": "vanilluxe",
+    "119": "deerling",
+    "120": "sawsbuck",
+    "121": "karrablast",
+    "122": "escavalier",
+    "123": "foongus",
+    "124": "amoonguss",
+    "125": "frillish-male",
+    "126": "jellicent-male",
+    "127": "alomomola",
+    "128": "joltik",
+    "129": "galvantula",
+    "130": "ferroseed",
+    "131": "ferrothorn",
+    "132": "klink",
+    "133": "klang",
+    "134": "klinklang",
+    "135": "tynamo",
+    "136": "eelektrik",
+    "137": "eelektross",
+    "138": "elgyem",
+    "139": "beheeyem",
+    "140": "litwick",
+    "141": "lampent",
+    "142": "chandelure",
+    "143": "axew",
+    "144": "fraxure",
+    "145": "haxorus",
+    "146": "cubchoo",
+    "147": "beartic",
+    "148": "cryogonal",
+    "149": "shelmet",
+    "150": "accelgor",
+    "151": "stunfisk",
+    "152": "mienfoo",
+    "153": "mienshao",
+    "154": "druddigon",
+    "155": "golett",
+    "156": "golurk",
+    "157": "bouffalant",
+    "158": "rufflet",
+    "159": "braviary",
+    "160": "braviary-hisui",
+    "161": "vullaby",
+    "162": "mandibuzz",
+    "163": "heatmor",
+    "164": "durant",
+    "165": "deino",
+    "166": "zweilous",
+    "167": "hydreigon",
+    "168": "larvesta",
+    "169": "volcarona",
+    "170": "stunfisk-galar"
+  },
+  "npcs": {
+    "3": [
+      {
+        "posicao": 1,
+        "stages": [
+          151,
+          151,
+          151
+        ]
+      },
+      {
+        "posicao": 2,
+        "stages": [
+          74,
+          75,
+          76
+        ]
+      },
+      {
+        "posicao": 3,
+        "stages": [
+          50,
+          51,
+          51
+        ]
+      }
+    ],
+    "6": [
+      {
+        "posicao": 1,
+        "stages": [
+          108,
+          109,
+          110
+        ]
+      },
+      {
+        "posicao": 2,
+        "stages": [
+          48,
+          49,
+          49
+        ]
+      },
+      {
+        "posicao": 3,
+        "stages": [
+          38,
+          39,
+          39
+        ]
+      }
+    ],
+    "4": [
+      {
+        "posicao": 1,
+        "stages": [
+          27,
+          28,
+          29
+        ]
+      },
+      {
+        "posicao": 2,
+        "stages": [
+          25,
+          26,
+          26
+        ]
+      },
+      {
+        "posicao": 3,
+        "stages": [
+          119,
+          120,
+          120
+        ]
+      }
+    ],
+    "5": [
+      {
+        "posicao": 1,
+        "stages": [
+          82,
+          83,
+          83
+        ]
+      },
+      {
+        "posicao": 2,
+        "stages": [
+          45,
+          46,
+          47
+        ]
+      },
+      {
+        "posicao": 3,
+        "stages": [
+          92,
+          93,
+          93
+        ]
+      }
+    ],
+    "2": [
+      {
+        "posicao": 1,
+        "stages": [
+          53,
+          54,
+          55
+        ]
+      },
+      {
+        "posicao": 2,
+        "stages": [
+          60,
+          60,
+          60
+        ]
+      },
+      {
+        "posicao": 3,
+        "stages": [
+          59,
+          59,
+          59
+        ]
+      }
+    ],
+    "1": [
+      {
+        "posicao": 1,
+        "stages": [
+          128,
+          129,
+          129
+        ]
+      },
+      {
+        "posicao": 2,
+        "stages": [
+          149,
+          150,
+          150
+        ]
+      },
+      {
+        "posicao": 3,
+        "stages": [
+          164,
+          164,
+          164
+        ]
+      }
+    ]
+  }
+}

@@ -62,7 +62,7 @@ final class GameController
         $pokemon = $stmt->fetch();
         if (!$pokemon) JsonResponse::send(['ok' => false, 'message' => 'Dados do Pokémon inicial não encontrados.'], 404);
 
-        $nivel = 5;
+        $nivel = 8;
         $idEspecie = (int) $pokemon['id_pokemon_especie'];
         $opcoesStatus = (new Encontro($this->conn))->encontrarOpcoesDeGolpeStatus([$idEspecie]);
         $idGolpeStatus = $opcoesStatus[$idEspecie][0] ?? null;
