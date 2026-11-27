@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Testa a seleção COMPLETA do time NPC com PDO simulado, nos seis ginásios
  * e nos três biomas. Não modifica o banco de dados.
  */
-require_once dirname(__DIR__) . '/app/Autoload.php';
+require dirname(__DIR__) . '/app/Autoload.php';
 
 use App\Services\MontadorTimeAdversario;
 use App\Services\BattleService;

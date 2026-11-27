@@ -21,20 +21,51 @@ function alterarUrl(rota, substituir = false) {
     const url = urlDaRota(rota);
     substituir ? history.replaceState({}, '', url) : history.pushState({}, '', url);
 }
+// Centraliza as requisições da SPA. A rota vai pela query string para não
+// depender do suporte do Apache ao caminho /index.php/api/...
+function montarUrlApi(caminho) {
+    const indiceConsulta = caminho.indexOf('?');
+    const rotaApi = indiceConsulta === -1 ? caminho : caminho.slice(0, indiceConsulta);
+    const consulta = indiceConsulta === -1 ? '' : caminho.slice(indiceConsulta + 1);
+    return `${entryUrl}?_api_rota=${encodeURIComponent(rotaApi)}${consulta ? `&${consulta}` : ''}`;
+}
+
 async function requisitarApi(caminho, opcoes = {}) {
+    const url = montarUrlApi(caminho);
     let resposta;
     try {
-        resposta = await fetch(`${entryUrl}${caminho}`, {
+        resposta = await fetch(url, {
             method: opcoes.method || 'GET', credentials: 'same-origin',
             headers: { 'Accept': 'application/json', ...(opcoes.body ? { 'Content-Type': 'application/json' } : {}) },
             ...(opcoes.body ? { body: JSON.stringify(opcoes.body) } : {})
         });
-    } catch (_) { throw new Error('Não foi possível comunicar com o servidor.'); }
-    const tipo = resposta.headers.get('content-type') || '';
-    if (!tipo.includes('application/json')) throw new Error('O servidor não retornou JSON. Confira o log do PHP.');
-    const dados = await resposta.json();
+    } catch (_) {
+        throw new Error(`Não foi possível comunicar com o servidor. Requisição: ${caminho}.`);
+    }
+
+    const tipo = (resposta.headers.get('content-type') || '').toLowerCase();
+    const corpo = await resposta.text();
+    if (!tipo.includes('application/json')) {
+        // O status e a URL identificam erros de rota ou uma página HTML do Apache.
+        console.error('A API retornou um formato inesperado:', {
+            url: url, status: resposta.status, tipo: tipo, inicio: corpo.slice(0, 300)
+        });
+        throw new Error(`A API retornou ${tipo.includes('html') ? 'HTML' : 'outro formato'} em vez de JSON (HTTP ${resposta.status}). Rota: ${caminho}. Confira a URL do projeto e o log do Apache/PHP.`);
+    }
+
+    let dados;
+    try {
+        dados = JSON.parse(corpo);
+    } catch (_) {
+        console.error('Resposta JSON inválida na API:', { url: url, status: resposta.status, inicio: corpo.slice(0, 300) });
+        throw new Error(`A API retornou JSON inválido (HTTP ${resposta.status}). Rota: ${caminho}. Confira se há avisos PHP misturados à resposta.`);
+    }
+
+    if (!dados || typeof dados !== 'object') {
+        throw new Error(`A API retornou dados inesperados. Rota: ${caminho}.`);
+    }
     if (!resposta.ok || dados.ok === false) {
-        const erro = new Error(dados.message || 'Não foi possível concluir a operação.');
+        const erro = new Error(dados.message || `A operação falhou (HTTP ${resposta.status}).`);
         erro.status = resposta.status;
         throw erro;
     }

@@ -8,7 +8,7 @@ spl_autoload_register(function (string $class): void {
         $file = dirname(__DIR__) . '/config/database.php';
 
         if (is_file($file)) {
-            require_once $file;
+            require $file;
         }
 
         return;
@@ -28,6 +28,6 @@ spl_autoload_register(function (string $class): void {
         . '.php';
 
     if (is_file($file)) {
-        require_once $file;
+        require $file;
     }
 });

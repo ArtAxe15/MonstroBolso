@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 session_start();
 
-require_once __DIR__ . '/../app/Autoload.php';
+require __DIR__ . '/../app/Autoload.php';
 
 use App\Config\Database;
 use App\Http\JsonResponse;
@@ -21,6 +21,16 @@ if ($uriCompleta === $entryPath) {
     $rota = substr($uriCompleta, strlen($entryPath));
 } else {
     $rota = '/';
+}
+
+// Aceita rotas da API por query string: /index.php?_api_rota=/api/session.
+// Isso evita respostas HTML de erro em servidores sem suporte a PATH_INFO.
+if (isset($_GET['_api_rota'])) {
+    $rotaSolicitada = $_GET['_api_rota'];
+    if (!is_string($rotaSolicitada) || !str_starts_with($rotaSolicitada, '/api/')) {
+        JsonResponse::send(['ok' => false, 'message' => 'Rota da API inválida.'], 400);
+    }
+    $rota = $rotaSolicitada;
 }
 
 $metodo = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');

@@ -12,7 +12,7 @@ if (($argc ?? 0) !== 2 || !ctype_digit((string)$argv[1]) || (int)$argv[1] <= 0) 
     fwrite(STDERR, "Uso: php scripts/diagnosticar_npcs.php ID_DO_PERFIL\n");
     exit(1);
 }
-require_once dirname(__DIR__) . '/app/Autoload.php';
+require dirname(__DIR__) . '/app/Autoload.php';
 
 use App\Config\Database;
 use App\Models\Encontro;
